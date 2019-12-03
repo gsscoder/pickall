@@ -23,16 +23,6 @@ namespace PickAll
             }
         }
 
-        public static IEnumerable<T> CastOnlySubclassOf<T>(this IEnumerable<object> source)
-        {
-            return source.Where(item => item.GetType().IsSubclassOf(typeof(T))).Cast<T>();
-        }
-
-        public static IEnumerable<T> CastImplements<T>(this IEnumerable<object> source)
-        {
-            return source.Where(item => typeof(T).IsAssignableFrom(item.GetType())).Cast<T>();
-        }
-
         // Based on MoreLINQ one (/github.com/morelinq)
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(
             this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
