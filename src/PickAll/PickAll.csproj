@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>PickAll</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Title>.NET agile and extensible web searching API</Title>
+    <Version>0.1.0</Version>
+    <Authors>gsscoder</Authors>
+    <PackageProjectUrl>https://github.com/gsscoder/pickall</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gsscoder/pickall</RepositoryUrl>
+    <Company />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>../../artifacts/PickAll/Debug</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>../../artifacts/PickAll/Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.14.0-alpha-787" />
+  </ItemGroup>
+
+</Project>
