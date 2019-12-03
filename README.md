@@ -15,7 +15,7 @@ $ cd pickall
 $ dotnet build -c Release.
 
 # execute sample
-$ ./artifacts/PickAll.Samples/Release/netcoreapp3.0/PickAll.Simple 
+$ ./artifacts/PickAll.Simple/Release/netcoreapp3.0/PickAll.Simple
 [0] GOOGLE: "Guida a .NET Core | Microsoft Docs": "https://docs.microsoft.com/it-it/dotnet/core/"
 [0] DUCKDUCKGO: ".NET Core Guide | Microsoft Docs": "https://docs.microsoft.com/en-us/dotnet/core/"
 [1] GOOGLE: "Introduzione a .NET Core": "https://docs.microsoft.com/it-it/dotnet/core/get-started"
