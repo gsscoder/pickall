@@ -38,6 +38,12 @@ namespace PickAll
             return this;
         }
 
+        public SearchContext With<T>(T service) where T : IPostProcessor
+        {
+            _services = _services.CloneWith(service);
+            return this;
+        }
+
         /// <summary>
         /// Unregisters an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
         /// </summary>
@@ -79,7 +85,7 @@ namespace PickAll
                 } else if (typeof(IPostProcessor).IsAssignableFrom(service.GetType())) {
                     var current = ((IPostProcessor)service).Process(results);
                     results = new List<ResultInfo>();
-                    results.AddRange(results);
+                    results.AddRange(current);
                 }
             }
             return results;
