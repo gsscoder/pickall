@@ -47,7 +47,8 @@ var context = new SearchContext()
     .With<GoogleSearcher>() // search on google.com
     .With<DuckDuckGoSearcher>() // search on duckduckgo.com
     .With<UniquenessPostProcessor>() // remove duplicates
-    ,With<OrderPostProcessor>(); // order results by index
+    .With<OrderPostProcessor>(); // order results by index
+// execute services (order of addition)
 var results = context.Search("hello web");
 
 foreach (var result in results) {

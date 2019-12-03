@@ -56,5 +56,22 @@ namespace PickAll.Tests.Unit
             Assert.Equal(0, results.ElementAt(0).Index);
             Assert.Equal(0, results.ElementAt(1).Index);
         }
+
+        [Fact]
+        public void Search_invokes_services_by_addition_order()
+        {
+            var context = new SearchContext()
+                .With(new MarkPostProcessor("nothing"))
+                .With<Searcher_with_five_results>()
+                .With(new MarkPostProcessor("STAMP/0"))
+                .With(new MarkPostProcessor("STAMP/1"));
+            var results = context.Search("query").GetAwaiter().GetResult();
+
+            var searcherResults = new Searcher_with_five_results(
+                new EmptyBrowsingContext()).Search("query").GetAwaiter().GetResult();
+            var expected = $"STAMP/1|STAMP/0|{searcherResults.ElementAt(0).Description}";
+
+            Assert.Equal(expected, results.ElementAt(0).Description);
+        }
     }
 }
