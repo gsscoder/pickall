@@ -72,20 +72,17 @@ namespace PickAll
             if (query.Trim() == string.Empty) throw new ArgumentException(nameof(query),
                 $"{nameof(query)} cannot be empty or contains only white spaces");
 
-            var searches = new List<ResultInfo>();
-            foreach (var searcher in _services.CastOnlySubclassOf<Searcher>()) {
-                searches.AddRange(await searcher.Search(query));
+            var results = new List<ResultInfo>();
+            foreach (var service in _services) {
+                if (service.GetType().IsSubclassOf(typeof(Searcher))) {
+                    results.AddRange(await ((Searcher)service).Search(query));
+                } else if (typeof(IPostProcessor).IsAssignableFrom(service.GetType())) {
+                    var current = ((IPostProcessor)service).Process(results);
+                    results = new List<ResultInfo>();
+                    results.AddRange(results);
+                }
             }
-
-            var processed = new List<ResultInfo>();
-            processed.AddRange(searches);
-            foreach (var postProcessor in _services.CastImplements<IPostProcessor>()) {
-                 var current = postProcessor.Process(processed);
-                 processed = new List<ResultInfo>();
-                 processed.AddRange(current);
-            }
-
-            return processed;
+            return results;
         }
 
         /// <summary>
