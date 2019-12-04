@@ -16,13 +16,11 @@ $ dotnet build -c Release.
 
 # execute sample
 $ ./artifacts/PickAll.Simple/Debug/netcoreapp3.0/PickAll.Simple
-[5] DUCKDUCKGO: "Brief History of Steve Jobs and Apple": "https://www.thebalancecareers.com/industry-spotlight-steve-jobs-38936"
-[10] GOOGLE: "Apple Inc.": "https://en.wikipedia.org/wiki/Apple_Inc."
-[12] DUCKDUCKGO: "Steve Jobs and the Apple Story - Investopedia": "https://www.investopedia.com/articles/fundamental-analysis/12/steve-jobs-apple-story.asp"
-[13] GOOGLE: "In ricordo di Steve Jobs - Apple (IT)": "https://www.apple.com/it/stevejobs/"
-[14] GOOGLE: "Remembering Steve Jobs - Apple": "https://www.apple.com/stevejobs/"
-[17] GOOGLE: "Steve Jobs - Apple, Family & Death - Biography": "https://www.biography.com/business-figure/steve-jobs"
-[19] DUCKDUCKGO: "Steve Jobs | Biography, Apple, & Facts | Britannica": "https://www.britannica.com/biography/Steve-Jobs
+[2] DUCKDUCKGO: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
+[3] GOOGLE: "Steve Jobs (film)": "https://it.wikipedia.org/wiki/Steve_Jobs_(film)"
+[4] GOOGLE: "Steve Jobs (libro)": "https://it.wikipedia.org/wiki/Steve_Jobs_(libro)"
+[7] GOOGLE: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
+[28] DUCKDUCKGO: "Steve Jobs - Forbes": "https://www.forbes.com/profile/steve-jobs/"
 ```
 
 # Test
@@ -49,11 +47,13 @@ var context = new SearchContext()
     .With<Google>() // search on google.com
     .With<DuckDuckGo>() // search on duckduckgo.com
     .With<Uniqueness>() // remove duplicates
-    .With<Order>(); // order results by index
+    .With<Order>() // order results by index
+    // match Levenshtein distance with maximum of 15
+    .With(new FuzzyMatch("mechanics", 15));
 // execute services (order of addition)
 var results = await context.Search("quantum physics");
 // do anything you need with LINQ
-var scientific = results.Where(result => result.Url.Contains("scien"));
+var scientific = results.Where(result => result.Url.Contains("wikipedia"));
 
 foreach (var result in scientific) {
     Console.WriteLine($"{result.Url} ${result.Description}");

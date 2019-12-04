@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using PickAll.PostProcessors;
 
 namespace PickAll.Simple
 {
@@ -8,10 +9,10 @@ namespace PickAll.Simple
     {
         static async Task Main(string[] args)
         {
-            var context = SearchContext.Default();
+            var context = SearchContext.Default()
+                .With(new FuzzyMatch("Steve Jobs Biography", 10));
             var results = await context.Search("steve jobs");
-            var filtered = results.Where(result =>
-                result.Description.ToLower().Contains("apple"));
+            var filtered = results;
 
             foreach(var result in filtered)
             {
