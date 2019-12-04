@@ -55,8 +55,8 @@ var results = await context.Search("quantum physics");
 // do anything you need with LINQ
 var scientific = results.Where(result => result.Url.Contains("scien"));
 
-foreach (var result in results) {
-    Console.WriteLine($"{result.Url}");
+foreach (var result in scientific) {
+    Console.WriteLine($"{result.Url} ${result.Description}");
 }
 ```
 
