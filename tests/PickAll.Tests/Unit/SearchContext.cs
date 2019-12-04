@@ -88,7 +88,7 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void Removed_searcher_doent_produce_results()
+        public void Removed_searcher_doesnt_produce_results()
         {
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
@@ -97,6 +97,18 @@ namespace PickAll.Tests.Unit
             var results = context.Search("query").GetAwaiter().GetResult();
 
             Assert.Equal(5, results.Count());
+        }
+
+        [Fact]
+        public void Removed_post_processor_doesnt_take_effect()
+        {
+            var context = new SearchContext()
+                .With<Searcher_with_five_results>()
+                .With(new MarkPostProcessor("STAMP"))
+                .Without<MarkPostProcessor>();
+            var results = context.Search("query").GetAwaiter().GetResult();
+
+            Assert.All(results, result => Assert.False(result.Description.StartsWith("STAMP")));
         }
     }
 }
