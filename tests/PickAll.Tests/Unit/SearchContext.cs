@@ -86,5 +86,17 @@ namespace PickAll.Tests.Unit
 
             Assert.Equal(expected, results.ElementAt(0).Description);
         }
+
+        [Fact]
+        public void Removed_searcher_doent_produce_results()
+        {
+            var context = new SearchContext()
+                .With<Searcher_with_three_results>()
+                .With<Searcher_with_five_results>()
+                .Without<Searcher_with_three_results>();
+            var results = context.Search("query").GetAwaiter().GetResult();
+
+            Assert.Equal(5, results.Count());
+        }
     }
 }
