@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AngleSharp;
+using PickAll.Searchers;
+using PickAll.PostProcessors;
 
 namespace PickAll
 {
@@ -100,10 +102,10 @@ namespace PickAll
             var @default = new SearchContext();
             @default._services = new object[]
                 {
-                    CreateService<GoogleSearcher>(@default._context),
-                    CreateService<DuckDuckGoSearcher>(@default._context),
-                    CreateService<UniquenessPostProcessor>(),
-                    CreateService<OrderPostProcessor>()
+                    CreateService<Google>(@default._context),
+                    CreateService<DuckDuckGo>(@default._context),
+                    CreateService<Uniqueness>(),
+                    CreateService<Order>()
                 };
             return @default;
         }

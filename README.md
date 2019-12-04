@@ -15,14 +15,14 @@ $ cd pickall
 $ dotnet build -c Release.
 
 # execute sample
-$ ./artifacts/PickAll.Simple/Release/netcoreapp3.0/PickAll.Simple
-[0] GOOGLE: "Guida a .NET Core | Microsoft Docs": "https://docs.microsoft.com/it-it/dotnet/core/"
-[0] DUCKDUCKGO: ".NET Core Guide | Microsoft Docs": "https://docs.microsoft.com/en-us/dotnet/core/"
-[1] GOOGLE: "Introduzione a .NET Core": "https://docs.microsoft.com/it-it/dotnet/core/get-started"
-[2] GOOGLE: "Informazioni su .NET Core": "https://docs.microsoft.com/it-it/dotnet/core/about"
-[2] DUCKDUCKGO: "About .NET Core | Microsoft Docs": "https://docs.microsoft.com/en-us/dotnet/core/about"
-[3] GOOGLE: "Compilare un'applicazione ...": "https://docs.microsoft.com/it-it/dotnet/core/tutorials/with-visual-studio"
-...
+$ ./artifacts/PickAll.Simple/Debug/netcoreapp3.0/PickAll.Simple
+[5] DUCKDUCKGO: "Brief History of Steve Jobs and Apple": "https://www.thebalancecareers.com/industry-spotlight-steve-jobs-38936"
+[10] GOOGLE: "Apple Inc.": "https://en.wikipedia.org/wiki/Apple_Inc."
+[12] DUCKDUCKGO: "Steve Jobs and the Apple Story - Investopedia": "https://www.investopedia.com/articles/fundamental-analysis/12/steve-jobs-apple-story.asp"
+[13] GOOGLE: "In ricordo di Steve Jobs - Apple (IT)": "https://www.apple.com/it/stevejobs/"
+[14] GOOGLE: "Remembering Steve Jobs - Apple": "https://www.apple.com/stevejobs/"
+[17] GOOGLE: "Steve Jobs - Apple, Family & Death - Biography": "https://www.biography.com/business-figure/steve-jobs"
+[19] DUCKDUCKGO: "Steve Jobs | Biography, Apple, & Facts | Britannica": "https://www.britannica.com/biography/Steve-Jobs
 ```
 
 # Test
@@ -42,14 +42,18 @@ $ dotnet test
 ## At a glance
 ```csharp
 using PickAll;
+using PickAll.Searchers;
+using PickAll.PostProcessors;
 
 var context = new SearchContext()
-    .With<GoogleSearcher>() // search on google.com
-    .With<DuckDuckGoSearcher>() // search on duckduckgo.com
-    .With<UniquenessPostProcessor>() // remove duplicates
-    .With<OrderPostProcessor>(); // order results by index
+    .With<Google>() // search on google.com
+    .With<DuckDuckGo>() // search on duckduckgo.com
+    .With<Uniqueness>() // remove duplicates
+    .With<Order>(); // order results by index
 // execute services (order of addition)
-var results = context.Search("hello web");
+var results = await context.Search("quantum physics");
+// do anything you need with LINQ
+var scientific = results.Where(result => result.Url.Contains("scien"));
 
 foreach (var result in results) {
     Console.WriteLine($"{result.Url}");

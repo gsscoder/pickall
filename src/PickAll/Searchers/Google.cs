@@ -6,17 +6,17 @@ using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Dom;
 
-namespace PickAll
+namespace PickAll.Searchers
 {
     /// <summary>
     /// <see cref="Searcher"> that searches on Google search engine.
     /// </summary>
-    public class GoogleSearcher : Searcher
+    public class Google : Searcher
     {
         private static readonly Regex _normalizeUrlRegEx = new Regex(@"^/url\?q=([^&]*)&.*",
             RegexOptions.Compiled);
 
-        public GoogleSearcher() : base()  
+        public Google() : base()  
         {
         }
 

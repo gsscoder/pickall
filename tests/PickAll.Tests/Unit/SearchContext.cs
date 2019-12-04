@@ -1,5 +1,6 @@
 using System.Linq;
 using Xunit;
+using PickAll.PostProcessors;
 using PickAll.Tests.Fakes;
 
 namespace PickAll.Tests.Unit
@@ -44,7 +45,7 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
-                .With<UniquenessPostProcessor>();
+                .With<Uniqueness>();
             var results = context.Search("query").GetAwaiter().GetResult();
 
             Assert.Equal(firstFakeResults + secondFakeResults - 2, results.Count());
@@ -62,7 +63,7 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
-                .With<OrderPostProcessor>();
+                .With<Order>();
             var results = context.Search("query").GetAwaiter().GetResult();
 
             Assert.Equal(0, results.ElementAt(0).Index);

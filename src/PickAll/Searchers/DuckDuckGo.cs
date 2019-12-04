@@ -5,14 +5,14 @@ using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Dom;
 
-namespace PickAll
+namespace PickAll.Searchers
 {
     /// <summary>
     /// <see cref="Searcher"> that searches on DuckDuckGo search engine.
     /// </summary>
-    public class DuckDuckGoSearcher : Searcher
+    public class DuckDuckGo : Searcher
     {
-        public DuckDuckGoSearcher() : base()  
+        public DuckDuckGo() : base()  
         {
         }
 
