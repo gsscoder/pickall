@@ -16,7 +16,7 @@ namespace PickAll
         private static readonly Regex _normalizeUrlRegEx = new Regex(@"^/url\?q=([^&]*)&.*",
             RegexOptions.Compiled);
 
-        public GoogleSearcher(IBrowsingContext context) : base(context)  
+        public GoogleSearcher() : base()  
         {
         }
 

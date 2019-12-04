@@ -14,8 +14,6 @@ namespace PickAll
         private readonly IBrowsingContext _context = BrowsingContext.New(
             Configuration.Default.WithDefaultLoader());
         private IEnumerable<object> _services =  new object[] {};
-        private object WithContext<T>() => Activator.CreateInstance(typeof(T), _context);
-        private static T WithoutContext<T>() => Activator.CreateInstance<T>();
 
         /// <summary>
         /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
@@ -26,10 +24,10 @@ namespace PickAll
         public SearchContext With<T>()
         {
             if (typeof(T).IsSubclassOf(typeof(Searcher))) {
-                _services = _services.CloneWith(WithContext<T>());
+                _services = _services.CloneWith(CreateService<T>(_context));
             }
             else if (typeof(IPostProcessor).IsAssignableFrom(typeof(T))) {
-                _services = _services.CloneWith(WithoutContext<T>());
+                _services = _services.CloneWith(CreateService<T>());
             }
             else {
                 throw new NotSupportedException(
@@ -97,15 +95,29 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"> instance.</returns>
         public static SearchContext Default()
         {
-            var context = new SearchContext();
-            context._services = new object[]
+            var @default = new SearchContext();
+            @default._services = new object[]
                 {
-                    context.WithContext<GoogleSearcher>(),
-                    context.WithContext<DuckDuckGoSearcher>(),
-                    WithoutContext<UniquenessPostProcessor>(),
-                    WithoutContext<OrderPostProcessor>()
+                    CreateService<GoogleSearcher>(@default._context),
+                    CreateService<DuckDuckGoSearcher>(@default._context),
+                    CreateService<UniquenessPostProcessor>(),
+                    CreateService<OrderPostProcessor>()
                 };
-            return context;
+            return @default;
+        }
+
+        private static object CreateService<T>(IBrowsingContext context = null)
+        {
+            if (typeof(T).IsSubclassOf(typeof(Searcher))) {
+                var service = (Searcher)Activator.CreateInstance(typeof(T));
+                service.Context = context;
+                return service;
+            }
+            else if (typeof(IPostProcessor).IsAssignableFrom(typeof(T))) {
+                return Activator.CreateInstance(typeof(T));
+            }
+            throw new NotSupportedException(
+                "T must inherit from Searcher or implements IPostProcessor");
         }
     }
 }

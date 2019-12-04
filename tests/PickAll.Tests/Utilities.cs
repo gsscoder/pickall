@@ -9,7 +9,8 @@ namespace PickAll.Tests
     {
         public static async Task<int> GetFakeSearcherResultsCount<T>()
         {
-            var searcher = (Searcher)Activator.CreateInstance(typeof(T), new EmptyBrowsingContext());
+            var searcher = (Searcher)Activator.CreateInstance(typeof(T));
+            searcher.Context = new EmptyBrowsingContext();
             var results = await searcher.Search("nothing");
             return results.Count();
         }

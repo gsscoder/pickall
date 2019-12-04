@@ -10,19 +10,22 @@ namespace PickAll
     /// </summary>
     public abstract class Searcher
     {
-        private readonly IBrowsingContext _context;
+        private IBrowsingContext _context;
 
-        protected Searcher(IBrowsingContext context)
+        protected Searcher()
         {
-            if (context == null) throw new ArgumentNullException(nameof(context),
-                $"{nameof(context)} cannot be null");
-
-            _context = context;
         }
 
-        protected IBrowsingContext Context
+        public IBrowsingContext Context
         {
             get { return _context; }
+            
+            set {
+                if (_context != null) {
+                    throw new InvalidOperationException("Context cannot be set more the once");
+                }
+                _context = value;
+            }
         }
 
         /// <summary>

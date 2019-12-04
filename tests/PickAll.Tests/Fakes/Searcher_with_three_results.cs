@@ -7,7 +7,7 @@ namespace PickAll.Tests.Fakes
 {
     public class Searcher_with_three_results : Searcher
     {
-        public Searcher_with_three_results(IBrowsingContext context) : base(context)
+        public Searcher_with_three_results() : base()
         {
         }
 

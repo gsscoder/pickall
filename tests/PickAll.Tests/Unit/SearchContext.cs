@@ -79,8 +79,9 @@ namespace PickAll.Tests.Unit
                 .With(new MarkPostProcessor("STAMP/2"));
             var results = context.Search("query").GetAwaiter().GetResult();
 
-            var searcherResults = new Searcher_with_five_results(
-                new EmptyBrowsingContext()).Search("query").GetAwaiter().GetResult();
+            var searcher = new Searcher_with_five_results();
+            searcher.Context = new EmptyBrowsingContext();
+            var searcherResults = searcher.Search("query").GetAwaiter().GetResult();
             var expected = $"STAMP/2|STAMP/1|{searcherResults.ElementAt(0).Description}";
 
             Assert.Equal(expected, results.ElementAt(0).Description);
