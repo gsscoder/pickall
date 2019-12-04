@@ -14,6 +14,8 @@ namespace PickAll
         private readonly IBrowsingContext _context = BrowsingContext.New(
             Configuration.Default.WithDefaultLoader());
         private IEnumerable<object> _services =  new object[] {};
+        private bool IsSearcher<T>() => typeof(T).IsSubclassOf(typeof(Searcher)); 
+        private bool IsPostProcessor<T>() => typeof(IPostProcessor).IsAssignableFrom(typeof(T));
 
         /// <summary>
         /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
@@ -23,10 +25,10 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
         public SearchContext With<T>()
         {
-            if (typeof(T).IsSubclassOf(typeof(Searcher))) {
+            if (IsSearcher<T>()) {
                 _services = _services.CloneWith(CreateService<T>(_context));
             }
-            else if (typeof(IPostProcessor).IsAssignableFrom(typeof(T))) {
+            else if (IsPostProcessor<T>()) {
                 _services = _services.CloneWith(CreateService<T>());
             }
             else {
@@ -50,10 +52,10 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"> instance with the given service removed.</returns>
         public SearchContext Without<T>()
         {
-            if (typeof(T).IsSubclassOf(typeof(Searcher))) {
+            if (IsSearcher<T>()) {
                 _services = _services.CloneWithout<T>();
             }
-            else if (typeof(IPostProcessor).IsAssignableFrom(typeof(T))) {
+            else if (IsPostProcessor<T>()) {
                 _services = _services.CloneWithout<T>();
             }
             else {
