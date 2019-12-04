@@ -16,7 +16,7 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void When_two_searches_are_set_Search_returns_a_merged_collection()
+        public void When_two_searchers_are_set_Search_returns_a_merged_collection()
         {
             var firstFakeResults =
                 Utilities.GetFakeSearcherResultsCount<Searcher_with_three_results>()
