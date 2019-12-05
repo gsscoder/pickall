@@ -48,7 +48,7 @@ using PickAll.PostProcessors;
 
 var context = new SearchContext()
     .With<Google>() // search on google.com
-    .With<DuckDuckGo>() // search on duckduckgo.com
+    .With("DuckDuckGo") // search on duckduckgo.com
     .With<Uniqueness>() // remove duplicates
     .With<Order>() // order results by index
     // match Levenshtein distance with maximum of 15
