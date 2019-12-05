@@ -10,10 +10,12 @@ namespace PickAll
     /// </summary>
     public abstract class Searcher
     {
+        private readonly string _name;
         private IBrowsingContext _context;
 
         protected Searcher()
         {
+            _name = GetType().Name;
         }
 
         public IBrowsingContext Context
@@ -36,9 +38,12 @@ namespace PickAll
         public abstract Task<IEnumerable<ResultInfo>> Search(string query);
 
         /// <summary>
-        /// The searcher identifier.
+        /// The searcher identifier set to class name.
         /// </summary>
-        public abstract string Name { get; }
+        public string Name
+        {
+            get { return _name; }
+        }
 
         protected ResultInfo CreateResult(ushort index, string url, string description)
         {

@@ -17,7 +17,7 @@ namespace PickAll.Simple
             foreach(var result in filtered)
             {
                 Console.WriteLine(
-                    $"[{result.Index}] {result.Originator.ToUpper()}: \"{result.Description}\": \"{result.Url}\"");
+                    $"[{result.Index}] {result.Originator}: \"{result.Description}\": \"{result.Url}\"");
             }
         }
     }

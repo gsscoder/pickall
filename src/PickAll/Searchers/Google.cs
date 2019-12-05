@@ -36,11 +36,6 @@ namespace PickAll.Searchers
             }
         }
 
-        public override string Name
-        {
-            get { return "google"; }
-        }
-
         private static bool Validate(string url)
         {
             return url.StartsWith($"/url?") &&

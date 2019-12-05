@@ -29,10 +29,5 @@ namespace PickAll.Searchers
                 }
             }
         }
-
-        public override string Name
-        {
-            get { return "duckduckgo"; }
-        }
     }
 }
