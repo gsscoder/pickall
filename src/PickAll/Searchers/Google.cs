@@ -27,13 +27,18 @@ namespace PickAll.Searchers
                 var form = document.QuerySelector<IHtmlFormElement>("form[action='/search']");
                 using (var result = await form.SubmitAsync(
                     new { q = query })) {
+                    // Take only valid URLs
                     var links = from anchor in result.QuerySelectorAll<IHtmlAnchorElement>("a")
                                 where Validate(anchor.Attributes["href"].Value)
                                 select anchor;
-
-                    return links.Select((link, index) =>
+                    // Create results normalizing URLs
+                    var results = links.Select((link, index) =>
                         CreateResult((ushort)index, Normalize(link.Attributes["href"].Value),
                             link.FirstChildText("div", "span")));
+                    // Discard ones without description (not actual results)
+                    return from @this in results
+                           where @this.Description.Trim() != string.Empty
+                           select @this;
                 }
             }
         }
