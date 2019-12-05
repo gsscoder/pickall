@@ -21,7 +21,7 @@ namespace PickAll.Simple
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
                 context = context.With(new FuzzyMatch(options.FuzzyMatch, 10));
             }
-            var results = await context.Search(options.Query);
+            var results = await context.SearchAsync(options.Query);
             var filtered = results;
 
             foreach(var result in filtered) {

@@ -16,13 +16,13 @@ namespace PickAll.Tests
         public static IEnumerable<ResultInfo> SearchSync(this Searcher searcher,
             string query = "none")
         {
-            return searcher.Search(query).GetAwaiter().GetResult();
+            return searcher.SearchAsync(query).GetAwaiter().GetResult();
         }
 
         public static IEnumerable<ResultInfo> SearchSync(this SearchContext context,
             string query = "none")
         {
-            return context.Search(query).GetAwaiter().GetResult();
+            return context.SearchAsync(query).GetAwaiter().GetResult();
         }
     }
 }

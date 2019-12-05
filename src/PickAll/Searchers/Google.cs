@@ -20,7 +20,7 @@ namespace PickAll.Searchers
         {
         }
 
-        public override async Task<IEnumerable<ResultInfo>> Search(string query)
+        public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
             using (var document = await Context.OpenAsync("https://www.google.com/")) {
                 var form = document.QuerySelector<IHtmlFormElement>("form[action='/search']");

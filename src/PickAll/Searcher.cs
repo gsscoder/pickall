@@ -35,7 +35,7 @@ namespace PickAll
         /// </summary>
         /// <param name="query">A query string.</param>
         /// <returns>A collection of <see cref="ResultInfo"> with search results.</returns>
-        public abstract Task<IEnumerable<ResultInfo>> Search(string query);
+        public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
 
         /// <summary>
         /// The searcher identifier set to class name.

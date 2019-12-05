@@ -11,7 +11,7 @@ namespace PickAll.Tests.Fakes
         {
         }
 
-        public override async Task<IEnumerable<ResultInfo>> Search(string query)
+        public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
             var results = new ResultInfo[] {
                 CreateResult(0, "http://nonsense.org/", "Nothing useful"),
