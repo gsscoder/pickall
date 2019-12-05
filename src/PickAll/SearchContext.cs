@@ -20,7 +20,8 @@ namespace PickAll
         private bool IsPostProcessor<T>() => typeof(IPostProcessor).IsAssignableFrom(typeof(T));
 
         /// <summary>
-        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
+        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
+        /// using type.
         /// </summary>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
         /// implements <see cref="IPostProcessor">.</typeparam>
@@ -40,8 +41,20 @@ namespace PickAll
             return this;
         }
 
-        public SearchContext With<T>(T service) where T : IPostProcessor
+        /// <summary>
+        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
+        /// implements <see cref="IPostProcessor">.</typeparam>
+        /// <returns><A <see cref="SearchContext"> with the given service added./returns>
+        /// <returns></returns>
+        public SearchContext With<T>(T service)
         {
+            if (!IsSearcher<T>() && !IsPostProcessor<T>()) {
+                throw new NotSupportedException(
+                    $"${nameof(service)} must inherit from Searcher or implements IPostProcessor");
+            }
             _services = _services.CloneWith(service);
             return this;
         }
