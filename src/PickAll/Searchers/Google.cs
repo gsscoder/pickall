@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,9 @@ namespace PickAll.Searchers
                 var form = document.QuerySelector<IHtmlFormElement>("form[action='/search']");
                 using (var result = await form.SubmitAsync(
                     new { q = query })) {
-                    var links = result.QuerySelectorAll<IHtmlAnchorElement>("a").Where(
-                        a => Validate(a.GetAttribute("href")));
+                    var links = from anchor in result.QuerySelectorAll<IHtmlAnchorElement>("a")
+                                where Validate(anchor.Attributes["href"].Value)
+                                select anchor;
 
                     return links.Select((link, index) =>
                         CreateResult((ushort)index, Normalize(link.Attributes["href"].Value),
@@ -38,7 +40,8 @@ namespace PickAll.Searchers
 
         private static bool Validate(string url)
         {
-            return url.StartsWith("/url?") &&
+            return
+                url.StartsWith("/url?") &&
                 !url.StartsWith("/url?q=http://webcache.googleusercontent.com");
         }
 
