@@ -57,8 +57,8 @@ namespace PickAll.Tests.Unit
                 .With<Order>();
             var results = context.SearchSync();
 
-            Assert.Equal(0, results.ElementAt(0).Index);
-            Assert.Equal(0, results.ElementAt(1).Index);
+            Assert.Equal(0, results.First().Index);
+            Assert.Equal(0, results.Second().Index);
         }
 
         [Fact]
@@ -72,9 +72,9 @@ namespace PickAll.Tests.Unit
             var results = context.SearchSync();
 
             var expected = Utilities.SearcherFor<Searcher_with_five_results, string>(
-                searcher => $"STAMP/2|STAMP/1|{searcher.SearchSync().ElementAt(0).Description}");
+                searcher => $"STAMP/2|STAMP/1|{searcher.SearchSync().First().Description}");
 
-            Assert.Equal(expected, results.ElementAt(0).Description);
+            Assert.Equal(expected, results.First().Description);
         }
 
         [Fact]
