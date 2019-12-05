@@ -10,7 +10,7 @@ namespace PickAll.PostProcessors
     {
         public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
-            return results.DistinctBy(result => result.Url);
+            return await Task.Run(() => results.DistinctBy(result => result.Url));
         }
     }
 }

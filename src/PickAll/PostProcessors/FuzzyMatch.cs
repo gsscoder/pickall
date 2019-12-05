@@ -29,13 +29,13 @@ namespace PickAll.PostProcessors
 
         public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
-            return 
+            return await Task.Run(() =>
                 from computed in 
                     from result in results
                     select new {result = result,
                                 distance = LevenshteinDistance(_text, result.Description)}
                     where computed.distance >= _minimumDistance && computed.distance <= _maximumDistance
-                select computed.result;
+                select computed.result);
         }
 
         // Based on https://www.dotnetperls.com/levenshtein.

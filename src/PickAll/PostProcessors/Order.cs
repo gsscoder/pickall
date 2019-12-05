@@ -11,7 +11,7 @@ namespace PickAll.PostProcessors
     {
         public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
-            return results.OrderBy(result => result.Index);
+            return await Task.Run(() =>results.OrderBy(result => result.Index));
         }
     }
 }

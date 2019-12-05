@@ -12,9 +12,9 @@ namespace PickAll.Tests.Fakes
             _stamp = stamp;
         }
 
-        public Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
+        public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
-            return Task.Run(() => _());
+            return await Task.Run(() => _());
             IEnumerable<ResultInfo> _() {
                 foreach (var result in results) {
                     yield return new ResultInfo(result.Originator, result.Index, result.Url,
