@@ -17,8 +17,16 @@ namespace PickAll
             Configuration.Default.WithDefaultLoader());
         private IEnumerable<object> _services =  new object[] {};
         private static bool IsSearcher<T>() => typeof(T).IsSubclassOf(typeof(Searcher)); 
+        private static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
         private static bool IsPostProcessor<T>() => typeof(IPostProcessor).IsAssignableFrom(typeof(T));
+        private static bool IsPostProcessor(Type type) => typeof(IPostProcessor).IsAssignableFrom(type);
 
+#if DEBUG
+        public IEnumerable<object> Services
+        {
+            get { return _services; }
+        }
+#endif
         /// <summary>
         /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
         /// using type.
@@ -59,6 +67,29 @@ namespace PickAll
                     $"${nameof(service)} must inherit from Searcher or implements IPostProcessor");
             }
             _services = _services.CloneWith(service);
+            return this;
+        }
+
+        public SearchContext With(string serviceName)
+        {
+            if (serviceName == null) {
+                throw new ArgumentNullException($"{nameof(serviceName)} cannot be null");
+            }
+            if (serviceName.Trim() == string.Empty) {
+                throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
+            }
+            var type = Type.GetType($"PickAll.Searchers.{serviceName}", false);
+            if (type == null) {
+                type = Type.GetType($"PickAll.PostProcessors.{serviceName}", false);
+                if (type == null) {
+                    throw new NotSupportedException($"{serviceName} service not found");
+                }
+            }
+            if (!IsSearcher(type) && !IsPostProcessor(type)) {
+                throw new NotSupportedException(
+                    $"${nameof(serviceName)} must inherit from Searcher or implements IPostProcessor");
+            }
+            _services = _services.CloneWith(CreateService(type, _context));
             return this;
         }
 
@@ -135,6 +166,20 @@ namespace PickAll
             }
             else if (IsPostProcessor<T>()) {
                 return Activator.CreateInstance(typeof(T));
+            }
+            throw new NotSupportedException(
+                "T must inherit from Searcher or implements IPostProcessor");
+        }
+
+        private static object CreateService(Type type, IBrowsingContext context = null)
+        {
+            if (IsSearcher(type)) {
+                var service = (Searcher)Activator.CreateInstance(type);
+                service.Context = context;
+                return service;
+            }
+            else if (IsPostProcessor(type)) {
+                return Activator.CreateInstance(type);
             }
             throw new NotSupportedException(
                 "T must inherit from Searcher or implements IPostProcessor");

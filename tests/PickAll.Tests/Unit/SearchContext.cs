@@ -8,6 +8,28 @@ namespace PickAll.Tests.Unit
     public class SearchContextTests
     {
         [Fact]
+        public void Can_add_searcher_service_by_name()
+        {
+            var context = new SearchContext()
+                .With("DuckDuckGo");
+            
+            Assert.Single(context.Services);
+            Assert.Collection(context.Services,
+                item => Assert.Equal("DuckDuckGo", ((Searcher)item).Name));
+        }
+
+        [Fact]
+        public void Can_add_post_processor_service_by_name()
+        {
+            var context = new SearchContext()
+                .With("Uniqueness");
+            
+            Assert.Single(context.Services);
+            Assert.Collection(context.Services,
+                item => Assert.True(typeof(IPostProcessor).IsAssignableFrom(item.GetType())));
+        }
+
+        [Fact]
         public void When_none_searcher_is_set_Search_returns_an_empty_collection()
         {
             var context = new SearchContext();
