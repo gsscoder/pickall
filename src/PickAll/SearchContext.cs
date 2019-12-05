@@ -16,8 +16,8 @@ namespace PickAll
         private readonly IBrowsingContext _context = BrowsingContext.New(
             Configuration.Default.WithDefaultLoader());
         private IEnumerable<object> _services =  new object[] {};
-        private bool IsSearcher<T>() => typeof(T).IsSubclassOf(typeof(Searcher)); 
-        private bool IsPostProcessor<T>() => typeof(IPostProcessor).IsAssignableFrom(typeof(T));
+        private static bool IsSearcher<T>() => typeof(T).IsSubclassOf(typeof(Searcher)); 
+        private static bool IsPostProcessor<T>() => typeof(IPostProcessor).IsAssignableFrom(typeof(T));
 
         /// <summary>
         /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
@@ -128,12 +128,12 @@ namespace PickAll
 
         private static object CreateService<T>(IBrowsingContext context = null)
         {
-            if (typeof(T).IsSubclassOf(typeof(Searcher))) {
+            if (IsSearcher<T>()) {
                 var service = (Searcher)Activator.CreateInstance(typeof(T));
                 service.Context = context;
                 return service;
             }
-            else if (typeof(IPostProcessor).IsAssignableFrom(typeof(T))) {
+            else if (IsPostProcessor<T>()) {
                 return Activator.CreateInstance(typeof(T));
             }
             throw new NotSupportedException(
