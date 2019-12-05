@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PickAll
 {
@@ -7,6 +8,6 @@ namespace PickAll
     /// </summary>
     public interface IPostProcessor
     {
-        IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results);
+        Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results);
     }
 }

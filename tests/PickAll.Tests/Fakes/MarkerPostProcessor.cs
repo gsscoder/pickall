@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PickAll.Tests.Fakes
 {
@@ -11,11 +12,14 @@ namespace PickAll.Tests.Fakes
             _stamp = stamp;
         }
 
-        public IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
+        public Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
-            foreach (var result in results) {
-                yield return new ResultInfo(result.Originator, result.Index, result.Url,
-                    $"{_stamp}|{result.Description}");
+            return Task.Run(() => _());
+            IEnumerable<ResultInfo> _() {
+                foreach (var result in results) {
+                    yield return new ResultInfo(result.Originator, result.Index, result.Url,
+                        $"{_stamp}|{result.Description}");
+                }
             }
         }
     }

@@ -98,7 +98,7 @@ namespace PickAll
                 if (service.GetType().IsSubclassOf(typeof(Searcher))) {
                     results.AddRange(await ((Searcher)service).SearchAsync(query));
                 } else if (typeof(IPostProcessor).IsAssignableFrom(service.GetType())) {
-                    var current = ((IPostProcessor)service).Process(results);
+                    var current = await ((IPostProcessor)service).ProcessAsync(results);
                     results = new List<ResultInfo>();
                     results.AddRange(current);
                 }

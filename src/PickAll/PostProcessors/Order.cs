@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PickAll.PostProcessors
 {
@@ -8,7 +9,7 @@ namespace PickAll.PostProcessors
     /// </summary>
     public class Order : IPostProcessor
     {
-        public IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
+        public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
             return results.OrderBy(result => result.Index);
         }

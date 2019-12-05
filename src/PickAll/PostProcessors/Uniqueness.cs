@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PickAll.PostProcessors
 {
@@ -7,7 +8,7 @@ namespace PickAll.PostProcessors
     /// </summary>
     public class Uniqueness : IPostProcessor
     {
-        public IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
+        public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
             return results.DistinctBy(result => result.Url);
         }

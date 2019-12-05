@@ -54,7 +54,7 @@ var context = new SearchContext()
     // match Levenshtein distance with maximum of 15
     .With(new FuzzyMatch("mechanics", 15));
 // execute services (order of addition)
-var results = await context.Search("quantum physics");
+var results = await context.SearchAsync("quantum physics");
 // do anything you need with LINQ
 var scientific = results.Where(result => result.Url.Contains("wikipedia"));
 

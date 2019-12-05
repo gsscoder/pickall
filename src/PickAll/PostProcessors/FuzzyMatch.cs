@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PickAll.PostProcessors
 {
@@ -26,14 +27,15 @@ namespace PickAll.PostProcessors
         {
         }
 
-        public IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
+        public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
-            return from computed in 
-                       from result in results
-                       select new {result = result,
-                                   distance = LevenshteinDistance(_text, result.Description)}
-                       where computed.distance >= _minimumDistance && computed.distance <= _maximumDistance
-                   select computed.result;
+            return 
+                from computed in 
+                    from result in results
+                    select new {result = result,
+                                distance = LevenshteinDistance(_text, result.Description)}
+                    where computed.distance >= _minimumDistance && computed.distance <= _maximumDistance
+                select computed.result;
         }
 
         // Based on https://www.dotnetperls.com/levenshtein.
