@@ -11,7 +11,7 @@ namespace PickAll.Tests.Unit
         public void When_none_searcher_is_set_Search_returns_an_empty_collection()
         {
             var context = new SearchContext();
-            var result = context.Search("query").GetAwaiter().GetResult();
+            var result = context.SearchSync("query");
 
             Assert.Empty(result);
         }
@@ -19,52 +19,43 @@ namespace PickAll.Tests.Unit
         [Fact]
         public void When_two_searchers_are_set_Search_returns_a_merged_collection()
         {
-            var firstFakeResults =
-                Utilities.GetFakeSearcherResultsCount<Searcher_with_three_results>()
-                    .GetAwaiter().GetResult();
-            var secondFakeResults =
-                Utilities.GetFakeSearcherResultsCount<Searcher_with_five_results>()
-                    .GetAwaiter().GetResult();
+            var firstCount = Utilities.ResultsCountOf<Searcher_with_three_results>();
+            var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
+
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>();
-            var results = context.Search("query").GetAwaiter().GetResult();
+            var results = context.SearchSync();
 
-            Assert.Equal(firstFakeResults + secondFakeResults, results.Count());
+            Assert.Equal(firstCount + secondCount, results.Count());
         }
 
         [Fact]
         public void When_uniqueness_is_set_Search_excludes_duplicates_url()
         {
-            var firstFakeResults =
-                Utilities.GetFakeSearcherResultsCount<Searcher_with_three_results>()
-                    .GetAwaiter().GetResult();
-            var secondFakeResults =
-                Utilities.GetFakeSearcherResultsCount<Searcher_with_five_results>()
-                    .GetAwaiter().GetResult();
+            var firstCount = Utilities.ResultsCountOf<Searcher_with_three_results>();
+            var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
+            
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .With<Uniqueness>();
-            var results = context.Search("query").GetAwaiter().GetResult();
+            var results = context.SearchSync();
 
-            Assert.Equal(firstFakeResults + secondFakeResults - 2, results.Count());
+            Assert.Equal(firstCount + secondCount - 2, results.Count());
         }
 
         [Fact]
         public void When_order_is_set_Search_results_are_ordered_by_index()
         {
-            var firstFakeResults =
-                Utilities.GetFakeSearcherResultsCount<Searcher_with_three_results>()
-                    .GetAwaiter().GetResult();
-            var secondFakeResults =
-                Utilities.GetFakeSearcherResultsCount<Searcher_with_five_results>()
-                    .GetAwaiter().GetResult();
+            var firstCount = Utilities.ResultsCountOf<Searcher_with_three_results>();
+            var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
+
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .With<Order>();
-            var results = context.Search("query").GetAwaiter().GetResult();
+            var results = context.SearchSync();
 
             Assert.Equal(0, results.ElementAt(0).Index);
             Assert.Equal(0, results.ElementAt(1).Index);
@@ -78,12 +69,10 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_five_results>()
                 .With(new MarkPostProcessor("STAMP/1"))
                 .With(new MarkPostProcessor("STAMP/2"));
-            var results = context.Search("query").GetAwaiter().GetResult();
+            var results = context.SearchSync();
 
-            var searcher = new Searcher_with_five_results();
-            searcher.Context = new EmptyBrowsingContext();
-            var searcherResults = searcher.Search("query").GetAwaiter().GetResult();
-            var expected = $"STAMP/2|STAMP/1|{searcherResults.ElementAt(0).Description}";
+            var expected = Utilities.SearcherFor<Searcher_with_five_results, string>(
+                searcher => $"STAMP/2|STAMP/1|{searcher.SearchSync().ElementAt(0).Description}");
 
             Assert.Equal(expected, results.ElementAt(0).Description);
         }
@@ -95,7 +84,7 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .Without<Searcher_with_three_results>();
-            var results = context.Search("query").GetAwaiter().GetResult();
+            var results = context.SearchSync();
 
             Assert.Equal(5, results.Count());
         }
@@ -107,7 +96,7 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_five_results>()
                 .With(new MarkPostProcessor("STAMP"))
                 .Without<MarkPostProcessor>();
-            var results = context.Search("query").GetAwaiter().GetResult();
+            var results = context.SearchSync();
 
             Assert.All(results, result => Assert.False(result.Description.StartsWith("STAMP")));
         }

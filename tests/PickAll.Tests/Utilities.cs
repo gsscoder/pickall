@@ -7,21 +7,27 @@ namespace PickAll.Tests
 {
     static class Utilities
     {
-        public static async Task<int> GetFakeSearcherResultsCount<T>()
+        public static string RandomDescriptionOf<T>() where T : Searcher
         {
-            var searcher = (Searcher)Activator.CreateInstance(typeof(T));
-            searcher.Context = new EmptyBrowsingContext();
-            var results = await searcher.Search("nothing");
-            return results.Count();
+            return SearcherFor<T, string>(searcher => {
+                var results = searcher.SearchSync();
+                var index = new Random().Next(results.Count() - 1);
+                return results.ElementAt(index).Description;
+                });
         }
 
-        public static string GetRandomDescription<T>()
+         public static int ResultsCountOf<T>() where T : Searcher
         {
-            var searcher = (Searcher)Activator.CreateInstance(typeof(T));
-            searcher.Context = new EmptyBrowsingContext();
-            var results = searcher.Search("nothing").GetAwaiter().GetResult();
-            var index = new Random().Next(results.Count() - 1);
-            return results.ElementAt(index).Description;
+            return Utilities.SearcherFor<T, int>(searcher => searcher.SearchSync().Count());
         }
+
+        public static TResult SearcherFor<T, TResult>(Func<T, TResult> selector) where T : Searcher
+        {
+            var searcher = (T)Activator.CreateInstance(typeof(T));
+            (searcher as Searcher).Context = new EmptyBrowsingContext();
+            return selector(searcher);
+        }
+
+
     }
 }

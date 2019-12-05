@@ -22,10 +22,5 @@ namespace PickAll.Tests.Fakes
             };
             return await Task.Run(() => results);
         }
-        
-        // public override string Name
-        // {
-        //     get { return "fake_earcher_with_five_results"; }
-        // }
     }
 }
