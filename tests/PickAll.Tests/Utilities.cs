@@ -10,15 +10,15 @@ namespace PickAll.Tests
         public static string RandomDescriptionOf<T>() where T : Searcher
         {
             return SearcherFor<T, string>(searcher => {
-                var results = searcher.SearchSync();
+                var results = searcher.Search();
                 var index = new Random().Next(results.Count() - 1);
                 return results.ElementAt(index).Description;
                 });
         }
 
-         public static int ResultsCountOf<T>() where T : Searcher
+        public static int ResultsCountOf<T>() where T : Searcher
         {
-            return Utilities.SearcherFor<T, int>(searcher => searcher.SearchSync().Count());
+            return Utilities.SearcherFor<T, int>(searcher => searcher.Search().Count());
         }
 
         public static TResult SearcherFor<T, TResult>(Func<T, TResult> selector) where T : Searcher

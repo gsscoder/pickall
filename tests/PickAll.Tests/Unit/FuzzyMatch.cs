@@ -15,7 +15,7 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext()
                 .With<Searcher_with_five_results>()
                 .With(new FuzzyMatch(description, 0));
-            var results = context.SearchSync();
+            var results = context.Search();
 
             Assert.Single(results);
             Assert.Equal(description, results.First().Description);

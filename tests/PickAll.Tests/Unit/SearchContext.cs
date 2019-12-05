@@ -11,7 +11,7 @@ namespace PickAll.Tests.Unit
         public void When_none_searcher_is_set_Search_returns_an_empty_collection()
         {
             var context = new SearchContext();
-            var result = context.SearchSync("query");
+            var result = context.Search("query");
 
             Assert.Empty(result);
         }
@@ -25,7 +25,7 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>();
-            var results = context.SearchSync();
+            var results = context.Search();
 
             Assert.Equal(firstCount + secondCount, results.Count());
         }
@@ -40,7 +40,7 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .With<Uniqueness>();
-            var results = context.SearchSync();
+            var results = context.Search();
 
             Assert.Equal(firstCount + secondCount - 2, results.Count());
         }
@@ -55,7 +55,7 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .With<Order>();
-            var results = context.SearchSync();
+            var results = context.Search();
 
             Assert.Equal(0, results.First().Index);
             Assert.Equal(0, results.Second().Index);
@@ -69,10 +69,10 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_five_results>()
                 .With(new MarkPostProcessor("STAMP/1"))
                 .With(new MarkPostProcessor("STAMP/2"));
-            var results = context.SearchSync();
+            var results = context.Search();
 
             var expected = Utilities.SearcherFor<Searcher_with_five_results, string>(
-                searcher => $"STAMP/2|STAMP/1|{searcher.SearchSync().First().Description}");
+                searcher => $"STAMP/2|STAMP/1|{searcher.Search().First().Description}");
 
             Assert.Equal(expected, results.First().Description);
         }
@@ -84,7 +84,7 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .Without<Searcher_with_three_results>();
-            var results = context.SearchSync();
+            var results = context.Search();
 
             Assert.Equal(5, results.Count());
         }
@@ -96,7 +96,7 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_five_results>()
                 .With(new MarkPostProcessor("STAMP"))
                 .Without<MarkPostProcessor>();
-            var results = context.SearchSync();
+            var results = context.Search();
 
             Assert.All(results, result => Assert.False(result.Description.StartsWith("STAMP")));
         }
