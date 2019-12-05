@@ -51,6 +51,9 @@ namespace PickAll
         /// <returns></returns>
         public SearchContext With<T>(T service)
         {
+            if (service == null) {
+                throw new ArgumentNullException($"{nameof(service)} cannot be null");
+            }
             if (!IsSearcher<T>() && !IsPostProcessor<T>()) {
                 throw new NotSupportedException(
                     $"${nameof(service)} must inherit from Searcher or implements IPostProcessor");
