@@ -38,8 +38,8 @@ namespace PickAll.Searchers
 
         private static bool Validate(string url)
         {
-            return url.StartsWith($"/url?") &&
-                !url.StartsWith($"/url?q=http://webcache.googleusercontent.com");
+            return url.StartsWith("/url?") &&
+                !url.StartsWith("/url?q=http://webcache.googleusercontent.com");
         }
 
         private static string Normalize(string url)
