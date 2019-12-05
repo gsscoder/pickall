@@ -15,12 +15,15 @@ $ cd pickall
 $ dotnet build -c Release.
 
 # execute sample
-$ ./artifacts/PickAll.Simple/Debug/netcoreapp3.0/PickAll.Simple
-[2] DUCKDUCKGO: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
-[3] GOOGLE: "Steve Jobs (film)": "https://it.wikipedia.org/wiki/Steve_Jobs_(film)"
-[4] GOOGLE: "Steve Jobs (libro)": "https://it.wikipedia.org/wiki/Steve_Jobs_(libro)"
-[7] GOOGLE: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
-[28] DUCKDUCKGO: "Steve Jobs - Forbes": "https://www.forbes.com/profile/steve-jobs/"
+$ cd artifacts/PickAll.Simple/Debug/netcoreapp3.0
+./PickAll.Simple "Steve Jobs" --fuzzy "Steve Jobs Biography"
+[2] Google: "Steve Jobs (film)": "https://it.wikipedia.org/wiki/Steve_Jobs_(film)"
+[3] Google: "Steve Jobs (libro)": "https://it.wikipedia.org/wiki/Steve_Jobs_(libro)"
+[6] Google: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
+[13] DuckDuckGo: "Steve Jobs - Biography - IMDb": "https://www.imdb.com/name/nm0423418/bio"
+[18] Google: "Steve Jobs - Wikiquote": "https://it.wikiquote.org/wiki/Steve_Jobs"
+[18] DuckDuckGo: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
+[27] DuckDuckGo: "Steve Jobs - Forbes": "https://www.forbes.com/profile/steve-jobs/"
 ```
 
 # Test
