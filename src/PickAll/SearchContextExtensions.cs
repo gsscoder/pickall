@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 
 namespace PickAll
 {
     /// <summary>
     /// A set of useful extensions for <see cref="SearchContext">.
     /// </summary>
-    public static class SearchContextExtensions
+    public static partial class SearchContextExtensions
     {
         private static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
         private static bool IsPostProcessor(Type type) => typeof(IPostProcessor).IsAssignableFrom(type);
@@ -20,10 +21,10 @@ namespace PickAll
         {
             var type = service.GetType();
             if (IsSearcher(type)) {
-                context.Services = context.Services.CloneWith(service);
+                context.Services = context.Services.CopyWith(service);
             }
             else if (IsPostProcessor(type)) {
-                context.Services = context.Services.CloneWith(service);
+                context.Services = context.Services.CopyWith(service);
             }
             else {
                 throw new NotSupportedException(
@@ -58,10 +59,10 @@ namespace PickAll
             if (IsSearcher(type)) {
                 var searcher = (Searcher)Activator.CreateInstance(type, args);
                 searcher.Context = context.ActiveContext;
-                context.Services = context.Services.CloneWith(searcher);
+                context.Services = context.Services.CopyWith(searcher);
             }
             else if (IsPostProcessor(type)) {
-                context.Services = context.Services.CloneWith(Activator.CreateInstance(type, args));
+                context.Services = context.Services.CopyWith(Activator.CreateInstance(type, args));
             } else {
                 throw new NotSupportedException(
                     $"${nameof(serviceName)} must inherit from Searcher or implements IPostProcessor");
@@ -81,16 +82,43 @@ namespace PickAll
         {
             var type = typeof(T);
             if (IsSearcher(type)) {
-                context.Services = context.Services.CloneWithout<T>();
+                context.Services = context.Services.CopyWithout<T>();
             }
             else if (IsPostProcessor(type)) {
-                context.Services = context.Services.CloneWithout<T>();
+                context.Services = context.Services.CopyWithout<T>();
             }
             else {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or implements IPostProcessor");
             }
             return context;
-        }       
+        }
+
+        private static IEnumerable<object> CopyWith<T>(this IEnumerable<object> collection, T newElement)
+        {
+            foreach (var element in collection) {
+                yield return element;
+            }
+            yield return newElement;
+        }
+
+        private static IEnumerable<object> CopyWithout<T>(this IEnumerable<object> collection)
+        {
+            var type = typeof(T);
+            bool removed = false;
+            foreach (var element in collection) {
+                if (element.GetType() != type) {
+                    yield return element;
+                }
+                else {
+                    if (!removed) {
+                        removed = true;
+                    }
+                    else {
+                        yield return element;
+                    }
+                }
+            }
+        }
     }
 }
