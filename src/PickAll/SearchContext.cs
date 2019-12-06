@@ -20,6 +20,7 @@ namespace PickAll
         private static bool IsSearcher<T>() => IsSearcher(typeof(T)); 
         private static bool IsPostProcessor(Type type) => typeof(IPostProcessor).IsAssignableFrom(type);
         private static bool IsPostProcessor<T>() => IsPostProcessor(typeof(T));
+        private static object CreateService<T>(IBrowsingContext context) => CreateService(typeof(T), context);
 
 #if DEBUG
         public IEnumerable<object> Services
@@ -40,7 +41,7 @@ namespace PickAll
                 _services = _services.CloneWith(CreateService<T>(_context));
             }
             else if (IsPostProcessor<T>()) {
-                _services = _services.CloneWith(CreateService<T>());
+                _services = _services.CloneWith(CreateService<T>(_context));
             }
             else {
                 throw new NotSupportedException(
@@ -75,8 +76,9 @@ namespace PickAll
         /// using service name.
         /// </summary>
         /// <param name="serviceName">Name of the service to add (case sensitive).</param>
+        /// <param name="args">Optional arguments for service constructor.</param>
         /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
-        public SearchContext With(string serviceName)
+        public SearchContext With(string serviceName, params object[] args)
         {
             if (serviceName == null) {
                 throw new ArgumentNullException($"{nameof(serviceName)} cannot be null");
@@ -95,8 +97,8 @@ namespace PickAll
                 throw new NotSupportedException(
                     $"${nameof(serviceName)} must inherit from Searcher or implements IPostProcessor");
             }
-            _services = _services.CloneWith(CreateService(type, _context));
-            return this;
+            _services = _services.CloneWith(CreateService(type, _context, args));
+            return this; 
         }
 
         /// <summary>
@@ -157,29 +159,25 @@ namespace PickAll
                 {
                     CreateService<Google>(@default._context),
                     CreateService<DuckDuckGo>(@default._context),
-                    CreateService<Uniqueness>(),
-                    CreateService<Order>()
+                    CreateService<Uniqueness>(@default._context),
+                    CreateService<Order>(@default._context)
                 };
             return @default;
         }
 
-        private static object CreateService(Type type, IBrowsingContext context = null)
+        private static object CreateService(Type type, IBrowsingContext context,
+            params object[] args)
         {
             if (IsSearcher(type)) {
-                var service = (Searcher)Activator.CreateInstance(type);
+                var service = (Searcher)Activator.CreateInstance(type, args);
                 service.Context = context;
                 return service;
             }
             else if (IsPostProcessor(type)) {
-                return Activator.CreateInstance(type);
+                return Activator.CreateInstance(type, args);
             }
             throw new NotSupportedException(
                 "T must inherit from Searcher or implements IPostProcessor");
-        }
-
-        private static object CreateService<T>(IBrowsingContext context = null)
-        {
-            return CreateService(typeof(T), context);
         }
     }
 }

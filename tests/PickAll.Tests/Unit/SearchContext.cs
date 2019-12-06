@@ -30,6 +30,17 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
+        public void Can_add_post_processor_service_with_parameters_by_name()
+        {
+            var context = new SearchContext()
+                .With("FuzzyMatch", "nothing", 0u, 10u);
+            
+            Assert.Single(context.Services);
+            Assert.Collection(context.Services,
+                item => Assert.True(typeof(IPostProcessor).IsAssignableFrom(item.GetType())));
+        }        
+
+        [Fact]
         public void When_none_searcher_is_set_Search_returns_an_empty_collection()
         {
             var context = new SearchContext();
