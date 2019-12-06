@@ -19,7 +19,7 @@ namespace PickAll.Simple
         {
             SearchContext context;
             if (options.Engines.Count() == 0) {
-                context = SearchContext.Default();
+                context = SearchContext.Default;
             } else {
                 context = new SearchContext();
                 foreach (var engine in options.Engines) {

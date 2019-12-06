@@ -10,24 +10,18 @@ namespace PickAll
     /// </summary>
     public abstract class Searcher
     {
+        private readonly IBrowsingContext _context;
         private readonly string _name;
-        private IBrowsingContext _context;
 
         protected Searcher()
         {
+            _context = SearchContext.ActiveContext;
             _name = GetType().Name;
         }
 
-        public IBrowsingContext Context
+        protected IBrowsingContext Context
         {
             get { return _context; }
-            
-            set {
-                if (_context != null) {
-                    throw new InvalidOperationException("Context cannot be set more the once");
-                }
-                _context = value;
-            }
         }
 
         /// <summary>

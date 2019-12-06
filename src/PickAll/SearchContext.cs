@@ -13,10 +13,21 @@ namespace PickAll
     /// </summary>
     public sealed class SearchContext
     {   
-        public SearchContext()
+        private readonly IEnumerable<object> _services;
+        private static readonly Lazy<IBrowsingContext> _activeContext = new Lazy<IBrowsingContext>(
+            () => BrowsingContext.New(Configuration.Default.WithDefaultLoader()));
+        private static readonly Lazy<SearchContext> _defaultContext = new Lazy<SearchContext>(
+            () => new SearchContext(new object[]
+                {
+                    new Google(),
+                    new DuckDuckGo(),
+                    new Uniqueness(),
+                    new Order()
+                }));
+
+        public SearchContext(IEnumerable<object> services = null)
         {
-            ActiveContext = BrowsingContext.New(Configuration.Default.WithDefaultLoader());
-            Services = new object[] {};
+            _services = services ?? new object[] {};
         }
 
 #if DEBUG
@@ -25,12 +36,13 @@ namespace PickAll
         internal IEnumerable<object> Services
 #endif
         {
-            get; set;
+            get { return _services; }
         }
 
-        internal IBrowsingContext ActiveContext
+
+        internal static IBrowsingContext ActiveContext
         {
-            get; private set;
+            get { return _activeContext.Value; }
         }
 
         /// <summary>
@@ -60,29 +72,11 @@ namespace PickAll
         }
 
         /// <summary>
-        /// Builds a <see cref="SearchContext"> instance, registering default services.
+        /// Gets the <see cref="SearchContext"> instance created with default services.
         /// </summary>
-        /// <returns>A <see cref="SearchContext"> instance.</returns>
-        public static SearchContext Default()
+        public static SearchContext Default
         {
-            var context = new SearchContext();
-            context.Services = new object[]
-                {
-                    SetUpService(new Google(), context.ActiveContext),
-                    SetUpService(new DuckDuckGo(), context.ActiveContext),
-                    SetUpService(new Uniqueness()),
-                    SetUpService(new Order())
-                };
-            return context;
-        }
-
-        private static object SetUpService(object service, IBrowsingContext context = null)
-        {
-            var configured = service;
-            if (context != null) {
-                ((Searcher)service).Context = context;
-            }
-            return configured;
+            get { return _defaultContext.Value; }
         }
     }
 }

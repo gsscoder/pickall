@@ -20,17 +20,11 @@ namespace PickAll
         public static SearchContext With(this SearchContext context, object service)
         {
             var type = service.GetType();
-            if (IsSearcher(type)) {
-                context.Services = context.Services.CopyWith(service);
-            }
-            else if (IsPostProcessor(type)) {
-                context.Services = context.Services.CopyWith(service);
-            }
-            else {
+            if (!IsSearcher(type) && !IsPostProcessor(type)) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or implements IPostProcessor");
             }
-            return context;
+            return new SearchContext(context.Services.CopyWith(service));
         }
 
         /// <summary>
@@ -44,19 +38,12 @@ namespace PickAll
         public static SearchContext With<T>(this SearchContext context)
         {
             var type = typeof(T);
-            if (IsSearcher(type)) {
-                var searcher = (Searcher)Activator.CreateInstance(type);
-                searcher.Context = context.ActiveContext;
-                context.Services = context.Services.CopyWith(searcher);
-            }
-            else if (IsPostProcessor(type)) {
-                context.Services = context.Services.CopyWith(Activator.CreateInstance(type));
-            }
-            else {
+            if (!IsSearcher(type) && !IsPostProcessor(type)) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or implements IPostProcessor");
             }
-            return context;
+            var service = Activator.CreateInstance<T>();
+            return new SearchContext(context.Services.CopyWith(service));
         }
 
         /// <summary>
@@ -82,18 +69,13 @@ namespace PickAll
                     throw new NotSupportedException($"{serviceName} service not found");
                 }
             }
-            if (IsSearcher(type)) {
-                var searcher = (Searcher)Activator.CreateInstance(type, args);
-                searcher.Context = context.ActiveContext;
-                context.Services = context.Services.CopyWith(searcher);
-            }
-            else if (IsPostProcessor(type)) {
-                context.Services = context.Services.CopyWith(Activator.CreateInstance(type, args));
-            } else {
+            if (!IsSearcher(type) && !IsPostProcessor(type)) {
                 throw new NotSupportedException(
-                    $"${nameof(serviceName)} must inherit from Searcher or implements IPostProcessor");
+                    "T must inherit from Searcher or implements IPostProcessor");
             }
-            return context; 
+
+            var service = Activator.CreateInstance(type, args);
+            return new SearchContext(context.Services.CopyWith(service));
         }
 
         /// <summary>
@@ -107,17 +89,11 @@ namespace PickAll
         public static SearchContext Without<T>(this SearchContext context)
         {
             var type = typeof(T);
-            if (IsSearcher(type)) {
-                context.Services = context.Services.CopyWithout<T>();
-            }
-            else if (IsPostProcessor(type)) {
-                context.Services = context.Services.CopyWithout<T>();
-            }
-            else {
+            if (!IsSearcher(type) && !IsPostProcessor(type)) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or implements IPostProcessor");
             }
-            return context;
+            return new SearchContext(context.Services.CopyWithout<T>());
         }
 
         private static IEnumerable<object> CopyWith<T>(this IEnumerable<object> collection, T newElement)
