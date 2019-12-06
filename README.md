@@ -46,10 +46,11 @@ using PickAll.Searchers;
 using PickAll.PostProcessors;
 
 var context = new SearchContext()
+    // add service by instance, type or type name
     .With(new Google()) // search on google.com
     .With("Yahoo") // search on yahoo.com
-    .With(new Uniqueness()) // remove duplicates
-    .With(new Order()) // order results by index
+    .With<Uniqueness>() // remove duplicates
+    .With<Order>() // order results by index
     // match Levenshtein distance with maximum of 15
     .With(new FuzzyMatch("mechanics", 15));
 // execute services (order of addition)

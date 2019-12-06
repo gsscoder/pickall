@@ -26,8 +26,8 @@ namespace PickAll.Simple
                     context = context.With(engine);
                 }
                 context = context
-                    .With(new Uniqueness())
-                    .With(new Order());
+                    .With<Uniqueness>()
+                    .With<Order>();
             }
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
                 context = context.With(new FuzzyMatch(options.FuzzyMatch, 10));

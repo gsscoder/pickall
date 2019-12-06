@@ -35,6 +35,32 @@ namespace PickAll
 
         /// <summary>
         /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
+        /// with a parameterless constructor.
+        /// </summary>
+        /// <param name="context">The search context to alter.</param>
+        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
+        /// implements <see cref="IPostProcessor">.</typeparam>
+        /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
+        public static SearchContext With<T>(this SearchContext context)
+        {
+            var type = typeof(T);
+            if (IsSearcher(type)) {
+                var searcher = (Searcher)Activator.CreateInstance(type);
+                searcher.Context = context.ActiveContext;
+                context.Services = context.Services.CopyWith(searcher);
+            }
+            else if (IsPostProcessor(type)) {
+                context.Services = context.Services.CopyWith(Activator.CreateInstance(type));
+            }
+            else {
+                throw new NotSupportedException(
+                    "T must inherit from Searcher or implements IPostProcessor");
+            }
+            return context;
+        }
+
+        /// <summary>
+        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
         /// using service name.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
