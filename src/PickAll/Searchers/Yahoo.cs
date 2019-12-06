@@ -22,7 +22,7 @@ namespace PickAll.Searchers
                 var form = document.QuerySelector<IHtmlFormElement>("#uh-search-form");
                 ((IHtmlInputElement)form["uh-search-box"]).Value = query;
                 using (var result = await form.SubmitAsync(form)) {
-                    var links = result.QuerySelectorAll<IHtmlAnchorElement>("#web a");
+                    var links = result.QuerySelectorAll<IHtmlAnchorElement>("#web h3.title a");
 
                     return links.Select((link, index) =>
                         CreateResult((ushort)index, link.Attributes["href"].Value, link.Text));
