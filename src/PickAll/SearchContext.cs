@@ -25,9 +25,13 @@ namespace PickAll
                     new Order()
                 }));
 
-        public SearchContext(IEnumerable<object> services = null)
+        internal SearchContext(IEnumerable<object> services)
         {
-            _services = services ?? new object[] {};
+            _services = services;
+        }
+
+        public SearchContext() : this(new object[] {})
+        {
         }
 
 #if DEBUG
