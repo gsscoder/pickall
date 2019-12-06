@@ -8,14 +8,14 @@
 # clone the repository
 $ git clone https://github.com/gsscoder/pickall.git
 
-# change the working directory
-$ cd pickall
-
 # build the package
+$ cd pickall/src/PickAll
 $ dotnet build -c Release.
 
 # execute sample
-$ cd artifacts/PickAll.Simple/Debug/netcoreapp3.0
+$ cd pickall/samples/PickAll.Simple
+$ dotnet build -c Release
+$ cd ../../artifacts/PickAll.Simple/Release/netcoreapp3.0/PickAll.Simple
 ./PickAll.Simple "Steve Jobs" -e Yahoo:DuckDuckGo --fuzzy "Steve Jobs Biography"
 [0] Yahoo: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
 [2] DuckDuckGo: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
