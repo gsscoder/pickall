@@ -10,7 +10,7 @@ namespace PickAll.Simple
                 Required = true)]
         public string Query { get; set; }
 
-        [Option('f', "fuzzy", HelpText = "Text for fuzzy matching with Levenshtein distance")]
+        [Option('f', "fuzzy", HelpText = "Fuzzy matching of Levenshtein distance 0-10")]
         public string FuzzyMatch { get; set; }
 
         [Option('e', "engines", HelpText = "Search engines to use separated by ':'",
