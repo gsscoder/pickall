@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace PickAll
 {
@@ -24,7 +23,7 @@ namespace PickAll
                 throw new NotSupportedException(
                     "T must inherit from Searcher or implements IPostProcessor");
             }
-            return new SearchContext(context.Services.CopyWith(service));
+            return new SearchContext(context.Services.Concat(service));
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace PickAll
                     "T must inherit from Searcher or implements IPostProcessor");
             }
             var service = Activator.CreateInstance<T>();
-            return new SearchContext(context.Services.CopyWith(service));
+            return new SearchContext(context.Services.Concat(service));
         }
 
         /// <summary>
@@ -75,7 +74,7 @@ namespace PickAll
             }
 
             var service = Activator.CreateInstance(type, args);
-            return new SearchContext(context.Services.CopyWith(service));
+            return new SearchContext(context.Services.Concat(service));
         }
 
         /// <summary>
@@ -93,34 +92,7 @@ namespace PickAll
                 throw new NotSupportedException(
                     "T must inherit from Searcher or implements IPostProcessor");
             }
-            return new SearchContext(context.Services.CopyWithout<T>());
-        }
-
-        private static IEnumerable<object> CopyWith<T>(this IEnumerable<object> collection, T newElement)
-        {
-            foreach (var element in collection) {
-                yield return element;
-            }
-            yield return newElement;
-        }
-
-        private static IEnumerable<object> CopyWithout<T>(this IEnumerable<object> collection)
-        {
-            var type = typeof(T);
-            bool removed = false;
-            foreach (var element in collection) {
-                if (element.GetType() != type) {
-                    yield return element;
-                }
-                else {
-                    if (!removed) {
-                        removed = true;
-                    }
-                    else {
-                        yield return element;
-                    }
-                }
-            }
+            return new SearchContext(context.Services.Remove<T>());
         }
     }
 }
