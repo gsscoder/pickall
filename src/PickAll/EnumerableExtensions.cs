@@ -33,7 +33,6 @@ namespace PickAll
             }
         }
 
-
         // Based on MoreLINQ one (/github.com/morelinq)
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(
             this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
