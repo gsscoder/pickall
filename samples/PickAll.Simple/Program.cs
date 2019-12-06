@@ -17,7 +17,18 @@ namespace PickAll.Simple
 
         static async Task<int> DoSearch(Options options)
         {
-            var context = SearchContext.Default();
+            SearchContext context;
+            if (options.Engines.Count() == 0) {
+                context = SearchContext.Default();
+            } else {
+                context = new SearchContext();
+                foreach (var engine in options.Engines) {
+                    context = context.With(engine);
+                }
+                context = context
+                    .With<Uniqueness>()
+                    .With<Order>();
+            }
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
                 context = context.With(new FuzzyMatch(options.FuzzyMatch, 10));
             }
