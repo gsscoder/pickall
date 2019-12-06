@@ -16,14 +16,13 @@ $ dotnet build -c Release.
 
 # execute sample
 $ cd artifacts/PickAll.Simple/Debug/netcoreapp3.0
-./PickAll.Simple "Steve Jobs" --fuzzy "Steve Jobs Biography"
-[2] Google: "Steve Jobs (film)": "https://it.wikipedia.org/wiki/Steve_Jobs_(film)"
-[3] Google: "Steve Jobs (libro)": "https://it.wikipedia.org/wiki/Steve_Jobs_(libro)"
-[6] Google: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
+./PickAll.Simple "Steve Jobs" -e Yahoo:DuckDuckGo --fuzzy "Steve Jobs Biography"
+[0] Yahoo: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
+[2] DuckDuckGo: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
+[8] Yahoo: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
+[10] Yahoo: "Steve Jobs – Wikipedia": "https://de.wikipedia.org/wiki/Steve_Jobs"
 [13] DuckDuckGo: "Steve Jobs - Biography - IMDb": "https://www.imdb.com/name/nm0423418/bio"
-[18] Google: "Steve Jobs - Wikiquote": "https://it.wikiquote.org/wiki/Steve_Jobs"
-[18] DuckDuckGo: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
-[27] DuckDuckGo: "Steve Jobs - Forbes": "https://www.forbes.com/profile/steve-jobs/"
+[28] DuckDuckGo: "Steve Jobs - Forbes": "https://www.forbes.com/profile/steve-jobs/"
 ```
 
 # Test
@@ -48,7 +47,7 @@ using PickAll.PostProcessors;
 
 var context = new SearchContext()
     .With<Google>() // search on google.com
-    .With("DuckDuckGo") // search on duckduckgo.com
+    .With("Yahoo") // search on yahoo.com
     .With<Uniqueness>() // remove duplicates
     .With<Order>() // order results by index
     // match Levenshtein distance with maximum of 15
