@@ -55,7 +55,7 @@ namespace PickAll
         /// <param name="service"></param>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
         /// implements <see cref="IPostProcessor">.</typeparam>
-        /// <returns><A <see cref="SearchContext"> with the given service added./returns>
+        /// <returns><A <see cref="SearchContext"> with the given service added.</returns>
         /// <returns></returns>
         public SearchContext With<T>(T service)
         {
@@ -70,6 +70,12 @@ namespace PickAll
             return this;
         }
 
+        /// <summary>
+        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
+        /// using service name.
+        /// </summary>
+        /// <param name="serviceName">Name of the service to add (case sensitive).</param>
+        /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
         public SearchContext With(string serviceName)
         {
             if (serviceName == null) {
