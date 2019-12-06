@@ -38,7 +38,9 @@ namespace PickAll.PostProcessors
                 select computed.result);
         }
 
-        // Based on https://www.dotnetperls.com/levenshtein.
+        /// <summary>
+        /// Based on https://www.dotnetperls.com/levenshtein.
+        /// </summary>
         private static uint LevenshteinDistance(string firstString, string secondString)
         {
             uint n = (uint)firstString.Length;
