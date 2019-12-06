@@ -16,10 +16,10 @@ namespace PickAll
         private readonly IBrowsingContext _context = BrowsingContext.New(
             Configuration.Default.WithDefaultLoader());
         private IEnumerable<object> _services =  new object[] {};
-        private static bool IsSearcher<T>() => typeof(T).IsSubclassOf(typeof(Searcher)); 
         private static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
-        private static bool IsPostProcessor<T>() => typeof(IPostProcessor).IsAssignableFrom(typeof(T));
+        private static bool IsSearcher<T>() => IsSearcher(typeof(T)); 
         private static bool IsPostProcessor(Type type) => typeof(IPostProcessor).IsAssignableFrom(type);
+        private static bool IsPostProcessor<T>() => IsPostProcessor(typeof(T));
 
 #if DEBUG
         public IEnumerable<object> Services
@@ -163,20 +163,6 @@ namespace PickAll
             return @default;
         }
 
-        private static object CreateService<T>(IBrowsingContext context = null)
-        {
-            if (IsSearcher<T>()) {
-                var service = (Searcher)Activator.CreateInstance(typeof(T));
-                service.Context = context;
-                return service;
-            }
-            else if (IsPostProcessor<T>()) {
-                return Activator.CreateInstance(typeof(T));
-            }
-            throw new NotSupportedException(
-                "T must inherit from Searcher or implements IPostProcessor");
-        }
-
         private static object CreateService(Type type, IBrowsingContext context = null)
         {
             if (IsSearcher(type)) {
@@ -189,6 +175,11 @@ namespace PickAll
             }
             throw new NotSupportedException(
                 "T must inherit from Searcher or implements IPostProcessor");
+        }
+
+        private static object CreateService<T>(IBrowsingContext context = null)
+        {
+            return CreateService(typeof(T), context);
         }
     }
 }
