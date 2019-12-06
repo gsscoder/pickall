@@ -16,12 +16,23 @@ namespace PickAll
 
         public static IEnumerable<object> CloneWithout<T>(this IEnumerable<object> collection)
         {
+            var type = typeof(T);
+            bool removed = false;
             foreach (var element in collection) {
-                if (element.GetType() != typeof(T)) {
+                if (element.GetType() != type) {
                     yield return element;
+                }
+                else {
+                    if (!removed) {
+                        removed = true;
+                    }
+                    else {
+                        yield return element;
+                    }
                 }
             }
         }
+
 
         // Based on MoreLINQ one (/github.com/morelinq)
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(

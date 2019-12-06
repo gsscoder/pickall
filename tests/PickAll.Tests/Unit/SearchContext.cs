@@ -56,8 +56,8 @@ namespace PickAll.Tests.Unit
             var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
 
             var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>();
+                .With(new Searcher_with_three_results())
+                .With(new Searcher_with_five_results());
             var results = context.Search();
 
             Assert.Equal(firstCount + secondCount, results.Count());
@@ -70,9 +70,9 @@ namespace PickAll.Tests.Unit
             var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
             
             var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>()
-                .With<Uniqueness>();
+                .With(new Searcher_with_three_results())
+                .With(new Searcher_with_five_results())
+                .With(new Uniqueness());
             var results = context.Search();
 
             Assert.Equal(firstCount + secondCount - 2, results.Count());
@@ -85,9 +85,9 @@ namespace PickAll.Tests.Unit
             var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
 
             var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>()
-                .With<Order>();
+                .With(new Searcher_with_three_results())
+                .With(new Searcher_with_five_results())
+                .With(new Order());
             var results = context.Search();
 
             Assert.Equal(0, results.First().Index);
@@ -99,7 +99,7 @@ namespace PickAll.Tests.Unit
         {
             var context = new SearchContext()
                 .With(new MarkPostProcessor("STAMP/0")) // unuseful here
-                .With<Searcher_with_five_results>()
+                .With(new Searcher_with_five_results())
                 .With(new MarkPostProcessor("STAMP/1"))
                 .With(new MarkPostProcessor("STAMP/2"));
             var results = context.Search();
@@ -114,8 +114,8 @@ namespace PickAll.Tests.Unit
         public void Removed_searcher_doesnt_produce_results()
         {
             var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>()
+                .With(new Searcher_with_three_results())
+                .With(new Searcher_with_five_results())
                 .Without<Searcher_with_three_results>();
             var results = context.Search();
 
@@ -126,12 +126,28 @@ namespace PickAll.Tests.Unit
         public void Removed_post_processor_doesnt_take_effect()
         {
             var context = new SearchContext()
-                .With<Searcher_with_five_results>()
+                .With(new Searcher_with_five_results())
                 .With(new MarkPostProcessor("STAMP"))
                 .Without<MarkPostProcessor>();
             var results = context.Search();
 
             Assert.All(results, result => Assert.False(result.Description.StartsWith("STAMP")));
+        }
+
+        [Fact]
+        public void Without_remove_only_first_service_of_a_given_type()
+        {
+            var context = new SearchContext()
+                .With(new Searcher_with_three_results())
+                .With(new Order())
+                .With(new Searcher_with_five_results())
+                .With(new Order())
+                .Without<Order>();
+
+            Assert.Collection(context.Services,
+                item => Assert.IsType<Searcher_with_three_results>(item),
+                item => Assert.IsType<Searcher_with_five_results>(item),
+                item => Assert.IsType<Order>(item));
         }
     }
 }

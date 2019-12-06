@@ -15,12 +15,9 @@ namespace PickAll
     {
         private readonly IBrowsingContext _context = BrowsingContext.New(
             Configuration.Default.WithDefaultLoader());
-        private IEnumerable<object> _services =  new object[] {};
+        private IEnumerable<object> _services = new object[] {};
         private static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
-        private static bool IsSearcher<T>() => IsSearcher(typeof(T)); 
         private static bool IsPostProcessor(Type type) => typeof(IPostProcessor).IsAssignableFrom(type);
-        private static bool IsPostProcessor<T>() => IsPostProcessor(typeof(T));
-        private static object CreateService<T>(IBrowsingContext context) => CreateService(typeof(T), context);
 
 #if DEBUG
         public IEnumerable<object> Services
@@ -29,45 +26,23 @@ namespace PickAll
         }
 #endif
         /// <summary>
-        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
-        /// using type.
+        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
         /// </summary>
-        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
-        /// implements <see cref="IPostProcessor">.</typeparam>
+        /// <param name="service">A service instance to register.</param>
         /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
-        public SearchContext With<T>()
+        public SearchContext With(object service)
         {
-            if (IsSearcher<T>()) {
-                _services = _services.CloneWith(CreateService<T>(_context));
+            var type = service.GetType();
+            if (IsSearcher(type)) {
+                _services = _services.CloneWith(service);
             }
-            else if (IsPostProcessor<T>()) {
-                _services = _services.CloneWith(CreateService<T>(_context));
+            else if (IsPostProcessor(type)) {
+                _services = _services.CloneWith(service);
             }
             else {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or implements IPostProcessor");
             }
-            return this;
-        }
-
-        /// <summary>
-        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
-        /// </summary>
-        /// <param name="service"></param>
-        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
-        /// implements <see cref="IPostProcessor">.</typeparam>
-        /// <returns><A <see cref="SearchContext"> with the given service added.</returns>
-        /// <returns></returns>
-        public SearchContext With<T>(T service)
-        {
-            if (service == null) {
-                throw new ArgumentNullException($"{nameof(service)} cannot be null");
-            }
-            if (!IsSearcher<T>() && !IsPostProcessor<T>()) {
-                throw new NotSupportedException(
-                    $"${nameof(service)} must inherit from Searcher or implements IPostProcessor");
-            }
-            _services = _services.CloneWith(service);
             return this;
         }
 
@@ -102,17 +77,19 @@ namespace PickAll
         }
 
         /// <summary>
-        /// Unregisters an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
+        /// Unregisters first instance of <see cref="Searcher"> or <see cref="IPostProcessor">
+        /// using type.
         /// </summary>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
         /// implements <see cref="IPostProcessor">.</typeparam>
         /// <returns>A <see cref="SearchContext"> instance with the given service removed.</returns>
         public SearchContext Without<T>()
         {
-            if (IsSearcher<T>()) {
+            var type = typeof(T);
+            if (IsSearcher(type)) {
                 _services = _services.CloneWithout<T>();
             }
-            else if (IsPostProcessor<T>()) {
+            else if (IsPostProcessor(type)) {
                 _services = _services.CloneWithout<T>();
             }
             else {
@@ -120,7 +97,7 @@ namespace PickAll
                     "T must inherit from Searcher or implements IPostProcessor");
             }
             return this;
-        }
+        }        
 
         /// <summary>
         /// Executes a search asynchronously, invoking all <see cref="Searcher">
@@ -157,10 +134,10 @@ namespace PickAll
             var @default = new SearchContext();
             @default._services = new object[]
                 {
-                    CreateService<Google>(@default._context),
-                    CreateService<DuckDuckGo>(@default._context),
-                    CreateService<Uniqueness>(@default._context),
-                    CreateService<Order>(@default._context)
+                    CreateService(typeof(Google), @default._context),
+                    CreateService(typeof(DuckDuckGo), @default._context),
+                    CreateService(typeof(Uniqueness), @default._context),
+                    CreateService(typeof(Order), @default._context)
                 };
             return @default;
         }
