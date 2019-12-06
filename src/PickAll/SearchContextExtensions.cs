@@ -5,7 +5,7 @@ namespace PickAll
     /// <summary>
     /// A set of useful extensions for <see cref="SearchContext">.
     /// </summary>
-    public static class SearchContextEtensions
+    public static class SearchContextExtensions
     {
         private static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
         private static bool IsPostProcessor(Type type) => typeof(IPostProcessor).IsAssignableFrom(type);
