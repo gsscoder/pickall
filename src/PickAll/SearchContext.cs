@@ -68,11 +68,17 @@ namespace PickAll
                     throw new NotSupportedException($"{serviceName} service not found");
                 }
             }
-            if (!IsSearcher(type) && !IsPostProcessor(type)) {
+            if (IsSearcher(type)) {
+                var searcher = (Searcher)Activator.CreateInstance(type, args);
+                searcher.Context = _context;
+                _services = _services.CloneWith(searcher);
+            }
+            else if (IsPostProcessor(type)) {
+                _services = _services.CloneWith(Activator.CreateInstance(type, args));
+            } else {
                 throw new NotSupportedException(
                     $"${nameof(serviceName)} must inherit from Searcher or implements IPostProcessor");
             }
-            _services = _services.CloneWith(CreateService(type, _context, args));
             return this; 
         }
 
@@ -134,27 +140,21 @@ namespace PickAll
             var @default = new SearchContext();
             @default._services = new object[]
                 {
-                    CreateService(typeof(Google), @default._context),
-                    CreateService(typeof(DuckDuckGo), @default._context),
-                    CreateService(typeof(Uniqueness), @default._context),
-                    CreateService(typeof(Order), @default._context)
+                    SetUpService(new Google(), @default._context),
+                    SetUpService(new DuckDuckGo(), @default._context),
+                    SetUpService(new Uniqueness()),
+                    SetUpService(new Order())
                 };
             return @default;
         }
 
-        private static object CreateService(Type type, IBrowsingContext context,
-            params object[] args)
+        private static object SetUpService(object service, IBrowsingContext context = null)
         {
-            if (IsSearcher(type)) {
-                var service = (Searcher)Activator.CreateInstance(type, args);
-                service.Context = context;
-                return service;
+            var configured = service;
+            if (context != null) {
+                ((Searcher)service).Context = context;
             }
-            else if (IsPostProcessor(type)) {
-                return Activator.CreateInstance(type, args);
-            }
-            throw new NotSupportedException(
-                "T must inherit from Searcher or implements IPostProcessor");
+            return configured;
         }
     }
 }
