@@ -38,9 +38,10 @@ namespace PickAll
             get { return _name; }
         }
 
-        protected ResultInfo CreateResult(ushort index, string url, string description)
+        protected ResultInfo CreateResult(
+            ushort index, string url, string description, object data = null)
         {
-            return new ResultInfo(Name, index, url, description);
+            return new ResultInfo(Name, index, url, description, data);
         }
     }
 }

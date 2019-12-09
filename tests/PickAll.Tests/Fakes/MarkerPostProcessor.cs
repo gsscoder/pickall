@@ -18,7 +18,7 @@ namespace PickAll.Tests.Fakes
             IEnumerable<ResultInfo> _() {
                 foreach (var result in results) {
                     yield return new ResultInfo(result.Originator, result.Index, result.Url,
-                        $"{_stamp}|{result.Description}");
+                        $"{_stamp}|{result.Description}", null);
                 }
             }
         }

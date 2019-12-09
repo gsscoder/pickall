@@ -12,7 +12,8 @@ namespace PickAll
         /// <param name="index">The result index.</param>
         /// <param name="url">The result URL.</param>
         /// <param name="description">The result description.</param>
-        public ResultInfo(string originator, ushort index, string url, string description)
+        /// <param name="data">TAdditional data supplied by the service.</param>
+        public ResultInfo(string originator, ushort index, string url, string description, object data)
         {
             Originator = originator;
             Index = index;
@@ -39,5 +40,10 @@ namespace PickAll
         /// The result description.
         /// </summary>
         public string Description { get; private set; }
+
+        /// <summary>
+        /// Additional data supplied by the service. 
+        /// </summary>
+        public object Data { get; private set; }
     } 
 }
