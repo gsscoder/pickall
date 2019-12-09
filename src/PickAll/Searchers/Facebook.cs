@@ -23,33 +23,42 @@ namespace PickAll.Searchers
 
         public class Data
         {
-            public string ProfileID;
+            public Data(string profileID, string imageUrl)
+            {
+                ProfileID = profileID;
+                ImageUrl = imageUrl;
+            }
 
-            public string ImageUrl;
+            public string ProfileID { get; private set; }
+
+            public string ImageUrl { get; private set; }
 
             public override string ToString()
             {
                 var builder = new StringBuilder();
                 if (!string.IsNullOrEmpty(ProfileID)) {
-                    builder.Append("{ProfileID: ");
+                    builder.Append("ProfileID: ");
                     builder.Append(ProfileID);
                 }
-                if (builder.Length > 0) {
-                    builder.Append(", ");
-                }
                 if (!string.IsNullOrEmpty(ImageUrl)) {
+                    if (builder.Length > 0) {
+                        builder.Append(", ");
+                    }
                     builder.Append("ImageUrl: ");
                     builder.Append(ImageUrl);
                 }
                 if (builder.Length > 0) {
-                    builder.Append("}");
+                    builder.Insert(0, '{');
+                    builder.Append('}');
                 }
                 return builder.ToString();
             }
         }
 
         private static readonly string _baseUrl = "https://m.facebook.com";
-        private static readonly Regex _profileId = new Regex(@"(?<=/).+?(?=\?)", RegexOptions.Compiled);
+        private static readonly Regex[] _profileId = {
+            new Regex(@"(?<=\?id=).+?(?=$|\?|&)", RegexOptions.Compiled),
+            new Regex(@"(?<=/).*?(?=$|/|\?|&)", RegexOptions.Compiled)};
         private readonly Options _options;
 
         public Facebook(Options options) : base()  
@@ -57,7 +66,7 @@ namespace PickAll.Searchers
             _options = options;
         }
 
-        public Facebook() : this(new Options { RetrieveImageLink = false })
+        public Facebook() : this(new Options())
         {
         }
 
@@ -74,20 +83,17 @@ namespace PickAll.Searchers
                     var link =table.QuerySelector<IHtmlAnchorElement>("td.bt.bu a")
                         .Attributes["href"].Value;
                     var description = table.QuerySelector<IHtmlDivElement>("div.bw").Text();
-                    Data data = null;
-                    Action initData = () => { if (data == null) data = new Data(); };
-                    if (_options.RetrieveImageLink)
-                    {
-                        initData();
-                        data.ImageUrl = table.QuerySelector<IHtmlImageElement>("td.bo.bp img")
+                    String profileID = null;
+                    String smallImageUrl = null;
+                    if (_options.RetrieveProfileID) {
+                        profileID = GetProfileID(link);
+                    }
+                    if (_options.RetrieveImageLink) {         
+                        smallImageUrl = table.QuerySelector<IHtmlImageElement>("td.bo.bp img")
                             .Attributes["src"].Value;
                     }
-                    if (_options.RetrieveProfileID)
-                    {
-                        initData();
-                        data.ProfileID = GetProfileID(link);
-                    }
-                    results.Add(CreateResult(index, $"{_baseUrl}{link}", description, data));
+                    results.Add(CreateResult(index, $"{_baseUrl}{link}", description,
+                        new Data(profileID, smallImageUrl)));
                     index++;
                 }
                 return results;
@@ -96,8 +102,13 @@ namespace PickAll.Searchers
 
         private static string GetProfileID(string url)
         {
-            var match = _profileId.Match(url);
-            return match.Groups.Count == 1 ? match.Groups[0].Value : url;
+            foreach (var regEx in _profileId) {
+                var match = regEx.Match(url);
+                if (match.Length > 0) {
+                    return match.Value;
+                }
+            }
+            return string.Empty;
         }
     }
 }
