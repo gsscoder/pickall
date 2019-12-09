@@ -39,8 +39,8 @@ namespace PickAll.Simple
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
                 context = context.With(new FuzzyMatch(options.FuzzyMatch, 10));
             }
-            var results = await context.SearchAsync(options.Query);
 
+            var results = await context.SearchAsync(options.Query);
             foreach (var result in results) {
                 Console.WriteLine(
                     $"[{result.Index}] {result.Originator}: \"{result.Description}\": \"{result.Url}\"");
