@@ -19,6 +19,7 @@ namespace PickAll
             Index = index;
             Url = url;
             Description = description;
+            Data = data;
         }
 
         /// <summary>

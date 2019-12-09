@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using PickAll.Searchers;
 using PickAll.PostProcessors;
 using CommandLine;
 
@@ -21,23 +22,31 @@ namespace PickAll.Simple
             if (options.Engines.Count() == 0) {
                 context = SearchContext.Default;
             } else {
+                // Exclude Facebook searcher for custom configuration
+                var engines = options.Engines.Where(engine => engine != "Facebook");
                 context = new SearchContext();
-                foreach (var engine in options.Engines) {
+                foreach (var engine in engines) {
                     context = context.With(engine);
                 }
                 context = context
                     .With<Uniqueness>()
                     .With<Order>();
+                if (options.Engines.Contains("Facebook")) {
+                    context = context.With(
+                        new Facebook(new Facebook.Options { RetrieveImageLink = true }));
+                }
             }
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
                 context = context.With(new FuzzyMatch(options.FuzzyMatch, 10));
             }
             var results = await context.SearchAsync(options.Query);
-            var filtered = results;
 
-            foreach(var result in filtered) {
+            foreach (var result in results) {
                 Console.WriteLine(
                     $"[{result.Index}] {result.Originator}: \"{result.Description}\": \"{result.Url}\"");
+                if (result.Data != null) {
+                    Console.WriteLine($"  Data:\n    {result.Data}");
+                }
             }
 
             return 0;

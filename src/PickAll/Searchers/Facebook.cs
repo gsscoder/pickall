@@ -12,9 +12,35 @@ namespace PickAll.Searchers
     /// </summary>
     public class Facebook : Searcher
     {
-        private static string _baseUrl = "https://m.facebook.com";
+        public class Options
+        {
+            public bool RetrieveImageLink;
+        }
 
-        public Facebook() : base()  
+        public class Data
+        {
+            public Data(string imageUrl)
+            {
+                ImageUrl = imageUrl;
+            }
+
+            public string ImageUrl { get; private set; }
+
+            public override string ToString()
+            {
+                return $"ImageUrl: {ImageUrl}";
+            }
+        }
+
+        private static string _baseUrl = "https://m.facebook.com";
+        private readonly Options _options;
+
+        public Facebook(Options options) : base()  
+        {
+            _options = options;
+        }
+
+        public Facebook() : this(new Options { RetrieveImageLink = false })
         {
         }
 
@@ -22,12 +48,26 @@ namespace PickAll.Searchers
         {
             var formatted = string.Join("+", query.Split());
             using (var document = await Context.OpenAsync($"{_baseUrl}/public/{formatted}")) {
-                // Select titles to focus on actual results
-                var titles = document.QuerySelectorAll<IHtmlDivElement>(
-                    "div#BrowseResultsContainer div.bw");
-
-                return titles.Select((title, index) =>
-                    CreateResult((ushort)index, GetLinkFromTitle(title), title.Text()));
+                // Results are list of tables
+                var tables = document.QuerySelectorAll<IHtmlTableElement>(
+                    "div#BrowseResultsContainer table");
+                var results = new List<ResultInfo>();
+                ushort index = 0;
+                foreach (var table in tables) {
+                    var link =table.QuerySelector<IHtmlAnchorElement>("td.bt.bu a")
+                        .Attributes["href"].Value;
+                    var description = table.QuerySelector<IHtmlDivElement>("div.bw").Text();
+                    object data = null;
+                    if (_options.RetrieveImageLink)
+                    {
+                        var imageLink = table.QuerySelector<IHtmlImageElement>("td.bo.bp img")
+                            .Attributes["src"].Value;
+                        data = new Data(imageLink);
+                    }
+                    results.Add(CreateResult(index, $"{_baseUrl}{link}", description, data));
+                    index++;
+                }
+                return results;
             }
         }
 
