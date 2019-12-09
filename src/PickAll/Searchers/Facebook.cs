@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Dom;
@@ -14,25 +16,40 @@ namespace PickAll.Searchers
     {
         public class Options
         {
+            public bool RetrieveProfileID;
+
             public bool RetrieveImageLink;
         }
 
         public class Data
         {
-            public Data(string imageUrl)
-            {
-                ImageUrl = imageUrl;
-            }
+            public string ProfileID;
 
-            public string ImageUrl { get; private set; }
+            public string ImageUrl;
 
             public override string ToString()
             {
-                return $"ImageUrl: {ImageUrl}";
+                var builder = new StringBuilder();
+                if (!string.IsNullOrEmpty(ProfileID)) {
+                    builder.Append("{ProfileID: ");
+                    builder.Append(ProfileID);
+                }
+                if (builder.Length > 0) {
+                    builder.Append(", ");
+                }
+                if (!string.IsNullOrEmpty(ImageUrl)) {
+                    builder.Append("ImageUrl: ");
+                    builder.Append(ImageUrl);
+                }
+                if (builder.Length > 0) {
+                    builder.Append("}");
+                }
+                return builder.ToString();
             }
         }
 
-        private static string _baseUrl = "https://m.facebook.com";
+        private static readonly string _baseUrl = "https://m.facebook.com";
+        private static readonly Regex _profileId = new Regex(@"(?<=/).+?(?=\?)", RegexOptions.Compiled);
         private readonly Options _options;
 
         public Facebook(Options options) : base()  
@@ -57,12 +74,18 @@ namespace PickAll.Searchers
                     var link =table.QuerySelector<IHtmlAnchorElement>("td.bt.bu a")
                         .Attributes["href"].Value;
                     var description = table.QuerySelector<IHtmlDivElement>("div.bw").Text();
-                    object data = null;
+                    Data data = null;
+                    Action initData = () => { if (data == null) data = new Data(); };
                     if (_options.RetrieveImageLink)
                     {
-                        var imageLink = table.QuerySelector<IHtmlImageElement>("td.bo.bp img")
+                        initData();
+                        data.ImageUrl = table.QuerySelector<IHtmlImageElement>("td.bo.bp img")
                             .Attributes["src"].Value;
-                        data = new Data(imageLink);
+                    }
+                    if (_options.RetrieveProfileID)
+                    {
+                        initData();
+                        data.ProfileID = GetProfileID(link);
                     }
                     results.Add(CreateResult(index, $"{_baseUrl}{link}", description, data));
                     index++;
@@ -71,13 +94,10 @@ namespace PickAll.Searchers
             }
         }
 
-        private static string GetLinkFromTitle(IHtmlDivElement title) {
-            var anchor = title.Parent.Parent as IHtmlAnchorElement;
-            if (anchor == null) {
-                return string.Empty;
-            }
-            var href = anchor.Attributes["href"].Value;
-            return $"{_baseUrl}{href}";
+        private static string GetProfileID(string url)
+        {
+            var match = _profileId.Match(url);
+            return match.Groups.Count == 1 ? match.Groups[0].Value : url;
         }
     }
 }

@@ -33,7 +33,9 @@ namespace PickAll.Simple
                     .With<Order>();
                 if (options.Engines.Contains("Facebook")) {
                     context = context.With(
-                        new Facebook(new Facebook.Options { RetrieveImageLink = true }));
+                        new Facebook(new Facebook.Options {
+                            RetrieveProfileID = true,
+                            RetrieveImageLink = true }));
                 }
             }
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
