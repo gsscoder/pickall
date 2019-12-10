@@ -16,7 +16,7 @@ $ dotnet build -c Release.
 $ cd pickall/samples/PickAll.Simple
 $ dotnet build -c Release
 $ cd ../../artifacts/PickAll.Simple/Release/netcoreapp3.0/PickAll.Simple
-./PickAll.Simple "Steve Jobs" -e Yahoo:DuckDuckGo --fuzzy "Steve Jobs Biography"
+./PickAll.Simple "Steve Jobs" -e YAHOO:DuckDuckGo --fuzzy "Steve Jobs Biography"
 [0] Yahoo: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
 [2] DuckDuckGo: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
 [8] Yahoo: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
@@ -48,7 +48,7 @@ using PickAll.PostProcessors;
 var context = new SearchContext()
     .With<Google>() // search on google.com
     .With<Yahoo>() // search on yahoo.com
-    .With("Facebook") // search on facebook.com public pages
+    .With("facebook") // search on facebook.com public pages
     .With<Uniqueness>() // remove duplicates
     .With<Order>() // order results by index
     // match Levenshtein distance with maximum of 15
