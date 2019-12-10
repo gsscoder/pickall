@@ -36,12 +36,13 @@ namespace PickAll
         /// without settings, using its type name.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
-        /// <param name="serviceName">Name of the service to register (case sensitive).</param>
+        /// <param name="serviceName">Name of the service to register (case insensitive).</param>
         /// <param name="settings">The optional settings instance for the service.</param>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext">
         /// or <see cref="PostProcessor">.</typeparam>
         /// <returns>A <see cref="SearchContext"> with the given service added.</returns>       
-        public static SearchContext With(this SearchContext context, string serviceName, object settings = null)
+        public static SearchContext With(this SearchContext context, string serviceName,
+                                         object settings = null)
         {
             if (serviceName == null) {
                 throw new ArgumentNullException($"{nameof(serviceName)} cannot be null");
@@ -50,7 +51,8 @@ namespace PickAll
                 throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
             }
             var type = context.GetType().GetTypeInfo().Assembly.GetTypes().Where(
-                @this => @this.Name == serviceName).SingleOrDefault();
+                @this => @this.Name.Equals(serviceName, StringComparison.OrdinalIgnoreCase))
+                         .SingleOrDefault();
             if (type == null) {
                 throw new NotSupportedException($"{serviceName} service not found");
             }

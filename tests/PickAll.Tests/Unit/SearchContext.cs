@@ -23,6 +23,19 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
+        public void Can_add_service_by_name_ignoring_case()
+        {
+            var context = new SearchContext()
+                .With("DUCKDUCKgo")
+                .With("uniQueness");
+            
+            Assert.Equal(2, context.Services.Count());
+            Assert.Collection(context.Services,
+                item => Assert.IsType<DuckDuckGo>(item),
+                item => Assert.IsType<Uniqueness>(item));
+        }
+
+        [Fact]
         public void Can_add_post_processor_service_with_parameters_by_name()
         {
             var context = new SearchContext()
