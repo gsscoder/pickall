@@ -9,25 +9,16 @@ namespace PickAll.Tests.Unit
     public class SearchContextTests
     {
         [Fact]
-        public void Can_add_searcher_service_by_name()
+        public void Can_add_service_by_name()
         {
             var context = new SearchContext()
-                .With("DuckDuckGo");
-            
-            Assert.Single(context.Services);
-            Assert.Collection(context.Services,
-                item => Assert.Equal("DuckDuckGo", ((Searcher)item).Name));
-        }
-
-        [Fact]
-        public void Can_add_post_processor_service_by_name()
-        {
-            var context = new SearchContext()
+                .With("DuckDuckGo")
                 .With("Uniqueness");
             
             Assert.Single(context.Services);
             Assert.Collection(context.Services,
-                item => Assert.True(item.GetType().IsSubclassOf(typeof(PostProcessor))));
+                item => Assert.IsType<DuckDuckGo>(item),
+                item => Assert.IsType<Uniqueness>(item));
         }
 
         [Fact]
@@ -38,7 +29,7 @@ namespace PickAll.Tests.Unit
             
             Assert.Single(context.Services);
             Assert.Collection(context.Services,
-                item => Assert.True(item.GetType().IsSubclassOf(typeof(PostProcessor))));
+                item => Assert.IsType<FuzzyMatch>(item));
         }
 
         [Fact]
