@@ -9,18 +9,23 @@ namespace PickAll
     /// </summary>
     public abstract class Searcher
     {
-        private readonly IBrowsingContext _context;
-        private readonly string _name;
-
-        protected Searcher()
+        public Searcher(IBrowsingContext context, object settings)
         {
-            _context = SearchContext.ActiveContext;
-            _name = GetType().Name;
+            Context = context;
+            Settings = settings;
+            Name = GetType().Name;
         }
 
         protected IBrowsingContext Context
         {
-            get { return _context; }
+            get;
+            private set;
+        }
+
+        protected object Settings
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -35,7 +40,8 @@ namespace PickAll
         /// </summary>
         public string Name
         {
-            get { return _name; }
+            get;
+            private set;
         }
 
         protected ResultInfo CreateResult(

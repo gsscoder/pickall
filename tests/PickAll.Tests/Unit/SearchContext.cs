@@ -27,18 +27,18 @@ namespace PickAll.Tests.Unit
             
             Assert.Single(context.Services);
             Assert.Collection(context.Services,
-                item => Assert.True(typeof(IPostProcessor).IsAssignableFrom(item.GetType())));
+                item => Assert.True(item.GetType().IsSubclassOf(typeof(PostProcessor))));
         }
 
         [Fact]
         public void Can_add_post_processor_service_with_parameters_by_name()
         {
             var context = new SearchContext()
-                .With("FuzzyMatch", "nothing", 0u, 10u);
+                .With("FuzzyMatch", new FuzzyMatchSettings {Text = "nothing", MaximumDistance = 10 });
             
             Assert.Single(context.Services);
             Assert.Collection(context.Services,
-                item => Assert.True(typeof(IPostProcessor).IsAssignableFrom(item.GetType())));
+                item => Assert.True(item.GetType().IsSubclassOf(typeof(PostProcessor))));
         }
 
         [Fact]
@@ -115,10 +115,11 @@ namespace PickAll.Tests.Unit
         public void Search_invokes_services_by_addition_order()
         {
             var context = new SearchContext()
-                .With(new MarkPostProcessor("STAMP/0")) // unuseful here
+                .With<MarkPostProcessor>(
+                    new MarkPostProcessorSettings{ Stamp = "STAMP/0" }) // unuseful here
                 .With<Searcher_with_five_results>()
-                .With(new MarkPostProcessor("STAMP/1"))
-                .With(new MarkPostProcessor("STAMP/2"));
+                .With<MarkPostProcessor>(new MarkPostProcessorSettings{ Stamp = "STAMP/1" })
+                .With<MarkPostProcessor>(new MarkPostProcessorSettings{ Stamp = "STAMP/2" });
             var results = context.Search();
 
             var expected = Utilities.SearcherFor<Searcher_with_five_results, string>(
@@ -144,7 +145,7 @@ namespace PickAll.Tests.Unit
         {
             var context = new SearchContext()
                 .With<Searcher_with_five_results>()
-                .With(new MarkPostProcessor("STAMP"))
+                .With<MarkPostProcessor>(new MarkPostProcessorSettings { Stamp = "STAMP"})
                 .Without<MarkPostProcessor>();
             var results = context.Search();
 

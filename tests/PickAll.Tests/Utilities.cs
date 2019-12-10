@@ -23,10 +23,8 @@ namespace PickAll.Tests
 
         public static TResult SearcherFor<T, TResult>(Func<T, TResult> selector) where T : Searcher
         {
-            var searcher = (T)Activator.CreateInstance(typeof(T));
+            var searcher = (T)Activator.CreateInstance(typeof(T), new object[] { null, null });
             return selector(searcher);
         }
-
-
     }
 }

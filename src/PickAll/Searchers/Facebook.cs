@@ -9,65 +9,64 @@ using AngleSharp.Dom;
 
 namespace PickAll.Searchers
 {
+    public class FacebookSettings
+    {
+        public bool RetrieveProfileID;
+
+        public bool RetrieveImageLink;
+    }
+
+    public class FacebookData
+    {
+        public FacebookData(string profileID, string imageUrl)
+        {
+            ProfileID = profileID;
+            ImageUrl = imageUrl;
+        }
+
+        public string ProfileID { get; private set; }
+
+        public string ImageUrl { get; private set; }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            if (!string.IsNullOrEmpty(ProfileID)) {
+                builder.Append("ProfileID: ");
+                builder.Append(ProfileID);
+            }
+            if (!string.IsNullOrEmpty(ImageUrl)) {
+                if (builder.Length > 0) {
+                    builder.Append(", ");
+                }
+                builder.Append("ImageUrl: ");
+                builder.Append(ImageUrl);
+            }
+            if (builder.Length > 0) {
+                builder.Insert(0, '{');
+                builder.Append('}');
+            }
+            return builder.ToString();
+        }
+    }
+
     /// <summary>
     /// <see cref="Searcher"> that searches on Google search engine.
     /// </summary>
     public class Facebook : Searcher
     {
-        public class Options
-        {
-            public bool RetrieveProfileID;
-
-            public bool RetrieveImageLink;
-        }
-
-        public class Data
-        {
-            public Data(string profileID, string imageUrl)
-            {
-                ProfileID = profileID;
-                ImageUrl = imageUrl;
-            }
-
-            public string ProfileID { get; private set; }
-
-            public string ImageUrl { get; private set; }
-
-            public override string ToString()
-            {
-                var builder = new StringBuilder();
-                if (!string.IsNullOrEmpty(ProfileID)) {
-                    builder.Append("ProfileID: ");
-                    builder.Append(ProfileID);
-                }
-                if (!string.IsNullOrEmpty(ImageUrl)) {
-                    if (builder.Length > 0) {
-                        builder.Append(", ");
-                    }
-                    builder.Append("ImageUrl: ");
-                    builder.Append(ImageUrl);
-                }
-                if (builder.Length > 0) {
-                    builder.Insert(0, '{');
-                    builder.Append('}');
-                }
-                return builder.ToString();
-            }
-        }
-
         private static readonly string _baseUrl = "https://m.facebook.com";
-        private static readonly Regex[] _profileId = {
+        private static readonly Regex[] _expressions = {
             new Regex(@"(?<=\?id=).+?(?=$|\?|&)", RegexOptions.Compiled),
             new Regex(@"(?<=/).*?(?=$|/|\?|&)", RegexOptions.Compiled)};
-        private readonly Options _options;
+        private readonly FacebookSettings _settings;
 
-        public Facebook(Options options) : base()  
+        public Facebook(IBrowsingContext context, object settings = null) : base(context, settings)  
         {
-            _options = options;
-        }
-
-        public Facebook() : this(new Options())
-        {
+            _settings = Settings as FacebookSettings;
+            if (_settings == null) {
+                throw new NotSupportedException($"{nameof(settings)} must be of FacebookSettings type");
+            }
         }
 
         public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
@@ -85,15 +84,15 @@ namespace PickAll.Searchers
                     var description = table.QuerySelector<IHtmlDivElement>("div.bw").Text();
                     String profileID = null;
                     String smallImageUrl = null;
-                    if (_options.RetrieveProfileID) {
+                    if (_settings.RetrieveProfileID) {
                         profileID = GetProfileID(link);
                     }
-                    if (_options.RetrieveImageLink) {         
+                    if (_settings.RetrieveImageLink) {         
                         smallImageUrl = table.QuerySelector<IHtmlImageElement>("td.bo.bp img")
                             .Attributes["src"].Value;
                     }
                     results.Add(CreateResult(index, $"{_baseUrl}{link}", description,
-                        new Data(profileID, smallImageUrl)));
+                        new FacebookData(profileID, smallImageUrl)));
                     index++;
                 }
                 return results;
@@ -102,8 +101,8 @@ namespace PickAll.Searchers
 
         private static string GetProfileID(string url)
         {
-            foreach (var regEx in _profileId) {
-                var match = regEx.Match(url);
+            foreach (var expression in _expressions) {
+                var match = expression.Match(url);
                 if (match.Length > 0) {
                     return match.Value;
                 }

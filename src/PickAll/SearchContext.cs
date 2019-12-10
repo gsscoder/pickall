@@ -8,7 +8,7 @@ using PickAll.PostProcessors;
 namespace PickAll
 {
     /// <summary>
-    /// Manages <see cref="Searcher"> and <see cref="IPostProcessor"> instances to gather and
+    /// Manages <see cref="Searcher"> and <see cref="PostProcessor"> instances to gather and
     /// elaborate results.
     /// </summary>
     public sealed class SearchContext
@@ -19,11 +19,13 @@ namespace PickAll
         private static readonly Lazy<SearchContext> _defaultContext = new Lazy<SearchContext>(
             () => new SearchContext(new object[]
                 {
-                    new Google(),
-                    new DuckDuckGo(),
+                    new Google(_activeContext.Value),
+                    new DuckDuckGo(_activeContext.Value),
                     new Uniqueness(),
                     new Order()
                 }));
+        internal static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
+        internal static bool IsPostProcessor(Type type) => type.IsSubclassOf(typeof(PostProcessor)); 
 
         internal SearchContext(IEnumerable<object> services)
         {
@@ -43,15 +45,14 @@ namespace PickAll
             get { return _services; }
         }
 
-
-        internal static IBrowsingContext ActiveContext
+        internal IBrowsingContext ActiveContext
         {
             get { return _activeContext.Value; }
         }
 
         /// <summary>
         /// Executes a search asynchronously, invoking all <see cref="Searcher">
-        /// and <see cref="IPostProcessor"> services.
+        /// and <see cref="PostProcessor"> services.
         /// </summary>
         /// <param name="query">A query string for sercher services.</param>
         /// <returns>A colection of <see cref="ResultInfo">.</returns>
@@ -64,10 +65,10 @@ namespace PickAll
 
             var results = new List<ResultInfo>();
             foreach (var service in Services) {
-                if (service.GetType().IsSubclassOf(typeof(Searcher))) {
+                if (IsSearcher(service.GetType())) {
                     results.AddRange(await ((Searcher)service).SearchAsync(query));
-                } else if (typeof(IPostProcessor).IsAssignableFrom(service.GetType())) {
-                    var current = await ((IPostProcessor)service).ProcessAsync(results);
+                } else if (IsPostProcessor(service.GetType())) {
+                    var current = await ((PostProcessor)service).ProcessAsync(results);
                     results = new List<ResultInfo>();
                     results.AddRange(current);
                 }

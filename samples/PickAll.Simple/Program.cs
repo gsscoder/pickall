@@ -33,14 +33,17 @@ namespace PickAll.Simple
                     .With<Uniqueness>()
                     .With<Order>();
                 if (options.Engines.Contains("Facebook")) {
-                    context = context.With(
-                        new Facebook(new Facebook.Options {
+                    context = context.With<Facebook>(
+                        new FacebookSettings {
                             RetrieveProfileID = true,
-                            RetrieveImageLink = true }));
+                            RetrieveImageLink = true });
                 }
             }
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
-                context = context.With(new FuzzyMatch(options.FuzzyMatch, 10));
+                context = context.With<FuzzyMatch>(
+                    new FuzzyMatchSettings {
+                        Text = options.FuzzyMatch,
+                        MaximumDistance = 10 });
             }
 
             var results = await context.SearchAsync(options.Query);

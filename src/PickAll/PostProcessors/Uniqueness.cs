@@ -6,9 +6,13 @@ namespace PickAll.PostProcessors
     /// <summary>
     /// Post processor to remove duplicate results by URL. 
     /// </summary>
-    public class Uniqueness : IPostProcessor
+    public class Uniqueness : PostProcessor
     {
-        public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
+        public Uniqueness(object settings = null) : base(settings)
+        {
+        }
+
+        public override async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
             return await Task.Run(() => results.DistinctBy(result => result.Url));
         }

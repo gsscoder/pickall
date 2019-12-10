@@ -7,53 +7,39 @@ namespace PickAll
     /// </summary>
     public static partial class SearchContextExtensions
     {
-        private static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
-        private static bool IsPostProcessor(Type type) => typeof(IPostProcessor).IsAssignableFrom(type);
-
         /// <summary>
-        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">.
+        /// Registers an instance of <see cref="Searcher"> or <see cref="PostProcessor">
+        /// without settings.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
-        /// <param name="service">A service instance to register.</param>
+        /// <param name="settings">The optional settings instance for the service.</param>
+        /// <typeparam name="T">A type that inherits from <see cref="SearchContext">
+        /// or <see cref="PostProcessor">.</typeparam>
         /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
-        public static SearchContext With(this SearchContext context, object service)
-        {
-            var type = service.GetType();
-            if (!IsSearcher(type) && !IsPostProcessor(type)) {
-                throw new NotSupportedException(
-                    "T must inherit from Searcher or implements IPostProcessor");
-            }
-            return new SearchContext(context.Services.Concat(service));
-        }
-
-        /// <summary>
-        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
-        /// with a parameterless constructor.
-        /// </summary>
-        /// <param name="context">The search context to alter.</param>
-        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
-        /// implements <see cref="IPostProcessor">.</typeparam>
-        /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
-        public static SearchContext With<T>(this SearchContext context)
+        public static SearchContext With<T>(this SearchContext context, object settings = null)
         {
             var type = typeof(T);
-            if (!IsSearcher(type) && !IsPostProcessor(type)) {
+            if (!SearchContext.IsSearcher(type) && !SearchContext.IsPostProcessor(type)) {
                 throw new NotSupportedException(
-                    "T must inherit from Searcher or implements IPostProcessor");
+                    "T must inherit from Searcher or PostProcessor");
             }
-            var service = Activator.CreateInstance<T>();
+            var service = SearchContext.IsSearcher(type) ?
+                Activator.CreateInstance(type, context.ActiveContext, settings) :
+                Activator.CreateInstance(type, settings);
             return new SearchContext(context.Services.Concat(service));
         }
 
         /// <summary>
-        /// Registers an instance of <see cref="Searcher"> or <see cref="IPostProcessor">
-        /// using service name.
+        /// Registers an instance of <see cref="Searcher"> or <see cref="PostProcessor">
+        /// without settings, using its type name.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
-        /// <param name="serviceName">Name of the service to add (case sensitive).</param>
-        /// <param name="args">Optional arguments for service constructor.</param>
-        /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
-        public static SearchContext With(this SearchContext context, string serviceName, params object[] args)
+        /// <param name="serviceName">Name of the service to register (case sensitive).</param>
+        /// <param name="settings">The optional settings instance for the service.</param>
+        /// <typeparam name="T">A type that inherits from <see cref="SearchContext">
+        /// or <see cref="PostProcessor">.</typeparam>
+        /// <returns>A <see cref="SearchContext"> with the given service added.</returns>       
+        public static SearchContext With(this SearchContext context, string serviceName, object settings = null)
         {
             if (serviceName == null) {
                 throw new ArgumentNullException($"{nameof(serviceName)} cannot be null");
@@ -68,29 +54,31 @@ namespace PickAll
                     throw new NotSupportedException($"{serviceName} service not found");
                 }
             }
-            if (!IsSearcher(type) && !IsPostProcessor(type)) {
+            if (!SearchContext.IsSearcher(type) && !SearchContext.IsPostProcessor(type)) {
                 throw new NotSupportedException(
-                    "T must inherit from Searcher or implements IPostProcessor");
+                    "T must inherit from Searcher or PostProcessor");
             }
 
-            var service = Activator.CreateInstance(type, args);
+            var service = SearchContext.IsSearcher(type) ?
+                Activator.CreateInstance(type, context.ActiveContext, settings) :
+                Activator.CreateInstance(type, settings);
             return new SearchContext(context.Services.Concat(service));
         }
 
         /// <summary>
-        /// Unregisters first instance of <see cref="Searcher"> or <see cref="IPostProcessor">
+        /// Unregisters first instance of <see cref="Searcher"> or <see cref="PostProcessor">
         /// using type.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
-        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"> or
-        /// implements <see cref="IPostProcessor">.</typeparam>
+        /// <typeparam name="T">A type that inherits from <see cref="SearchContext">
+        /// or <see cref="PostProcessor">.</typeparam>
         /// <returns>A <see cref="SearchContext"> instance with the given service removed.</returns>
         public static SearchContext Without<T>(this SearchContext context)
         {
             var type = typeof(T);
-            if (!IsSearcher(type) && !IsPostProcessor(type)) {
+            if (!SearchContext.IsSearcher(type) && !SearchContext.IsPostProcessor(type)) {
                 throw new NotSupportedException(
-                    "T must inherit from Searcher or implements IPostProcessor");
+                    "T must inherit from Searcher or PostProcessor");
             }
             return new SearchContext(context.Services.Remove<T>());
         }

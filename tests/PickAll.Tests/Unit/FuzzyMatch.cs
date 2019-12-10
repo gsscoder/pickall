@@ -13,8 +13,8 @@ namespace PickAll.Tests.Unit
             var description = Utilities.RandomDescriptionOf<Searcher_with_five_results>();
 
             var context = new SearchContext()
-                .With(new Searcher_with_five_results())
-                .With(new FuzzyMatch(description, 0));
+                .With<Searcher_with_five_results>()
+                .With<FuzzyMatch>(new FuzzyMatchSettings { Text = description });
             var results = context.Search();
 
             Assert.Single(results);

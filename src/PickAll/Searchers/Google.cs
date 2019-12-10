@@ -13,10 +13,10 @@ namespace PickAll.Searchers
     /// </summary>
     public class Google : Searcher
     {
-        private static readonly Regex _normalizeUrl = new Regex(@"^/url\?q=([^&]*)&.*",
+        private static readonly Regex _expression = new Regex(@"^/url\?q=([^&]*)&.*",
             RegexOptions.Compiled);
 
-        public Google() : base()  
+        public Google(IBrowsingContext context, object settings = null) : base(context, settings)  
         {
         }
 
@@ -51,7 +51,7 @@ namespace PickAll.Searchers
 
         private static string Normalize(string url)
         {
-            var match = _normalizeUrl.Match(url);
+            var match = _expression.Match(url);
             return match.Groups.Count == 2 ? match.Groups[1].Value : url;
         }
     }

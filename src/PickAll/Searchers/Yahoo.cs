@@ -12,7 +12,7 @@ namespace PickAll.Searchers
     /// </summary>
     public class Yahoo : Searcher
     {
-        public Yahoo() : base()  
+        public Yahoo(IBrowsingContext context, object settings) : base(context, settings)  
         {
         }
 

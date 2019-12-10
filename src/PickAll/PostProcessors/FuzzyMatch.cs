@@ -5,36 +5,36 @@ using System.Threading.Tasks;
 
 namespace PickAll.PostProcessors
 {
-
-    public class FuzzyMatch : IPostProcessor
+    public class FuzzyMatchSettings
     {
-        private readonly string _text;
-        private readonly uint _minimumDistance;
-        private readonly uint _maximumDistance;
+        public string Text;
 
-        public FuzzyMatch(string text, uint minimumDistance, uint maximumDistance)
+        public uint MinimumDistance;
+
+        public uint MaximumDistance;
+    }
+
+    public class FuzzyMatch : PostProcessor
+    {
+        private readonly FuzzyMatchSettings _settings;
+
+        public FuzzyMatch(object settings = null) : base(settings)
         {
-            _text = text;
-            _minimumDistance = minimumDistance;
-            _maximumDistance = maximumDistance;
+            _settings = Settings as FuzzyMatchSettings;
+            if (_settings == null) {
+                throw new NotSupportedException($"{nameof(settings)} must be of FuzzyMatchSettings type");
+            }
         }
 
-        public FuzzyMatch(string text, uint maximumDistance) : this(text, 0, maximumDistance)
-        {
-        }
-
-        public FuzzyMatch(string text) : this(text, 0, 0)
-        {
-        }
-
-        public async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
+        public override async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
         {
             return await Task.Run(() =>
                 from computed in 
                     from result in results
                     select new {result = result,
-                                distance = LevenshteinDistance(_text, result.Description)}
-                    where computed.distance >= _minimumDistance && computed.distance <= _maximumDistance
+                                distance = LevenshteinDistance(_settings.Text, result.Description)}
+                    where computed.distance >= _settings.MinimumDistance &&
+                          computed.distance <= _settings.MaximumDistance
                 select computed.result);
         }
 
