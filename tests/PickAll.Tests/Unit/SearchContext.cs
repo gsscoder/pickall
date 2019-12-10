@@ -62,11 +62,11 @@ namespace PickAll.Tests.Unit
         [Fact]
         public void Adding_a_custom_post_processor_by_name_throws_NotSupportedException()
         {
-            Action action = () => new SearchContext().With("MarkerPostProcessor");
+            Action action = () => new SearchContext().With("Post_processor_marker");
             
             var exception = Assert.Throws<NotSupportedException>(action);
 
-            Assert.Equal("MarkerPostProcessor service not found", exception.Message);
+            Assert.Equal("Post_processor_marker service not found", exception.Message);
         }
 
         [Fact]
@@ -127,11 +127,11 @@ namespace PickAll.Tests.Unit
         public void Search_invokes_services_by_addition_order()
         {
             var context = new SearchContext()
-                .With<MarkPostProcessor>(
-                    new MarkPostProcessorSettings{ Stamp = "STAMP/0" }) // unuseful here
+                .With<Post_processor_marker>(
+                    new Post_processor_marker_settings{ Stamp = "STAMP/0" }) // unuseful here
                 .With<Searcher_with_five_results>()
-                .With<MarkPostProcessor>(new MarkPostProcessorSettings{ Stamp = "STAMP/1" })
-                .With<MarkPostProcessor>(new MarkPostProcessorSettings{ Stamp = "STAMP/2" });
+                .With<Post_processor_marker>(new Post_processor_marker_settings{ Stamp = "STAMP/1" })
+                .With<Post_processor_marker>(new Post_processor_marker_settings{ Stamp = "STAMP/2" });
             var results = context.Search();
 
             var expected = Utilities.SearcherFor<Searcher_with_five_results, string>(
@@ -157,8 +157,8 @@ namespace PickAll.Tests.Unit
         {
             var context = new SearchContext()
                 .With<Searcher_with_five_results>()
-                .With<MarkPostProcessor>(new MarkPostProcessorSettings { Stamp = "STAMP"})
-                .Without<MarkPostProcessor>();
+                .With<Post_processor_marker>(new Post_processor_marker_settings { Stamp = "STAMP"})
+                .Without<Post_processor_marker>();
             var results = context.Search();
 
             Assert.All(results, result => Assert.False(result.Description.StartsWith("STAMP")));

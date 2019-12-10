@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 
 namespace PickAll.Tests.Fakes
 {
-    public class MarkPostProcessorSettings
+    public class Post_processor_marker_settings
     {
         public string Stamp;
     }
 
-    public class MarkPostProcessor : PostProcessor
+    public class Post_processor_marker : PostProcessor
     {
-        private readonly MarkPostProcessorSettings _settings;
+        private readonly Post_processor_marker_settings _settings;
 
-        public MarkPostProcessor(object settings) : base(settings)
+        public Post_processor_marker(object settings) : base(settings)
         {
-            _settings = Settings as MarkPostProcessorSettings;
+            _settings = Settings as Post_processor_marker_settings;
             if (_settings == null) {
                 throw new NotImplementedException();
             }
