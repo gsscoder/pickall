@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace PickAll
 {
@@ -47,18 +49,15 @@ namespace PickAll
             if (serviceName.Trim() == string.Empty) {
                 throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
             }
-            var type = Type.GetType($"PickAll.Searchers.{serviceName}", false);
+            var type = context.GetType().GetTypeInfo().Assembly.GetTypes().Where(
+                @this => @this.Name == serviceName).SingleOrDefault();
             if (type == null) {
-                type = Type.GetType($"PickAll.PostProcessors.{serviceName}", false);
-                if (type == null) {
-                    throw new NotSupportedException($"{serviceName} service not found");
-                }
+                throw new NotSupportedException($"{serviceName} service not found");
             }
             if (!SearchContext.IsSearcher(type) && !SearchContext.IsPostProcessor(type)) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
-
             var service = SearchContext.IsSearcher(type) ?
                 Activator.CreateInstance(type, context.ActiveContext, settings) :
                 Activator.CreateInstance(type, settings);

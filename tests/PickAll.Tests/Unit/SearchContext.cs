@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Xunit;
 using PickAll.Searchers;
@@ -15,7 +16,7 @@ namespace PickAll.Tests.Unit
                 .With("DuckDuckGo")
                 .With("Uniqueness");
             
-            Assert.Single(context.Services);
+            Assert.Equal(2, context.Services.Count());
             Assert.Collection(context.Services,
                 item => Assert.IsType<DuckDuckGo>(item),
                 item => Assert.IsType<Uniqueness>(item));
@@ -46,6 +47,26 @@ namespace PickAll.Tests.Unit
                 item => Assert.IsType<DuckDuckGo>(item),
                 item => Assert.IsType<Uniqueness>(item),
                 item => Assert.IsType<Order>(item));
+        }
+
+        [Fact]
+        public void Adding_a_custom_searcher_by_name_throws_NotSupportedException()
+        {
+            Action action = () => new SearchContext().With("Searcher_with_three_results");
+            
+            var exception = Assert.Throws<NotSupportedException>(action);
+
+            Assert.Equal("Searcher_with_three_results service not found", exception.Message);
+        }
+
+        [Fact]
+        public void Adding_a_custom_post_processor_by_name_throws_NotSupportedException()
+        {
+            Action action = () => new SearchContext().With("MarkerPostProcessor");
+            
+            var exception = Assert.Throws<NotSupportedException>(action);
+
+            Assert.Equal("MarkerPostProcessor service not found", exception.Message);
         }
 
         [Fact]
