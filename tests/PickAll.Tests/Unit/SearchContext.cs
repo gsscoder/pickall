@@ -44,7 +44,7 @@ namespace PickAll.Tests.Unit
                 .Without("DUCKDUCKgo")
                 .Without("uniQueness");
             
-            Assert.Equal(0, context.Services.Count());
+            Assert.Empty(context.Services);
         }
 
         [Fact]

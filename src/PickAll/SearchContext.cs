@@ -13,7 +13,6 @@ namespace PickAll
     /// </summary>
     public sealed class SearchContext
     {   
-        private readonly IEnumerable<object> _services;
         private static readonly Lazy<IBrowsingContext> _activeContext = new Lazy<IBrowsingContext>(
             () => BrowsingContext.New(Configuration.Default.WithDefaultLoader()));
         private static readonly Lazy<SearchContext> _defaultContext = new Lazy<SearchContext>(
@@ -29,7 +28,7 @@ namespace PickAll
 
         internal SearchContext(IEnumerable<object> services)
         {
-            _services = services;
+            Services = services;
         }
 
         public SearchContext() : this(new object[] {})
@@ -42,7 +41,7 @@ namespace PickAll
         internal IEnumerable<object> Services
 #endif
         {
-            get { return _services; }
+            get; private set;
         }
 
         internal IBrowsingContext ActiveContext
