@@ -25,7 +25,7 @@ $ cd ../../artifacts/PickAll.Simple/Release/netcoreapp3.0/PickAll.Simple
 [28] DuckDuckGo: "Steve Jobs - Forbes": "https://www.forbes.com/profile/steve-jobs/"
 ```
 
-# Test
+## Test
 ```sh
 # change to tests directory
 $ cd pickall/tests/PickAll.Tests
