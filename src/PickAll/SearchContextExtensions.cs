@@ -11,7 +11,7 @@ namespace PickAll
     {
         /// <summary>
         /// Registers an instance of <see cref="Searcher"> or <see cref="PostProcessor">
-        /// without settings.
+        /// without settings, using its type.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
         /// <param name="settings">The optional settings instance for the service.</param>
@@ -67,8 +67,8 @@ namespace PickAll
         }
 
         /// <summary>
-        /// Unregisters first instance of <see cref="Searcher"> or <see cref="PostProcessor">
-        /// using type.
+        /// Unregisters first instance of <see cref="Searcher"> or <see cref="PostProcessor">,
+        /// using its type.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext">
@@ -81,7 +81,27 @@ namespace PickAll
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
-            return new SearchContext(context.Services.Remove<T>());
+            return new SearchContext(context.Services.Exclude<T>());
+        }
+
+        /// <summary>
+        /// Unregisters first instance of <see cref="Searcher"> or <see cref="PostProcessor">,
+        /// using its type name.
+        /// </summary>
+        /// <param name="context">The search context to alter.</param>
+        /// <param name="serviceName">Name of the service to register (case insensitive).</param>
+        /// or <see cref="PostProcessor">.</typeparam>
+        /// <returns>A <see cref="SearchContext"> instance with the given service removed.</returns>
+        public static SearchContext Without(this SearchContext context, string serviceName)
+        {
+            var service = (from @this in context.Services
+                           where @this.GetType().Name.Equals(
+                               serviceName, StringComparison.OrdinalIgnoreCase)
+                           select @this).FirstOrDefault();
+            if (service == null) {
+                throw new InvalidOperationException($"{serviceName} not registred as service");
+            }
+            return new SearchContext(context.Services.Exclude(service.GetType()));
         }
     }
 }

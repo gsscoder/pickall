@@ -13,9 +13,8 @@ namespace PickAll
             yield return newElement;
         }
 
-        public static IEnumerable<object> Remove<T>(this IEnumerable<object> collection)
+        public static IEnumerable<object> Exclude(this IEnumerable<object> collection, Type type)
         {
-            var type = typeof(T);
             bool removed = false;
             foreach (var element in collection) {
                 if (element.GetType() != type) {
@@ -30,6 +29,11 @@ namespace PickAll
                     }
                 }
             }
+        }
+
+        public static IEnumerable<object> Exclude<T>(this IEnumerable<object> collection)
+        {
+            return collection.Exclude(typeof(T));
         }
 
         /// <summary>

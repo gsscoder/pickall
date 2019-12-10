@@ -36,6 +36,18 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
+        public void Can_remove_service_by_name_ignoring_case()
+        {
+            var context = new SearchContext()
+                .With<DuckDuckGo>()
+                .With<Uniqueness>()
+                .Without("DUCKDUCKgo")
+                .Without("uniQueness");
+            
+            Assert.Equal(0, context.Services.Count());
+        }
+
+        [Fact]
         public void Can_add_post_processor_service_with_parameters_by_name()
         {
             var context = new SearchContext()
@@ -47,7 +59,7 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void Can_add_services_with_generic_or_non_generic_With_method()
+        public void Can_add_service_with_generic_or_non_generic_With_method()
         {
             var context = new SearchContext()
                 .With<Google>()
@@ -60,6 +72,18 @@ namespace PickAll.Tests.Unit
                 item => Assert.IsType<DuckDuckGo>(item),
                 item => Assert.IsType<Uniqueness>(item),
                 item => Assert.IsType<Order>(item));
+        }
+
+        [Fact]
+        public void Can_remove_service_with_using_name()
+        {
+            var context = new SearchContext()
+                .With<Yahoo>()
+                .With<Order>()
+                .Without("Yahoo")
+                .Without("Order");
+
+            Assert.Empty(context.Services);
         }
 
         [Fact]
