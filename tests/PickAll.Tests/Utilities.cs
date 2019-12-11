@@ -16,6 +16,15 @@ namespace PickAll.Tests
                 });
         }
 
+        public static ResultInfo RandomResultInfoOf<T>() where T : Searcher
+        {
+            return SearcherFor<T, ResultInfo>(searcher => {
+                var results = searcher.Search();
+                var index = new Random().Next(results.Count() - 1);
+                return results.ElementAt(index);
+                });
+        }
+
         public static int ResultsCountOf<T>() where T : Searcher
         {
             return Utilities.SearcherFor<T, int>(searcher => searcher.Search().Count());

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Xunit;
+using FluentAssertions;
 using PickAll.Searchers;
 using PickAll.PostProcessors;
 using PickAll.Tests.Fakes;
@@ -16,10 +17,11 @@ namespace PickAll.Tests.Unit
                 .With("DuckDuckGo")
                 .With("Uniqueness");
             
-            Assert.Equal(2, context.Services.Count());
-            Assert.Collection(context.Services,
-                item => Assert.IsType<DuckDuckGo>(item),
-                item => Assert.IsType<Uniqueness>(item));
+            context.Services.Should().NotBeEmpty()
+                .And.HaveCount(2)
+                .And.SatisfyRespectively(
+                    item => item.Should().BeOfType<DuckDuckGo>(),
+                    item => item.Should().BeOfType<Uniqueness>());
         }
 
         [Fact]
@@ -29,10 +31,11 @@ namespace PickAll.Tests.Unit
                 .With("DUCKDUCKgo")
                 .With("uniQueness");
             
-            Assert.Equal(2, context.Services.Count());
-            Assert.Collection(context.Services,
-                item => Assert.IsType<DuckDuckGo>(item),
-                item => Assert.IsType<Uniqueness>(item));
+            context.Services.Should().NotBeEmpty()
+                .And.HaveCount(2)
+                .And.SatisfyRespectively(
+                    item => item.Should().BeOfType<DuckDuckGo>(),
+                    item => item.Should().BeOfType<Uniqueness>());
         }
 
         [Fact]
@@ -44,7 +47,7 @@ namespace PickAll.Tests.Unit
                 .Without("DUCKDUCKgo")
                 .Without("uniQueness");
             
-            Assert.Empty(context.Services);
+            context.Services.Should().BeEmpty();
         }
 
         [Fact]
@@ -53,9 +56,9 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext()
                 .With("FuzzyMatch", new FuzzyMatchSettings {Text = "nothing", MaximumDistance = 10 });
             
-            Assert.Single(context.Services);
-            Assert.Collection(context.Services,
-                item => Assert.IsType<FuzzyMatch>(item));
+            context.Services.Should().NotBeEmpty()
+                .And.ContainSingle()
+                .And.ContainItemsAssignableTo<FuzzyMatch>();
         }
 
         [Fact]
@@ -67,11 +70,13 @@ namespace PickAll.Tests.Unit
                 .With<Uniqueness>()
                 .With("Order");
 
-            Assert.Collection(context.Services,
-                item => Assert.IsType<Google>(item),
-                item => Assert.IsType<DuckDuckGo>(item),
-                item => Assert.IsType<Uniqueness>(item),
-                item => Assert.IsType<Order>(item));
+            context.Services.Should().NotBeEmpty()
+                .And.HaveCount(4)
+                .And.SatisfyRespectively(
+                    item => item.Should().BeOfType<Google>(),
+                    item => item.Should().BeOfType<DuckDuckGo>(),
+                    item => item.Should().BeOfType<Uniqueness>(),
+                    item => item.Should().BeOfType<Order>());
         }
 
         [Fact]
@@ -83,36 +88,39 @@ namespace PickAll.Tests.Unit
                 .Without("Yahoo")
                 .Without("Order");
 
-            Assert.Empty(context.Services);
+            context.Services.Should().BeEmpty();
         }
 
         [Fact]
         public void Adding_a_custom_searcher_by_name_throws_NotSupportedException()
         {
-            Action action = () => new SearchContext().With("Searcher_with_three_results");
-            
-            var exception = Assert.Throws<NotSupportedException>(action);
+            var context = new SearchContext();
 
-            Assert.Equal("Searcher_with_three_results service not found", exception.Message);
+            Action action = () => context.With("Searcher_with_three_results");
+            
+            action.Should().ThrowExactly<NotSupportedException>()
+                .WithMessage("Searcher_with_three_results service not found");
         }
 
         [Fact]
         public void Adding_a_custom_post_processor_by_name_throws_NotSupportedException()
         {
-            Action action = () => new SearchContext().With("Post_processor_marker");
-            
-            var exception = Assert.Throws<NotSupportedException>(action);
+            var context = new SearchContext();
 
-            Assert.Equal("Post_processor_marker service not found", exception.Message);
+            Action action = () => context.With("Post_processor_marker");
+            
+            action.Should().ThrowExactly<NotSupportedException>()
+                .WithMessage("Post_processor_marker service not found");
         }
 
         [Fact]
         public void When_none_searcher_is_set_Search_returns_an_empty_collection()
         {
             var context = new SearchContext();
-            var result = context.Search("query");
 
-            Assert.Empty(result);
+            var results = context.Search("query");
+
+            results.Should().BeEmpty();
         }
 
         [Fact]
@@ -126,7 +134,8 @@ namespace PickAll.Tests.Unit
                 .With<Searcher_with_five_results>();
             var results = context.Search();
 
-            Assert.Equal(firstCount + secondCount, results.Count());
+            results.Should().NotBeEmpty()
+                .And.HaveCount(firstCount + secondCount);
         }
 
         [Fact]
@@ -141,23 +150,30 @@ namespace PickAll.Tests.Unit
                 .With<Uniqueness>();
             var results = context.Search();
 
-            Assert.Equal(firstCount + secondCount - 2, results.Count());
+            results.Should().NotBeEmpty()
+                .And.HaveCount(firstCount + secondCount - 2);
         }
 
         [Fact]
         public void When_order_is_set_Search_results_are_ordered_by_index()
         {
-            var firstCount = Utilities.ResultsCountOf<Searcher_with_three_results>();
-            var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
-
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .With<Order>();
             var results = context.Search();
 
-            Assert.Equal(0, results.First().Index);
-            Assert.Equal(0, results.Second().Index);
+            results.Should().NotBeEmpty()
+                .And.SatisfyRespectively(
+                    item => item.Index.Should().Be(0),
+                    item => item.Index.Should().Be(0),
+                    item => item.Index.Should().Be(1),
+                    item => item.Index.Should().Be(1),
+                    item => item.Index.Should().Be(2),
+                    item => item.Index.Should().Be(2),
+                    item => item.Index.Should().Be(3),
+                    item => item.Index.Should().Be(4)
+                );
         }
 
         [Fact]
@@ -174,19 +190,22 @@ namespace PickAll.Tests.Unit
             var expected = Utilities.SearcherFor<Searcher_with_five_results, string>(
                 searcher => $"STAMP/2|STAMP/1|{searcher.Search().First().Description}");
 
-            Assert.Equal(expected, results.First().Description);
+            results.First().Description.Should().Be(expected);
         }
 
         [Fact]
         public void Removed_searcher_doesnt_produce_results()
         {
+            var expected = Utilities.ResultsCountOf<Searcher_with_five_results>();
+
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
                 .With<Searcher_with_five_results>()
                 .Without<Searcher_with_three_results>();
             var results = context.Search();
 
-            Assert.Equal(5, results.Count());
+            results.Should().NotBeEmpty()
+                .And.HaveCount(expected);
         }
 
         [Fact]
@@ -198,11 +217,12 @@ namespace PickAll.Tests.Unit
                 .Without<Post_processor_marker>();
             var results = context.Search();
 
-            Assert.All(results, result => Assert.False(result.Description.StartsWith("STAMP")));
+            results.Should().NotBeEmpty()
+                .And.OnlyContain(x => !x.Description.StartsWith("STAMP"));
         }
 
         [Fact]
-        public void Without_remove_only_first_service_of_a_given_type()
+        public void Without_removes_only_first_service_of_a_given_type()
         {
             var context = new SearchContext()
                 .With<Searcher_with_three_results>()
@@ -211,10 +231,12 @@ namespace PickAll.Tests.Unit
                 .With<Order>()
                 .Without<Order>();
 
-            Assert.Collection(context.Services,
-                item => Assert.IsType<Searcher_with_three_results>(item),
-                item => Assert.IsType<Searcher_with_five_results>(item),
-                item => Assert.IsType<Order>(item));
+            context.Services.Should().NotBeEmpty()
+                .And.HaveCount(3)
+                .And.SatisfyRespectively(
+                    item => item.Should().BeOfType<Searcher_with_three_results>(),
+                    item => item.Should().BeOfType<Searcher_with_five_results>(),
+                    item => item.Should().BeOfType<Order>());
         }
     }
 }
