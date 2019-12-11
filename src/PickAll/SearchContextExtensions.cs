@@ -94,6 +94,12 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"> instance with the given service removed.</returns>
         public static SearchContext Without(this SearchContext context, string serviceName)
         {
+            if (serviceName == null) {
+                throw new ArgumentNullException($"{nameof(serviceName)} cannot be null");
+            }
+            if (serviceName.Trim() == string.Empty) {
+                throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
+            }
             var service = (from @this in context.Services
                            where @this.GetType().Name.Equals(
                                serviceName, StringComparison.OrdinalIgnoreCase)
