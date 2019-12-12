@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using PickAll.Tests.Fakes;
 
 namespace PickAll.Tests
 {
@@ -11,6 +9,18 @@ namespace PickAll.Tests
         public static T Second<T>(this IEnumerable<T> collection)
         {
             return collection.ElementAt(1);
+        }
+
+        public static T Random<T>(this T[] array)
+        {
+            var index = new Random().Next(array.Length - 1);
+            return array[index];
+        }
+
+        public static T Random<T>(this IEnumerable<T> collection)
+        {
+            var index = new Random().Next(collection.Count() - 1);
+            return collection.ElementAt(index);
         }
 
         public static IEnumerable<ResultInfo> Search(this Searcher searcher,
