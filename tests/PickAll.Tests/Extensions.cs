@@ -28,17 +28,5 @@ namespace PickAll.Tests
             return new ResultInfo(
                 result.Originator, index, result.Url, result.Description, result.Data);
         }
-
-        public static IEnumerable<ResultInfo> Search(this Searcher searcher,
-            string query = "none")
-        {
-            return searcher.SearchAsync(query).GetAwaiter().GetResult();
-        }
-
-        public static IEnumerable<ResultInfo> Search(this SearchContext context,
-            string query = "none")
-        {
-            return context.SearchAsync(query).GetAwaiter().GetResult();
-        }
     }
 }

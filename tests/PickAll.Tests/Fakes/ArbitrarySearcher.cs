@@ -8,8 +8,6 @@ namespace PickAll.Tests
 {
     class ArbitrarySearcherSettings
     {
-        public bool Unique;
-
         public ushort Samples;
     }
 
@@ -31,9 +29,6 @@ namespace PickAll.Tests
             return await Task.Run(() => _());
             IEnumerable<ResultInfo> _() {
                 var originator = Guid.NewGuid().ToString();
-                if (_settings.Unique) {
-                    return ResultInfoGenerator.GenerateUnique(originator, _settings.Samples);
-                }
                 return ResultInfoGenerator.Generate(originator, _settings.Samples);
             }
         }

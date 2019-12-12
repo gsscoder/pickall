@@ -163,13 +163,13 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void Removed_post_processor_doesnt_take_effect()
+        public async void Removed_post_processor_doesnt_take_effect()
         {
             var context = new SearchContext()
                 .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 5 })
                 .With<Marker>(new MarkerSettings { Stamp = "stamp"})
                 .Without<Marker>();
-            var results = context.Search();
+            var results = await context.SearchAsync("query");
 
             results.Should().NotBeEmpty()
                 .And.OnlyContain(x => !x.Description.StartsWith("stamp"));
