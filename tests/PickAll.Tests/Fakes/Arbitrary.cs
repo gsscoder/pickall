@@ -90,7 +90,7 @@ namespace PickAll.Tests
                 var url = Urls.Generate();
                 var description= Descriptions.Generate();
                 var searched = from @this in generated
-                               where $"{@this.Url}{@this.Description}" == $"{url}{@description}"
+                               where @this.Url == url
                                select @this;
                 if (searched.Count() == 0) {
                     var result = new ResultInfo(

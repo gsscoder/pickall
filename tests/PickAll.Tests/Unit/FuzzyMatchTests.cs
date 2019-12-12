@@ -1,7 +1,6 @@
 using Xunit;
 using FluentAssertions;
 using PickAll.PostProcessors;
-using PickAll.Tests.Fakes;
 
 namespace PickAll.Tests.Unit
 {
@@ -16,7 +15,8 @@ namespace PickAll.Tests.Unit
             var fuzzyMatch = new FuzzyMatch(new FuzzyMatchSettings { Text = expected.Description });
             var processed = await fuzzyMatch.ProcessAsync(results);
 
-            processed.Should().ContainSingle()
+            processed.Should().NotBeEmpty()
+                .And.ContainSingle()
                 .And.ContainEquivalentOf(expected);
         }
     }

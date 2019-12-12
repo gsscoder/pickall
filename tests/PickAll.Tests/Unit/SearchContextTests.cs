@@ -80,7 +80,7 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void Can_remove_service_with_using_name()
+        public void Can_remove_service_by_name()
         {
             var context = new SearchContext()
                 .With<Yahoo>()
@@ -114,44 +114,25 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void When_none_searcher_is_set_Search_returns_an_empty_collection()
+        public async void When_none_searcher_is_set_Search_returns_an_empty_collection()
         {
             var context = new SearchContext();
 
-            var results = context.Search("query");
+            var results = await context.SearchAsync("query");
 
             results.Should().BeEmpty();
         }
 
         [Fact]
-        public void When_two_searchers_are_set_Search_returns_a_merged_collection()
+        public async void When_two_searchers_are_set_Search_returns_a_merged_collection()
         {
-            var firstCount = Utilities.ResultsCountOf<Searcher_with_three_results>();
-            var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
-
             var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>();
-            var results = context.Search();
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 8 })
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 12 });
+            var results = await context.SearchAsync("query");
 
             results.Should().NotBeEmpty()
-                .And.HaveCount(firstCount + secondCount);
-        }
-
-        [Fact]
-        public void When_uniqueness_is_set_Search_excludes_duplicates_url()
-        {
-            var firstCount = Utilities.ResultsCountOf<Searcher_with_three_results>();
-            var secondCount = Utilities.ResultsCountOf<Searcher_with_five_results>();
-            
-            var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>()
-                .With<Uniqueness>();
-            var results = context.Search();
-
-            results.Should().NotBeEmpty()
-                .And.HaveCount(firstCount + secondCount - 2);
+                .And.HaveCount(20);
         }
 
         [Fact]
