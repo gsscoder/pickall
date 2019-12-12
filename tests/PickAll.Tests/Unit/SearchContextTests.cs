@@ -96,10 +96,10 @@ namespace PickAll.Tests.Unit
         {
             var context = new SearchContext();
 
-            Action action = () => context.With("Searcher_with_three_results");
+            Action action = () => context.With("ArbitrarySearcher", new ArbitrarySearcherSettings());
             
             action.Should().ThrowExactly<NotSupportedException>()
-                .WithMessage("Searcher_with_three_results service not found");
+                .WithMessage("ArbitrarySearcher service not found");
         }
 
         [Fact]
@@ -107,10 +107,10 @@ namespace PickAll.Tests.Unit
         {
             var context = new SearchContext();
 
-            Action action = () => context.With("Post_processor_marker");
+            Action action = () => context.With("Marker", new MarkerSettings());
             
             action.Should().ThrowExactly<NotSupportedException>()
-                .WithMessage("Post_processor_marker service not found");
+                .WithMessage("Marker service not found");
         }
 
         [Fact]
@@ -136,65 +136,60 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void Search_invokes_services_by_addition_order()
+        public async void Search_invokes_services_by_addition_order()
         {
             var context = new SearchContext()
-                .With<Post_processor_marker>(
-                    new Post_processor_marker_settings{ Stamp = "STAMP/0" }) // unuseful here
-                .With<Searcher_with_five_results>()
-                .With<Post_processor_marker>(new Post_processor_marker_settings{ Stamp = "STAMP/1" })
-                .With<Post_processor_marker>(new Post_processor_marker_settings{ Stamp = "STAMP/2" });
-            var results = context.Search();
+                .With<Marker>(
+                    new MarkerSettings{ Stamp = "stamp0" })
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 5 })
+                .With<Marker>(new MarkerSettings{ Stamp = "stamp1" })
+                .With<Marker>(new MarkerSettings{ Stamp = "stamp2" });
+            var results = await context.SearchAsync("search");
 
-            var expected = Utilities.SearcherFor<Searcher_with_five_results, string>(
-                searcher => $"STAMP/2|STAMP/1|{searcher.Search().First().Description}");
-
-            results.First().Description.Should().Be(expected);
+            results.First().Description.Should().StartWith("stamp2|stamp1|");
         }
 
         [Fact]
-        public void Removed_searcher_doesnt_produce_results()
+        public async void Removed_searcher_doesnt_produce_results()
         {
-            var expected = Utilities.ResultsCountOf<Searcher_with_five_results>();
-
             var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>()
-                .Without<Searcher_with_three_results>();
-            var results = context.Search();
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 8 })
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 })
+                .Without<ArbitrarySearcher>();
+            var results = await context.SearchAsync("search");
 
             results.Should().NotBeEmpty()
-                .And.HaveCount(expected);
+                .And.HaveCount(10);
         }
 
         [Fact]
         public void Removed_post_processor_doesnt_take_effect()
         {
             var context = new SearchContext()
-                .With<Searcher_with_five_results>()
-                .With<Post_processor_marker>(new Post_processor_marker_settings { Stamp = "STAMP"})
-                .Without<Post_processor_marker>();
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 5 })
+                .With<Marker>(new MarkerSettings { Stamp = "stamp"})
+                .Without<Marker>();
             var results = context.Search();
 
             results.Should().NotBeEmpty()
-                .And.OnlyContain(x => !x.Description.StartsWith("STAMP"));
+                .And.OnlyContain(x => !x.Description.StartsWith("stamp"));
         }
 
         [Fact]
-        public void Without_removes_only_first_service_of_a_given_type()
+        public void Without_removes_only_first_added_service_of_a_given_type()
         {
             var context = new SearchContext()
-                .With<Searcher_with_three_results>()
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 5 })
                 .With<Order>()
-                .With<Searcher_with_five_results>()
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 3 })
                 .With<Order>()
                 .Without<Order>();
 
             context.Services.Should().NotBeEmpty()
                 .And.HaveCount(3)
                 .And.SatisfyRespectively(
-                    item => item.Should().BeOfType<Searcher_with_three_results>(),
-                    item => item.Should().BeOfType<Searcher_with_five_results>(),
+                    item => item.Should().BeOfType<ArbitrarySearcher>(),
+                    item => item.Should().BeOfType<ArbitrarySearcher>(),
                     item => item.Should().BeOfType<Order>());
         }
     }
