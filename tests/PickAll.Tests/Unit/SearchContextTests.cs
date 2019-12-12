@@ -136,28 +136,6 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public void When_order_is_set_Search_results_are_ordered_by_index()
-        {
-            var context = new SearchContext()
-                .With<Searcher_with_three_results>()
-                .With<Searcher_with_five_results>()
-                .With<Order>();
-            var results = context.Search();
-
-            results.Should().NotBeEmpty()
-                .And.SatisfyRespectively(
-                    item => item.Index.Should().Be(0),
-                    item => item.Index.Should().Be(0),
-                    item => item.Index.Should().Be(1),
-                    item => item.Index.Should().Be(1),
-                    item => item.Index.Should().Be(2),
-                    item => item.Index.Should().Be(2),
-                    item => item.Index.Should().Be(3),
-                    item => item.Index.Should().Be(4)
-                );
-        }
-
-        [Fact]
         public void Search_invokes_services_by_addition_order()
         {
             var context = new SearchContext()

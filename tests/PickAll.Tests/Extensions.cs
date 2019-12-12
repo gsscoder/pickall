@@ -23,6 +23,12 @@ namespace PickAll.Tests
             return collection.ElementAt(index);
         }
 
+        public static ResultInfo WithIndex(this ResultInfo result, ushort index)
+        {
+            return new ResultInfo(
+                result.Originator, index, result.Url, result.Description, result.Data);
+        }
+
         public static IEnumerable<ResultInfo> Search(this Searcher searcher,
             string query = "none")
         {

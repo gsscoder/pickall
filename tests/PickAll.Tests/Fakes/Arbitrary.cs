@@ -88,9 +88,9 @@ namespace PickAll.Tests
             var generated = new List<ResultInfo>();
             for (ushort index = 0; index <= samples - 1; index++) {
                 var url = Urls.Generate();
-                var description= Descriptions.Generate();
+                var description = Descriptions.Generate();
                 var searched = from @this in generated
-                               where @this.Url == url
+                               where @this.Url == url || @this.Description == description
                                select @this;
                 if (searched.Count() == 0) {
                     var result = new ResultInfo(

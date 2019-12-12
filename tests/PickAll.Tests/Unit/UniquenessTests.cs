@@ -13,7 +13,7 @@ namespace PickAll.Tests.Unit
         {
             var results = new List<ResultInfo>();
             results.AddRange(ResultInfoGenerator.GenerateUnique("random", 10));
-            results.Add(results.Random());
+            results.Add(results.Random().WithIndex(0));
             var uniqueness = new Uniqueness();
             var processed = await uniqueness.ProcessAsync(results);
 
