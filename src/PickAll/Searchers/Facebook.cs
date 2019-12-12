@@ -61,7 +61,7 @@ namespace PickAll.Searchers
             new Regex(@"(?<=/).*?(?=$|/|\?|&)", RegexOptions.Compiled)};
         private readonly FacebookSettings _settings;
 
-        public Facebook(IBrowsingContext context, object settings = null) : base(context, settings)  
+        public Facebook(IBrowsingContext context, object settings) : base(context, settings)  
         {
             _settings = Settings as FacebookSettings;
             if (_settings == null) {
