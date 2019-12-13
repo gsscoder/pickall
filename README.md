@@ -2,7 +2,12 @@
 
 .NET agile and extensible web searching API. Built with [AngleSharp](https://github.com/AngleSharp/AngleSharp).
 
+## Philosophy
+
+PickAll is primarily designed to collect a limited amount of results (possibly the more relavant) from different sources and process them in a chain of steps. Results are essentially URLs and descriptions, but more data can be handled.
+
 ## Build and sample
+
 **NOTE**: .NET Core 3.0 or higher is required.
 ```sh
 # clone the repository
@@ -26,6 +31,7 @@ $ cd ../../artifacts/PickAll.Simple/Release/netcoreapp3.0/PickAll.Simple
 ```
 
 ## Test
+
 ```sh
 # change to tests directory
 $ cd pickall/tests/PickAll.Tests
@@ -40,6 +46,7 @@ $ dotnet test
 ```
 
 ## At a glance
+
 ```csharp
 using PickAll;
 using PickAll.Searchers;
