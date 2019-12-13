@@ -25,6 +25,7 @@ namespace PickAll
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
+
             var service = type.IsSearcher() ?
                 Activator.CreateInstance(type, context.ActiveContext, settings) :
                 Activator.CreateInstance(type, settings);
@@ -50,6 +51,7 @@ namespace PickAll
             if (serviceName.Trim() == string.Empty) {
                 throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
             }
+
             var type = context.GetType().GetTypeInfo().Assembly.GetTypes().Where(
                 @this => @this.Name.Equals(serviceName, StringComparison.OrdinalIgnoreCase))
                          .SingleOrDefault();
@@ -81,6 +83,7 @@ namespace PickAll
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
+
             return new SearchContext(context.Services.Exclude<T>());
         }
 
@@ -100,6 +103,7 @@ namespace PickAll
             if (serviceName.Trim() == string.Empty) {
                 throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
             }
+
             var service = (from @this in context.Services
                            where @this.GetType().Name.Equals(
                                serviceName, StringComparison.OrdinalIgnoreCase)

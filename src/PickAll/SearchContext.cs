@@ -68,7 +68,6 @@ namespace PickAll
             var resultGroup = await Task.WhenAll(
                 searchers.Select(searcher => searcher.SearchAsync(query)));
             var results = resultGroup.SelectMany(group => group).ToList();
-
             // Invoke post processors in sync
             var processors = (from service in Services
                               where service.GetType().IsPostProcessor()
