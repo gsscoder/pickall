@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp;
 
-namespace PickAll.Tests
+namespace PickAll.Tests.Fakes
 {
     class ArbitrarySearcherSettings
     {

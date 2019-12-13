@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PickAll.Tests
+namespace PickAll.Tests.Fakes
 {
     static class Urls
     {
