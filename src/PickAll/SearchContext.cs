@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp;
 using PickAll.Searchers;
@@ -60,15 +61,22 @@ namespace PickAll
             if (query.Trim() == string.Empty) throw new ArgumentException(nameof(query),
                 $"{nameof(query)} cannot be empty or contains only white spaces");
 
-            var results = new List<ResultInfo>();
-            foreach (var service in Services) {
-                if (service.GetType().IsSearcher()) {
-                    results.AddRange(await ((Searcher)service).SearchAsync(query));
-                } else if (service.GetType().IsPostProcessor()) {
-                    var current = await ((PostProcessor)service).ProcessAsync(results);
-                    results = new List<ResultInfo>();
-                    results.AddRange(current);
-                }
+            // Invoke searchers in parallel
+            var searchers = (from service in Services
+                             where service.GetType().IsSearcher()
+                             select service).Cast<Searcher>();
+            var resultGroup = await Task.WhenAll(
+                searchers.Select(searcher => searcher.SearchAsync(query)));
+            var results = resultGroup.SelectMany(group => group).ToList();
+
+            // Invoke post processors in sync
+            var processors = (from service in Services
+                              where service.GetType().IsPostProcessor()
+                              select service).Cast<PostProcessor>();
+            foreach (var processor in processors) {
+                var current = await processor.ProcessAsync(results);
+                results = new List<ResultInfo>();
+                results.AddRange(current);
             }
             return results;
         }
