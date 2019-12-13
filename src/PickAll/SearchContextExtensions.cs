@@ -21,11 +21,11 @@ namespace PickAll
         public static SearchContext With<T>(this SearchContext context, object settings = null)
         {
             var type = typeof(T);
-            if (!SearchContext.IsSearcher(type) && !SearchContext.IsPostProcessor(type)) {
+            if (!type.IsSearcher() && !type.IsPostProcessor()) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
-            var service = SearchContext.IsSearcher(type) ?
+            var service = type.IsSearcher() ?
                 Activator.CreateInstance(type, context.ActiveContext, settings) :
                 Activator.CreateInstance(type, settings);
             return new SearchContext(context.Services.Concat(service));
@@ -56,11 +56,11 @@ namespace PickAll
             if (type == null) {
                 throw new NotSupportedException($"{serviceName} service not found");
             }
-            if (!SearchContext.IsSearcher(type) && !SearchContext.IsPostProcessor(type)) {
+            if (!type.IsSearcher() && !type.IsPostProcessor()) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
-            var service = SearchContext.IsSearcher(type) ?
+            var service = type.IsSearcher() ?
                 Activator.CreateInstance(type, context.ActiveContext, settings) :
                 Activator.CreateInstance(type, settings);
             return new SearchContext(context.Services.Concat(service));
@@ -77,7 +77,7 @@ namespace PickAll
         public static SearchContext Without<T>(this SearchContext context)
         {
             var type = typeof(T);
-            if (!SearchContext.IsSearcher(type) && !SearchContext.IsPostProcessor(type)) {
+            if (!type.IsSearcher() && !type.IsPostProcessor()) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }

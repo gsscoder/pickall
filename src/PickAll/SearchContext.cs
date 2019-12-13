@@ -23,8 +23,6 @@ namespace PickAll
                     new Uniqueness(),
                     new Order()
                 }));
-        internal static bool IsSearcher(Type type) => type.IsSubclassOf(typeof(Searcher)); 
-        internal static bool IsPostProcessor(Type type) => type.IsSubclassOf(typeof(PostProcessor)); 
 
         internal SearchContext(IEnumerable<object> services)
         {
@@ -64,9 +62,9 @@ namespace PickAll
 
             var results = new List<ResultInfo>();
             foreach (var service in Services) {
-                if (IsSearcher(service.GetType())) {
+                if (service.GetType().IsSearcher()) {
                     results.AddRange(await ((Searcher)service).SearchAsync(query));
-                } else if (IsPostProcessor(service.GetType())) {
+                } else if (service.GetType().IsPostProcessor()) {
                     var current = await ((PostProcessor)service).ProcessAsync(results);
                     results = new List<ResultInfo>();
                     results.AddRange(current);
