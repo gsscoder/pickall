@@ -16,7 +16,7 @@ namespace PickAll.Tests.Fakes
         private readonly ArbitrarySearcherSettings _settings;
 
         public ArbitrarySearcher(
-            IBrowsingContext context, object settings = null) : base(context, settings)  
+            IBrowsingContext context, object settings) : base(context, settings)  
         {
             _settings = Settings as ArbitrarySearcherSettings;
             if (_settings == null) {
