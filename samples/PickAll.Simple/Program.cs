@@ -32,12 +32,6 @@ namespace PickAll.Simple
                 context = context
                     .With<Uniqueness>()
                     .With<Order>();
-                if (options.Engines.Contains("Facebook")) {
-                    context = context.With<Facebook>(
-                        new FacebookSettings {
-                            RetrieveProfileID = true,
-                            RetrieveImageLink = true });
-                }
             }
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
                 context = context.With<FuzzyMatch>(
