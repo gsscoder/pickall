@@ -9,13 +9,13 @@ namespace PickAll.Tests.Unit
     public class OrderTests
     {
         [Fact]
-        public async void Should_ordered_by_index()
+        public void Should_ordered_by_index()
         {
             var results = new List<ResultInfo>();
             results.AddRange(ResultInfoGenerator.Generate("random1", 3));
             results.AddRange(ResultInfoGenerator.Generate("random2", 5));
             var order = new Order();
-            var processed = await order.ProcessAsync(results);
+            var processed = order.Process(results);
 
             processed.Should().NotBeEmpty()
                 .And.SatisfyRespectively(

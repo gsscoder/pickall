@@ -10,13 +10,13 @@ namespace PickAll.Tests.Unit
     public class UniquenessTests
     {
         [Fact]
-        public async void Should_exclude_duplicate_urls()
+        public void Should_exclude_duplicate_urls()
         {
             var results = new List<ResultInfo>();
             results.AddRange(ResultInfoGenerator.GenerateUnique("random", 10));
             results.Add(results.Random().WithIndex(0));
             var uniqueness = new Uniqueness();
-            var processed = await uniqueness.ProcessAsync(results);
+            var processed = uniqueness.Process(results);
 
             processed.Should().NotBeEmpty()
                 .And.HaveCount(results.Count() - 1);

@@ -73,7 +73,7 @@ namespace PickAll
                               where service.GetType().IsPostProcessor()
                               select service).Cast<PostProcessor>();
             foreach (var processor in processors) {
-                var current = await processor.ProcessAsync(results);
+                var current = processor.Process(results);
                 results = new List<ResultInfo>();
                 results.AddRange(current);
             }

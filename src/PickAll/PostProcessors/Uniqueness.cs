@@ -12,9 +12,9 @@ namespace PickAll.PostProcessors
         {
         }
 
-        public override async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
+        public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
-            return await Task.Run(() => results.DistinctBy(result => result.Url));
+            return results.DistinctBy(result => result.Url);
         }
     }
 }

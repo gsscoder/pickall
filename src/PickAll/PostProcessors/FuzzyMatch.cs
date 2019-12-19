@@ -26,16 +26,16 @@ namespace PickAll.PostProcessors
             }
         }
 
-        public override async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
+        public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
-            return await Task.Run(() =>
+            return
                 from computed in 
                     from result in results
                     select new {result = result,
                                 distance = LevenshteinDistance(_settings.Text, result.Description)}
                     where computed.distance >= _settings.MinimumDistance &&
                           computed.distance <= _settings.MaximumDistance
-                select computed.result);
+                select computed.result;
         }
 
         /// <summary>

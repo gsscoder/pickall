@@ -19,6 +19,6 @@ namespace PickAll
             private set;
         }
 
-        public abstract Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results);
+        public abstract IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results);
     }
 }

@@ -13,9 +13,9 @@ namespace PickAll.PostProcessors
         {
         }
 
-        public override async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
+        public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
-            return await Task.Run(() =>results.OrderBy(result => result.Index));
+            return results.OrderBy(result => result.Index);
         }
     }
 }

@@ -21,14 +21,11 @@ namespace PickAll.Tests.Fakes
             }
         }
 
-        public override async Task<IEnumerable<ResultInfo>> ProcessAsync(IEnumerable<ResultInfo> results)
+        public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
-            return await Task.Run(() => _());
-            IEnumerable<ResultInfo> _() {
-                foreach (var result in results) {
-                    yield return new ResultInfo(result.Originator, result.Index, result.Url,
-                        $"{_settings.Stamp}|{result.Description}", null);
-                }
+            foreach (var result in results) {
+                yield return new ResultInfo(result.Originator, result.Index, result.Url,
+                    $"{_settings.Stamp}|{result.Description}", null);
             }
         }
     }
