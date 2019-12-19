@@ -55,7 +55,6 @@ using PickAll.PostProcessors;
 var context = new SearchContext()
     .With<Google>() // search on google.com
     .With<Yahoo>() // search on yahoo.com
-    .With("facebook") // search on facebook.com public pages
     .With<Uniqueness>() // remove duplicates
     .With<Order>() // order results by index
     // match Levenshtein distance with maximum of 15
