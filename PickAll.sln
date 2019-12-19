@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll", "src/PickAll/Pick
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B9F43F2F-97BC-4AF3-A69F-90B858C953B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Simple", "samples/PickAll.Simple/PickAll.Simple.csproj", "{A354C85B-D8A6-4DE3-9B0A-6A590CAAAA0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Sample", "samples/PickAll.Sample/PickAll.Sample.csproj", "{A354C85B-D8A6-4DE3-9B0A-6A590CAAAA0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A4E8E206-43EA-4279-A75B-BB6D05ECA32B}"
 EndProject

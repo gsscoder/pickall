@@ -18,10 +18,10 @@ $ cd pickall/src/PickAll
 $ dotnet build -c Release.
 
 # execute sample
-$ cd pickall/samples/PickAll.Simple
+$ cd pickall/samples/PickAll.Sample
 $ dotnet build -c Release
-$ cd ../../artifacts/PickAll.Simple/Release/netcoreapp3.0/PickAll.Simple
-./PickAll.Simple "Steve Jobs" -e YAHOO:DuckDuckGo --fuzzy "Steve Jobs Biography"
+$ cd ../../artifacts/PickAll.Sample/Release/netcoreapp3.0/PickAll.Sample
+./PickAll.Sample "Steve Jobs" -e YAHOO:DuckDuckGo --fuzzy "Steve Jobs Biography"
 [0] Yahoo: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
 [2] DuckDuckGo: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
 [8] Yahoo: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
