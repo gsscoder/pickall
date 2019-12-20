@@ -34,11 +34,7 @@ namespace PickAll
         {
         }
 
-#if DEBUG
-        public IEnumerable<object> Services
-#else
         internal IEnumerable<object> Services
-#endif
         {
             get; private set;
         }
