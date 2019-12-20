@@ -58,8 +58,8 @@ namespace PickAll
         {
             if (query == null) throw new ArgumentNullException(nameof(query),
                 $"{nameof(query)} cannot be null");
-            if (query.Trim() == string.Empty) throw new ArgumentException(nameof(query),
-                $"{nameof(query)} cannot be empty or contains only white spaces");
+            if (query.Trim() == string.Empty) throw new ArgumentException(
+                $"{nameof(query)} cannot be empty or contains only white spaces", nameof(query));
 
             // Invoke searchers in parallel
             var searchers = (from service in Services

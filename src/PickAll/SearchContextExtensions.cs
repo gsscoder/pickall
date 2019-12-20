@@ -46,10 +46,10 @@ namespace PickAll
                                          object settings = null)
         {
             if (serviceName == null) {
-                throw new ArgumentNullException($"{nameof(serviceName)} cannot be null");
+                throw new ArgumentNullException(nameof(serviceName), $"{nameof(serviceName)} cannot be null");
             }
             if (serviceName.Trim() == string.Empty) {
-                throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
+                throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space", nameof(serviceName));
             }
 
             var type = context.GetType().GetTypeInfo().Assembly.GetTypes().Where(
@@ -98,10 +98,10 @@ namespace PickAll
         public static SearchContext Without(this SearchContext context, string serviceName)
         {
             if (serviceName == null) {
-                throw new ArgumentNullException($"{nameof(serviceName)} cannot be null");
+                throw new ArgumentNullException(nameof(serviceName), $"{nameof(serviceName)} cannot be null");
             }
             if (serviceName.Trim() == string.Empty) {
-                throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space");
+                throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space", nameof(serviceName));
             }
 
             var service = (from @this in context.Services
