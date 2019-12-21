@@ -194,23 +194,20 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public async void Context_state_is_set_in_services()
+        public async void Context_is_set_in_services()
         {
             var sut = new SearchContext()
                 .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 1 })
                 .With<Uniqueness>();
 
-            sut.Services.Cast<IService>().Should().NotBeEmpty()
-                .And.HaveCount(2)
-                .And.SatisfyRespectively(
-                    item => item.State.Should().BeNull(),
-                    item => item.State.Should().BeNull());
-
             await sut.SearchAsync("query");
 
-            sut.Services.Cast<IService>().Should().SatisfyRespectively(
-                item => item.State.Should().BeEquivalentTo(new ContextState("query")),
-                item => item.State.Should().BeEquivalentTo(new ContextState("query")));
+            sut.Query.Should().Be("query");
+            sut.Services.Should().NotBeEmpty()
+                .And.HaveCount(2)
+                .And.SatisfyRespectively(
+                    item => ((Searcher)item).Context.Should().NotBeNull(),
+                    item => ((PostProcessor)item).Context.Should().NotBeNull());
         }
     }
 }

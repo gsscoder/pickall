@@ -17,14 +17,6 @@ namespace PickAll
     {   
         private static readonly Lazy<IBrowsingContext> _activeContext = new Lazy<IBrowsingContext>(
             () => BrowsingContext.New(Configuration.Default.WithDefaultLoader()));
-        private static readonly Lazy<SearchContext> _defaultContext = new Lazy<SearchContext>(
-            () => new SearchContext(new object[]
-                {
-                    new Google(_activeContext.Value),
-                    new DuckDuckGo(_activeContext.Value),
-                    new Uniqueness(),
-                    new Order()
-                }));
 
         internal SearchContext(IEnumerable<object> services)
         {
@@ -35,14 +27,20 @@ namespace PickAll
         {
         }
 
+        public IBrowsingContext ActiveContext
+        {
+            get { return _activeContext.Value; }
+        }
+
+        public string Query
+        {
+            get;
+            private set;
+        }
+
         internal IEnumerable<object> Services
         {
             get; private set;
-        }
-
-        internal IBrowsingContext ActiveContext
-        {
-            get { return _activeContext.Value; }
         }
 
         /// <summary>
@@ -58,7 +56,7 @@ namespace PickAll
             if (query.Trim() == string.Empty) throw new ArgumentException(
                 $"{nameof(query)} cannot be empty or contains only white spaces", nameof(query));
 
-            Services = BindContextState(Services, new ContextState(query));
+            Query = query;
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -82,24 +80,18 @@ namespace PickAll
         }
 
         /// <summary>
-        /// Gets the <see cref="SearchContext"> instance created with default services.
+        /// Builds a <see cref="SearchContext"> instance with default services.
         /// </summary>
         public static SearchContext Default
         {
-            get { return _defaultContext.Value; }
+            get
+            {
+                return new SearchContext()
+                    .With<Google>()
+                    .With<DuckDuckGo>()
+                    .With<Uniqueness>()
+                    .With<Order>();
+            }
         }
-
-        static IEnumerable<object> BindContextState(IEnumerable<object> services,
-            ContextState state)
-        {
-            Func<IService, IService> bind = service =>
-                {
-                    var binded = service;
-                    binded.State = state;
-                    return binded;
-                };
-            return from service in services.Cast<IService>()
-                   select bind(service);
-        } 
     }
 }

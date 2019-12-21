@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AngleSharp;
 
 namespace PickAll.Tests.Fakes
 {
@@ -15,7 +14,7 @@ namespace PickAll.Tests.Fakes
         private readonly ArbitrarySearcherSettings _settings;
 
         public ArbitrarySearcher(
-            IBrowsingContext context, object settings) : base(context, settings)  
+            SearchContext context, object settings) : base(context, settings)  
         {
             _settings = Settings as ArbitrarySearcherSettings;
             if (_settings == null) {

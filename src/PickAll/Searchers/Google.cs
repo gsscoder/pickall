@@ -17,13 +17,13 @@ namespace PickAll.Searchers
         private static readonly Regex _expression = new Regex(@"^/url\?q=([^&]*)&.*",
             RegexOptions.Compiled);
 
-        public Google(IBrowsingContext context, object settings = null) : base(context, settings)  
+        public Google(SearchContext context, object settings = null) : base(context, settings)  
         {
         }
 
         public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
-            using (var document = await Context.OpenAsync("https://www.google.com/")) {
+            using (var document = await Context.ActiveContext.OpenAsync("https://www.google.com/")) {
                 var form = document.QuerySelector<IHtmlFormElement>("form[action='/search']");
                 using (var result = await form.SubmitAsync(
                     new { q = query })) {

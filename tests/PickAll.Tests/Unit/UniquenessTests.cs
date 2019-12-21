@@ -15,7 +15,7 @@ namespace PickAll.Tests.Unit
             var results = new List<ResultInfo>();
             results.AddRange(ResultInfoGenerator.GenerateUnique("random", 10));
             results.Add(results.Random().WithIndex(0));
-            var sut = new Uniqueness();
+            var sut = new Uniqueness(null);
             var processed = sut.Process(results);
 
             processed.Should().NotBeEmpty()

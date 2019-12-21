@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PickAll.PostProcessors
 {
@@ -9,7 +8,7 @@ namespace PickAll.PostProcessors
     /// </summary>
     public class Order : PostProcessor
     {
-        public Order(object settings = null) : base(settings)
+        public Order(SearchContext context, object settings = null) : base(context, settings)
         {
         }
 

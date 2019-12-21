@@ -12,13 +12,13 @@ namespace PickAll.Searchers
     /// </summary>
     public class DuckDuckGo : Searcher
     {
-        public DuckDuckGo(IBrowsingContext context, object settings = null) : base(context, settings)  
+        public DuckDuckGo(SearchContext context, object settings = null) : base(context, settings)  
         {
         }
 
         public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
-            using (var document = await Context.OpenAsync("https://duckduckgo.com/")) {
+            using (var document = await Context.ActiveContext.OpenAsync("https://duckduckgo.com/")) {
                 var form = document.QuerySelector<IHtmlFormElement>("#search_form_homepage");
                 using (var result = await form.SubmitAsync(
                     new { q = query })) {

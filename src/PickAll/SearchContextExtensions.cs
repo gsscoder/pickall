@@ -28,8 +28,8 @@ namespace PickAll
             }
 
             var service = type.IsSearcher() ?
-                Activator.CreateInstance(type, context.ActiveContext, settings) :
-                Activator.CreateInstance(type, settings);
+                Activator.CreateInstance(type, context, settings) :
+                Activator.CreateInstance(type, context, settings);
             return new SearchContext(context.Services.Concat(service));
         }
 
@@ -64,8 +64,8 @@ namespace PickAll
                     "T must inherit from Searcher or PostProcessor");
             }
             var service = type.IsSearcher() ?
-                Activator.CreateInstance(type, context.ActiveContext, settings) :
-                Activator.CreateInstance(type, settings);
+                Activator.CreateInstance(type, context, settings) :
+                Activator.CreateInstance(type, context, settings);
             return new SearchContext(context.Services.Concat(service));
         }
 

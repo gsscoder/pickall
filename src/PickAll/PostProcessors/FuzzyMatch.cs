@@ -18,7 +18,7 @@ namespace PickAll.PostProcessors
     {
         private readonly FuzzyMatchSettings _settings;
 
-        public FuzzyMatch(object settings) : base(settings)
+        public FuzzyMatch(SearchContext context, object settings) : base(context, settings)
         {
             _settings = Settings as FuzzyMatchSettings;
             if (_settings == null) {

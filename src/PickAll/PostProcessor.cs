@@ -6,16 +6,18 @@ namespace PickAll
     /// <summary>
     /// Represents a post processor service managed by <see cref="SearchContext">.
     /// </summary>
-    public abstract class PostProcessor : IService
+    public abstract class PostProcessor
     {
-        public PostProcessor(object settings)
+        public PostProcessor(SearchContext context, object settings)
         {
+            Context = context;
             Settings = settings;
         }
 
-        public ContextState State
+        internal SearchContext Context
         {
-            get; set;
+            get;
+            private set;
         }
 
         protected object Settings
