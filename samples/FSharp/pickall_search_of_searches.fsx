@@ -29,7 +29,7 @@ let results = context.SearchAsync(query)
 let words = results
             |> Seq.map (fun x -> x.Description.Split())
             |> Seq.concat
-let exclude = query.Split()
+let exclude = context.Query.Split()
 let newQuery = (words |> Seq.filter alpha
             |> Seq.filter (fun x -> exclude |> Seq.contains x |> not)
             |> Seq.countBy id
