@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PickAll
+namespace PickAll.Internal
 {
     static class EnumerableExtensions
     {

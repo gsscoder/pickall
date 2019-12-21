@@ -2,7 +2,7 @@ using System.Linq;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 
-namespace PickAll
+namespace PickAll.Internal
 {
     static class IHtmlElementExtensions
     {

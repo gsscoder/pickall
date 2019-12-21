@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Dom;
+using PickAll.Internal;
 
 namespace PickAll.Searchers
 {

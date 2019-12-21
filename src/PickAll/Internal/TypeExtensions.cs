@@ -1,6 +1,6 @@
 using System;
 
-namespace PickAll
+namespace PickAll.Internal
 {
     static class TypeExtensions
     {
