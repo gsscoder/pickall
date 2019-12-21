@@ -58,6 +58,8 @@ namespace PickAll
             if (query.Trim() == string.Empty) throw new ArgumentException(
                 $"{nameof(query)} cannot be empty or contains only white spaces", nameof(query));
 
+            Services = BindContextState(Services, new ContextState(query));
+
             // Invoke searchers in parallel
             var searchers = (from service in Services
                              where service.GetType().IsSearcher()
@@ -84,5 +86,18 @@ namespace PickAll
         {
             get { return _defaultContext.Value; }
         }
+
+        static IEnumerable<object> BindContextState(IEnumerable<object> services,
+            ContextState state)
+        {
+            Func<IService, IService> bind = service =>
+                {
+                    var binded = service;
+                    binded.State = state;
+                    return binded;
+                };
+            return from service in services.Cast<IService>()
+                   select bind(service);
+        } 
     }
 }

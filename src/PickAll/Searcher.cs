@@ -7,7 +7,7 @@ namespace PickAll
     /// <summary>
     /// Represents a searching services managed by <see cref="SearchContext">.
     /// </summary>
-    public abstract class Searcher
+    public abstract class Searcher : IService
     {
         public Searcher(IBrowsingContext context, object settings)
         {
@@ -20,6 +20,11 @@ namespace PickAll
         {
             get;
             private set;
+        }
+
+        public ContextState State
+        {
+            get; set;
         }
 
         protected object Settings

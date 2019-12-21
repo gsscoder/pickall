@@ -192,5 +192,25 @@ namespace PickAll.Tests.Unit
                     item => item.Should().BeOfType<ArbitrarySearcher>(),
                     item => item.Should().BeOfType<Order>());
         }
+
+        [Fact]
+        public async void Context_state_is_set_in_services()
+        {
+            var context = new SearchContext()
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 1 })
+                .With<Uniqueness>();
+
+            context.Services.Cast<IService>().Should().NotBeEmpty()
+                .And.HaveCount(2)
+                .And.SatisfyRespectively(
+                    item => item.State.Should().BeNull(),
+                    item => item.State.Should().BeNull());
+
+            await context.SearchAsync("query");
+
+            context.Services.Cast<IService>().Should().SatisfyRespectively(
+                item => item.State.Should().BeEquivalentTo(new ContextState("query")),
+                item => item.State.Should().BeEquivalentTo(new ContextState("query")));
+        }
     }
 }
