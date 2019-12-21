@@ -61,12 +61,14 @@ namespace PickAll
             Services = BindContextState(Services, new ContextState(query));
 
             // Invoke searchers in parallel
-            var searchers = (from service in Services
-                             where service.GetType().IsSearcher()
-                             select service).Cast<Searcher>();
             var resultGroup = await Task.WhenAll(
-                searchers.Select(searcher => searcher.SearchAsync(query)));
+                from searcher in 
+                    (from service in Services
+                     where service.GetType().IsSearcher()
+                     select service).Cast<Searcher>()
+                select searcher.SearchAsync(query));
             var results = resultGroup.SelectMany(group => group).ToList();
+
             // Invoke post processors in sync
             var processors = (from service in Services
                               where service.GetType().IsPostProcessor()
