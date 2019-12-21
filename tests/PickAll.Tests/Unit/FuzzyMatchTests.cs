@@ -13,8 +13,8 @@ namespace PickAll.Tests.Unit
             var results = ResultInfoGenerator.GenerateUnique("random", 10);
             var expected = results.Random();
 
-            var fuzzyMatch = new FuzzyMatch(new FuzzyMatchSettings { Text = expected.Description });
-            var processed = fuzzyMatch.Process(results);
+            var sut = new FuzzyMatch(new FuzzyMatchSettings { Text = expected.Description });
+            var processed = sut.Process(results);
 
             processed.Should().NotBeEmpty()
                 .And.ContainSingle()

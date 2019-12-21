@@ -14,8 +14,8 @@ namespace PickAll.Tests.Unit
             var results = new List<ResultInfo>();
             results.AddRange(ResultInfoGenerator.Generate("random1", 3));
             results.AddRange(ResultInfoGenerator.Generate("random2", 5));
-            var order = new Order();
-            var processed = order.Process(results);
+            var sut = new Order();
+            var processed = sut.Process(results);
 
             processed.Should().NotBeEmpty()
                 .And.SatisfyRespectively(
