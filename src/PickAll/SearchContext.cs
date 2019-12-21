@@ -27,6 +27,24 @@ namespace PickAll
         {
         }
 
+        /// <summary>
+        /// Builds a new search context with a given types.
+        /// </summary>
+        /// <param name="services">A list of service types.</param>
+        public SearchContext(params Type[] services)
+        {
+            var servicesCount = (from service in services
+                                 where service.IsService()
+                                 select service).Count();
+            if (servicesCount < services.Count()) {
+                throw new NotSupportedException(
+                    "All types must inherit from Searcher or PostProcessor");
+            }
+
+            Services = from service in services
+                       select Activator.CreateInstance(service, this, null);
+        }
+
         public IBrowsingContext ActiveContext
         {
             get { return _activeContext.Value; }

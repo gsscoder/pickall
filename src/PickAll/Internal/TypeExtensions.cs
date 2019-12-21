@@ -13,5 +13,10 @@ namespace PickAll.Internal
         {
             return type.IsSubclassOf(typeof(PostProcessor)); 
         }
+
+        public static bool IsService(this Type type)
+        {
+            return IsSearcher(type) || IsPostProcessor(type);
+        }
     }
 }

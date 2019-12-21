@@ -11,6 +11,37 @@ namespace PickAll.Tests.Unit
     public class SearchContextTests
     {
         [Fact]
+        public void Can_initialize_SearchContext_using_types()
+        {
+            var sut = new SearchContext(
+                typeof(Google),
+                typeof(Yahoo),
+                typeof(Uniqueness),
+                typeof(Order));
+
+            sut.Services.Should().NotBeEmpty()
+                .And.HaveCount(4)
+                .And.SatisfyRespectively(
+                    item => item.Should().BeOfType<Google>(),
+                    item => item.Should().BeOfType<Yahoo>(),
+                    item => item.Should().BeOfType<Uniqueness>(),
+                    item => item.Should().BeOfType<Order>());
+        }
+
+        [Fact]
+        public void Initializing_SearchContext_with_wrong_types_throws_NotSupportedException()
+        {
+            Action action = () => new SearchContext(
+                typeof(Google),
+                typeof(string),
+                typeof(Uniqueness),
+                typeof(int));
+            
+            action.Should().ThrowExactly<NotSupportedException>()
+                .WithMessage("All types must inherit from Searcher or PostProcessor");
+        }
+
+        [Fact]
         public void Can_add_service_by_name()
         {
             var sut = new SearchContext()
