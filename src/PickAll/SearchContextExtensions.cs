@@ -27,9 +27,7 @@ namespace PickAll
                     "T must inherit from Searcher or PostProcessor");
             }
 
-            var service = type.IsSearcher() ?
-                Activator.CreateInstance(type, context, settings) :
-                Activator.CreateInstance(type, context, settings);
+            var service = Activator.CreateInstance(type, context, settings);
             return new SearchContext(context.Services.Concat(service));
         }
 
@@ -63,9 +61,8 @@ namespace PickAll
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
-            var service = type.IsSearcher() ?
-                Activator.CreateInstance(type, context, settings) :
-                Activator.CreateInstance(type, context, settings);
+
+            var service =  Activator.CreateInstance(type, context, settings);
             return new SearchContext(context.Services.Concat(service));
         }
 
