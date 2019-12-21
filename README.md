@@ -47,6 +47,7 @@ $ dotnet test
 
 ## At a glance
 
+**CSharp:**
 ```csharp
 using PickAll;
 using PickAll.Searchers;
@@ -67,6 +68,18 @@ var scientific = results.Where(result => result.Url.Contains("wikipedia"));
 foreach (var result in scientific) {
     Console.WriteLine($"{result.Url} ${result.Description}");
 }
+```
+
+**FSharp:**
+```fsharp
+let context = new SearchContext(typeof<Google>,
+                                typeof<DuckDuckGo>,
+                                typeof<Yahoo>)
+let results = context.SearchAsync("quantum physics")
+              |> Async.AwaitTask
+              |> Async.RunSynchronously
+
+results |> Seq.iter (fun x -> printfn "%s %s" x.Url x.Description)
 ```
 
 ### Notes

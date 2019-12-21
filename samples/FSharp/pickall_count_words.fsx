@@ -2,7 +2,7 @@
 * pickall_count_words.fsx
 * - F# Script that demonstrates the use of PickAll (github.com/gsscoder/pickall)
 * - Searches the web and counts the words of results descriptions
-* - Requires PickAll.dll (0.8.0) and AngleSharp.dll (0.14.0-alpha-787)
+* - Requires PickAll.dll (0.10.0) and AngleSharp.dll (0.14.0-alpha-787)
 *   in the script directory
 *)
 #r "PickAll.dll"
@@ -18,10 +18,9 @@ let alpha (s : string) =
 
 let query = "Steve Jobs"
 
-let context = (new SearchContext())
-               .With<Google>()
-               .With<DuckDuckGo>()
-               .With<Yahoo>()
+let context = new SearchContext(typeof<Google>,
+                                typeof<DuckDuckGo>,
+                                typeof<Yahoo>)
 let results = context.SearchAsync(query)
               |> Async.AwaitTask
               |> Async.RunSynchronously

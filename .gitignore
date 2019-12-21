@@ -3,6 +3,7 @@
 .vscode/
 .vs
 tools/
+samples/FSharp/*.dll
 [Oo]bj/
 [Bb]in/
 .nuget/
