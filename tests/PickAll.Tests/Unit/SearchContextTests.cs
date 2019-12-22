@@ -240,5 +240,22 @@ namespace PickAll.Tests.Unit
                     item => ((Searcher)item).Context.Should().NotBeNull(),
                     item => ((PostProcessor)item).Context.Should().NotBeNull());
         }
+
+        [Fact]
+        public async void A_cloned_SearchContext_retains_services_not_query()
+        {
+            var context = new SearchContext(
+                typeof(Google),
+                typeof(DuckDuckGo),
+                typeof(Order));
+            await context.SearchAsync("query");
+
+            var sut = context.Clone();
+
+            sut.Query.Should().BeNull();
+            sut.Services.Should().NotBeEmpty()
+                .And.HaveCount(context.Services.Count())
+                .And.BeEquivalentTo(context.Services);
+        }
     }
 }

@@ -109,5 +109,15 @@ namespace PickAll
             }
             return new SearchContext(context.Services.Exclude(service.GetType()));
         }
+
+        /// <summary>
+        /// Builds a new search context with same services of the current. 
+        /// </summary>
+        /// <param name="context">The search context to clone.</param>
+        /// <returns>A cloned <see cref="SearchContext"> instance.</returns>
+        public static SearchContext Clone(this SearchContext context)
+        {
+            return new SearchContext(context.Services);
+        }
     }
 }
