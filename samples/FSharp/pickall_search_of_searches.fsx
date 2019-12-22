@@ -37,9 +37,11 @@ let newQuery = (words |> Seq.filter alpha
             |> Seq.map (fun (x, _) -> x + " ")
             |> String.Concat).Trim() + " " + query
 let newContext = context
+                  .WithoutAll<Searcher>()
+                  .With<Google>()
                   .With<Uniqueness>()
                   .With<Order>()
 newContext.SearchAsync(newQuery)
     |> Async.AwaitTask
     |> Async.RunSynchronously
-    |> Seq.iter (fun x -> printfn "%s - %s" (x.Description.ToUpper()) x.Url)
+    |> Seq.iter (fun x -> printfn "%s: %s - %s" x.Originator (x.Description.ToUpper()) x.Url)
