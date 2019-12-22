@@ -257,5 +257,28 @@ namespace PickAll.Tests.Unit
                 .And.HaveCount(context.Services.Count())
                 .And.BeEquivalentTo(context.Services);
         }
+
+        [Fact]
+        public void Can_exclude_all_services_by_category()
+        {
+            var context = new SearchContext(
+                typeof(Google),
+                typeof(Yahoo),
+                typeof(Order),
+                typeof(Uniqueness));
+            
+            var sut = context.WithoutAll<Searcher>();
+
+            sut.Services.Should().NotBeEmpty()
+                .And.HaveCount(2)
+                .And.SatisfyRespectively(
+                    item => item.Should().BeOfType<Order>(),
+                    item => item.Should().BeOfType<Uniqueness>()
+                );
+
+            sut = sut.WithoutAll<PostProcessor>();
+
+            sut.Services.Should().BeEmpty();
+        }
     }
 }

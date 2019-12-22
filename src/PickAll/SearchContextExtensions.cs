@@ -111,6 +111,28 @@ namespace PickAll
         }
 
         /// <summary>
+        /// Unregisters all instances of types that inherits from <see cref="Searcher">
+        /// or <see cref="PostProcessor">.
+        /// </summary>
+        /// <param name="context">The search context to alter.</param>
+        /// <typeparam name="T"><see cref="Searcher"> or <see cref="PostProcessor"> type.</typeparam>
+        /// <returns>A <see cref="SearchContext"> instance with all searcher
+        /// or all postprocessor removed.</returns>
+        public static SearchContext WithoutAll<T>(this SearchContext context)
+        {
+            if (typeof(T) != typeof(Searcher) && typeof(T) != typeof(PostProcessor))
+            {
+                throw new NotSupportedException(
+                    "T must be or inherit from Searcher or PostProcessor");
+            }
+
+            return new SearchContext(
+                from service in context.Services
+                where !service.GetType().IsSubclassOf(typeof(T))
+                select service);
+        }
+
+        /// <summary>
         /// Builds a new search context with same services of the current. 
         /// </summary>
         /// <param name="context">The search context to clone.</param>
