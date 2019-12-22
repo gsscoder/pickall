@@ -2,8 +2,7 @@
 * pickall_count_words.fsx
 * - F# Script that demonstrates the use of PickAll (github.com/gsscoder/pickall)
 * - Searches the web and counts the words of results descriptions
-* - Requires PickAll.dll (0.10.0) and AngleSharp.dll (0.14.0-alpha-787)
-*   in the script directory
+* - Requires PickAll.dll and AngleSharp.dll in the script directory
 *)
 #r "PickAll.dll"
 open System

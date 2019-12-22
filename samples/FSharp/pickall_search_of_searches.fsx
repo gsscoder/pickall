@@ -3,8 +3,7 @@
 * - F# Script that demonstrates the use of PickAll (github.com/gsscoder/pickall)
 * - Searches the web adding the first two more used words in initial results
 * - descriptions for a subsequent query
-* - Requires PickAll.dll (0.10.0) and AngleSharp.dll (0.14.0-alpha-787)
-*   in the script directory
+* - Requires PickAll.dll and AngleSharp.dll in the script directory
 *)
 #r "PickAll.dll"
 open System
