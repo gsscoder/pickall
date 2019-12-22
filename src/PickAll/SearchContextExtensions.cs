@@ -21,13 +21,12 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"> with the given service added.</returns>
         public static SearchContext With<T>(this SearchContext context, object settings = null)
         {
-            var type = typeof(T);
-            if (!type.IsSearcher() && !type.IsPostProcessor()) {
+            if (!typeof(T).IsSearcher() && !typeof(T).IsPostProcessor()) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
 
-            var service = Activator.CreateInstance(type, context, settings);
+            var service = Activator.CreateInstance(typeof(T), context, settings);
             return new SearchContext(context.Services.Concat(service));
         }
 
@@ -76,8 +75,7 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"> instance with the given service removed.</returns>
         public static SearchContext Without<T>(this SearchContext context)
         {
-            var type = typeof(T);
-            if (!type.IsSearcher() && !type.IsPostProcessor()) {
+            if (!typeof(T).IsSearcher() && !typeof(T).IsPostProcessor()) {
                 throw new NotSupportedException(
                     "T must inherit from Searcher or PostProcessor");
             }
