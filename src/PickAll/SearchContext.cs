@@ -17,6 +17,12 @@ namespace PickAll
     {   
         private static readonly Lazy<IBrowsingContext> _activeContext = new Lazy<IBrowsingContext>(
             () => BrowsingContext.New(Configuration.Default.WithDefaultLoader()));
+        private static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
+            () => new SearchContext(
+                typeof(Google),
+                typeof(DuckDuckGo),
+                typeof(Uniqueness),
+                typeof(Order)));
 
         internal SearchContext(IEnumerable<object> services)
         {
@@ -104,11 +110,7 @@ namespace PickAll
         {
             get
             {
-                return new SearchContext()
-                    .With<Google>()
-                    .With<DuckDuckGo>()
-                    .With<Uniqueness>()
-                    .With<Order>();
+                return _default.Value;
             }
         }
     }
