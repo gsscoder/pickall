@@ -60,6 +60,8 @@ var context = new SearchContext()
     .With<Order>() // order results by index
     // match Levenshtein distance with maximum of 15
     .With<FuzzyMatch>(new FuzzyMatchSettings { Text = "mechanics", MaximumDistance = 15 });
+    // repeat a search using more frequent words of previous results
+    .With<Improve>(new ImproveSettings {WordCount = 2, NoiseLength = 3})
 // execute services (order of addition)
 var results = await context.SearchAsync("quantum physics");
 // do anything you need with LINQ
