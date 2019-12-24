@@ -1,34 +1,20 @@
-using CSharpx;
-
 namespace PickAll
 {
     public abstract class Service
     {
-        private SetOnce<SearchContext> _context = new SetOnce<SearchContext>();
-        private SetOnce<object> _settings = new SetOnce<object>();
+        private SearchContext _context;
+        private object _settings;
 
         public SearchContext Context
         {
-            get
-            {
-                return _context.Value;
-            }
-            set
-            {
-                _context.Value = value;
-            }
+            get { return _context; }
+            set { _context = value; }
         }
 
         protected object Settings
         {
-            get
-            {
-                return _settings.Value;
-            }
-            set
-            {
-                _settings.Value = value;
-            }
+            get { return _settings; }
+            set { _settings = value; }
         }
     }
 }

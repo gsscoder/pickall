@@ -244,10 +244,10 @@ namespace PickAll.Tests.Unit
         [Fact]
         public async void A_cloned_SearchContext_retains_services_not_query()
         {
-            var context = new SearchContext(
-                typeof(Google),
-                typeof(DuckDuckGo),
-                typeof(Order));
+            var context = new SearchContext()
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 1 })
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 2 })
+                .With<Order>();
             await context.SearchAsync("query");
 
             var sut = context.Clone();
@@ -256,6 +256,23 @@ namespace PickAll.Tests.Unit
             sut.Services.Should().NotBeEmpty()
                 .And.HaveCount(context.Services.Count())
                 .And.BeEquivalentTo(context.Services);
+        }
+
+        [Fact]
+        public async void Services_of_cloned_SearchContext_are_unbound_to_original_context()
+        {
+            var context = new SearchContext()
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 1 })
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 2 })
+                .With<Order>();
+            await context.SearchAsync("query");
+
+            var sut = context.Clone();
+
+            sut.Query.Should().BeNull();
+            sut.Services.Should().NotBeEmpty()
+                .And.HaveCount(context.Services.Count())
+                .And.OnlyContain(service => service.Context == null);
         }
 
         [Fact]

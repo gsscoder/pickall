@@ -112,10 +112,7 @@ namespace PickAll
         /// </summary>
         public static SearchContext Default
         {
-            get
-            {
-                return _default.Value;
-            }
+            get { return _default.Value; }
         }
 
         Service BindContext(Service service)

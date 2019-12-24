@@ -141,7 +141,16 @@ namespace PickAll
         /// <returns>A cloned <see cref="SearchContext"/> instance.</returns>
         public static SearchContext Clone(this SearchContext context)
         {
-            return new SearchContext(context.Services);
+            return new SearchContext(
+                from service in context.Services
+                select UnbindContext(service));
+        }
+
+        static Service UnbindContext(Service service)
+        {
+            var unbound = service;
+            unbound.Context = null;
+            return service;
         }
     }
 }
