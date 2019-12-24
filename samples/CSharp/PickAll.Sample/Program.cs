@@ -21,10 +21,8 @@ namespace PickAll.Simple
             if (options.Engines.Count() == 0) {
                 context = SearchContext.Default;
             } else {
-                // Exclude Facebook searcher for custom configuration
-                var engines = options.Engines.Where(engine => engine != "Facebook");
                 context = new SearchContext();
-                foreach (var engine in engines) {
+                foreach (var engine in options.Engines) {
                     context = context.With(engine);
                 }
                 context = context
