@@ -13,6 +13,9 @@ namespace PickAll.Simple
         [Option('f', "fuzzy", HelpText = "Fuzzy matching of Levenshtein distance 0-10")]
         public string FuzzyMatch { get; set; }
 
+        [Option('i', "improve", HelpText = "Enable improve search post processor")]
+        public bool Improve { get; set; }
+
         [Option('e', "engines", HelpText = "Search engines to use separated by ':'",
             Separator = ':')]
         public IEnumerable<string> Engines { get; set; }

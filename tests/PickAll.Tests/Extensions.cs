@@ -23,6 +23,11 @@ namespace PickAll.Tests
             return collection.ElementAt(index);
         }
 
+        public static string Repeat(this string @string, int count)
+        {
+            return string.Join(" ", Enumerable.Repeat(@string, count).ToArray());
+        }
+
         public static ResultInfo WithIndex(this ResultInfo result, ushort index)
         {
             return new ResultInfo(

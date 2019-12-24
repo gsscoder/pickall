@@ -19,7 +19,7 @@ namespace PickAll
         internal SearchContext Context
         {
             get;
-            private set;
+            set;
         }
 
         protected object Settings

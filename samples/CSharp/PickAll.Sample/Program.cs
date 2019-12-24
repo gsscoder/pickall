@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using PickAll.Searchers;
 using PickAll.PostProcessors;
 using CommandLine;
 
@@ -38,6 +36,12 @@ namespace PickAll.Simple
                     new FuzzyMatchSettings {
                         Text = options.FuzzyMatch,
                         MaximumDistance = 10 });
+            }
+            if (options.Improve) {
+                context = context.With<Improve>(
+                    new ImproveSettings {
+                        WordCount = 2,
+                        NoiseLength = 3});
             }
 
             var results = await context.SearchAsync(options.Query);

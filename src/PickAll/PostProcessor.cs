@@ -17,13 +17,13 @@ namespace PickAll
         internal SearchContext Context
         {
             get;
-            private set;
+            set;
         }
 
         protected object Settings
         {
             get;
-            private set;
+            set;
         }
 
         public abstract IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results);

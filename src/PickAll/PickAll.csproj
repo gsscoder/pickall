@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>.NET agile and extensible web searching API</Title>
-    <Version>0.11.0</Version>
+    <Version>0.12.0</Version>
     <Authors>gsscoder</Authors>
     <Copyright>Copyright © Giacomo Stelluti Scala, 2019</Copyright>
     <PackageProjectUrl>https://github.com/gsscoder/pickall</PackageProjectUrl>

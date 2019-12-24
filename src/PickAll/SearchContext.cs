@@ -81,6 +81,7 @@ namespace PickAll
                 $"{nameof(query)} cannot be empty or contains only white spaces", nameof(query));
 
             Query = query;
+            BindContext();
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -111,6 +112,18 @@ namespace PickAll
             get
             {
                 return _default.Value;
+            }
+        }
+
+        void BindContext()
+        {
+            foreach(var service in Services) {
+                if (service.GetType().IsSearcher()) {
+                    ((Searcher)service).Context = this;
+                }
+                else {
+                    ((PostProcessor)service).Context = this;
+                }
             }
         }
     }
