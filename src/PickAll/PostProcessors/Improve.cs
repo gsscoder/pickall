@@ -5,13 +5,25 @@ using System.Linq;
 
 namespace PickAll.PostProcessors
 {
+    /// <summary>
+    /// Settings for <see cref="Improve"/> post processor.
+    /// </summary>
     public class ImproveSettings
     {
+        /// <summary>
+        /// Number of word with highest frequency to use in subsequent search.
+        /// </summary>
         public ushort WordCount;
 
+        /// <summary>
+        /// Length of words to be considered noise.
+        /// </summary>
         public ushort NoiseLength;
     }
 
+    /// <summary>
+    /// Post processor to improve results computing word frequency to perform a subsequent search.
+    /// </summary>
     public class Improve : PostProcessor
     {
         private readonly ImproveSettings _settings;

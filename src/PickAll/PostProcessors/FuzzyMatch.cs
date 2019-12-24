@@ -5,15 +5,30 @@ using SharpRhythm.Algorithms;
 
 namespace PickAll.PostProcessors
 {
+    /// <summary>
+    /// Settings for <see cref="FuzzyMatch"/> post processor.
+    /// </summary>
     public class FuzzyMatchSettings
     {
+        /// <summary>
+        /// String to compare against descriptions.
+        /// </summary>
         public string Text;
 
+        /// <summary>
+        /// Minimum distance of permutations. 
+        /// </summary>
         public uint MinimumDistance;
 
+        /// <summary>
+        /// Maximum distance of permutations.
+        /// </summary>
         public uint MaximumDistance;
     }
 
+    /// <summary>
+    /// Post processor to compare a string against results descriptions
+    /// </summary>
     public class FuzzyMatch : PostProcessor
     {
         private readonly FuzzyMatchSettings _settings;
