@@ -13,7 +13,7 @@ namespace PickAll.Tests.Fakes
     {
         private readonly MarkerSettings _settings;
 
-        public Marker(SearchContext context, object settings) : base(context, settings)
+        public Marker(object settings) : base(settings)
         {
             _settings = Settings as MarkerSettings;
             if (_settings == null) {

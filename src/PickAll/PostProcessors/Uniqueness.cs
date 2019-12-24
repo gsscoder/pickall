@@ -8,7 +8,7 @@ namespace PickAll.PostProcessors
     /// </summary>
     public class Uniqueness : PostProcessor
     {
-        public Uniqueness(SearchContext context, object settings = null) : base(context, settings)
+        public Uniqueness(object settings) : base(settings)
         {
         }
 

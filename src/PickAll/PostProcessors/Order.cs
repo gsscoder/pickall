@@ -8,7 +8,7 @@ namespace PickAll.PostProcessors
     /// </summary>
     public class Order : PostProcessor
     {
-        public Order(SearchContext context, object settings = null) : base(context, settings)
+        public Order(object settings) : base(settings)
         {
         }
 

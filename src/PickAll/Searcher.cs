@@ -1,31 +1,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AngleSharp;
 
 namespace PickAll
 {
     /// <summary>
     /// Represents a searching service managed by <see cref="SearchContext"/>.
     /// </summary>
-    public abstract class Searcher
+    public abstract class Searcher : Service
     {
-        public Searcher(SearchContext context, object settings)
+        public Searcher(object settings)
         {
-            Context = context;
             Settings = settings;
             Name = GetType().Name;
-        }
-
-        internal SearchContext Context
-        {
-            get;
-            set;
-        }
-
-        protected object Settings
-        {
-            get;
-            private set;
         }
 
         /// <summary>

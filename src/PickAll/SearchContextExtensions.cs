@@ -26,8 +26,9 @@ namespace PickAll
                     "T must inherit from Searcher or PostProcessor");
             }
 
-            var service = Activator.CreateInstance(typeof(T), context, settings);
-            return new SearchContext(context.Services.Concat(service));
+            var service = Activator.CreateInstance(typeof(T), settings);
+            return new SearchContext(
+                context.Services.Concat(service).Cast<Service>());
         }
 
         /// <summary>
@@ -61,8 +62,9 @@ namespace PickAll
                     "T must inherit from Searcher or PostProcessor");
             }
 
-            var service =  Activator.CreateInstance(type, context, settings);
-            return new SearchContext(context.Services.Concat(service));
+            var service =  Activator.CreateInstance(type, settings);
+            return new SearchContext(
+                context.Services.Concat(service).Cast<Service>());
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace PickAll
                     "T must inherit from Searcher or PostProcessor");
             }
 
-            return new SearchContext(context.Services.Exclude<T>());
+            return new SearchContext(context.Services.Exclude(typeof(T)));
         }
 
         /// <summary>

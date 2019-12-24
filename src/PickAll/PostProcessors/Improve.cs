@@ -28,7 +28,7 @@ namespace PickAll.PostProcessors
     {
         private readonly ImproveSettings _settings;
 
-        public Improve(SearchContext context, object settings) : base(context, settings)
+        public Improve(object settings) : base(settings)
         {
             _settings = settings as ImproveSettings;
             if (_settings == null) {

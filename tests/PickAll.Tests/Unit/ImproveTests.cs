@@ -12,8 +12,9 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext();
             await context.SearchAsync("query");
 
-            var sut = new Improve(context, new ImproveSettings{
+            var sut = new Improve(new ImproveSettings {
                 WordCount = 2});
+            sut.Context = context;
 
             var fakeResults = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription("hello from tests"),
@@ -32,8 +33,9 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext();
             await context.SearchAsync("massive repetition");
 
-            var sut = new Improve(context, new ImproveSettings{
+            var sut = new Improve(new ImproveSettings {
                 WordCount = 2});
+            sut.Context = context;
 
             var fakeResults = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(
@@ -58,9 +60,10 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext();
             await context.SearchAsync("massive repetition");
 
-            var sut = new Improve(context, new ImproveSettings{
+            var sut = new Improve(new ImproveSettings {
                 WordCount = 2,
                 NoiseLength = 3});
+            sut.Context = context;
 
             var fakeResults = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(

@@ -12,7 +12,7 @@ namespace PickAll.Searchers
     /// </summary>
     public class DuckDuckGo : Searcher
     {
-        public DuckDuckGo(SearchContext context, object settings = null) : base(context, settings)  
+        public DuckDuckGo(object settings) : base(settings)  
         {
         }
 

@@ -5,7 +5,7 @@ namespace PickAll.Internal
 {
     static class EnumerableExtensions
     {
-        public static IEnumerable<object> Concat<T>(this IEnumerable<object> collection, T newElement)
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> collection, T newElement)
         {
             foreach (var element in collection) {
                 yield return element;
@@ -13,7 +13,7 @@ namespace PickAll.Internal
             yield return newElement;
         }
 
-        public static IEnumerable<object> Exclude(this IEnumerable<object> collection, Type type)
+        public static IEnumerable<T> Exclude<T>(this IEnumerable<T> collection, Type type)
         {
             bool removed = false;
             foreach (var element in collection) {
@@ -31,10 +31,10 @@ namespace PickAll.Internal
             }
         }
 
-        public static IEnumerable<object> Exclude<T>(this IEnumerable<object> collection)
-        {
-            return collection.Exclude(typeof(T));
-        }
+        // public static IEnumerable<T> Exclude<T>(this IEnumerable<T> collection)
+        // {
+        //     return collection.Exclude(typeof(T));
+        // }
 
         /// <summary>
         /// Based on MoreLINQ one (github.com/morelinq).

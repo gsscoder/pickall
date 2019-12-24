@@ -24,12 +24,12 @@ namespace PickAll
                 typeof(Uniqueness),
                 typeof(Order)));
 
-        internal SearchContext(IEnumerable<object> services)
+        internal SearchContext(IEnumerable<Service> services)
         {
             Services = services;
         }
 
-        public SearchContext() : this(new object[] {})
+        public SearchContext() : this(Enumerable.Empty<Service>())
         {
         }
 
@@ -47,8 +47,9 @@ namespace PickAll
                     "All types must inherit from Searcher or PostProcessor");
             }
 
-            Services = from service in services
-                       select Activator.CreateInstance(service, this, null);
+            Services = (from service in services
+                        select Activator.CreateInstance(service, new object[] { null }))
+                        .Cast<Service>();
         }
 
         public IBrowsingContext ActiveContext
@@ -62,7 +63,7 @@ namespace PickAll
             private set;
         }
 
-        internal IEnumerable<object> Services
+        internal IEnumerable<Service> Services
         {
             get; private set;
         }
@@ -81,7 +82,9 @@ namespace PickAll
                 $"{nameof(query)} cannot be empty or contains only white spaces", nameof(query));
 
             Query = query;
-            BindContext();
+            
+            Services = from service in Services
+                       select BindContext(service);
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -115,16 +118,10 @@ namespace PickAll
             }
         }
 
-        void BindContext()
+        Service BindContext(Service service)
         {
-            foreach(var service in Services) {
-                if (service.GetType().IsSearcher()) {
-                    ((Searcher)service).Context = this;
-                }
-                else {
-                    ((PostProcessor)service).Context = this;
-                }
-            }
+            service.Context = this;
+            return service;
         }
     }
 }
