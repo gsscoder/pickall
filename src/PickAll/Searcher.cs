@@ -5,7 +5,7 @@ using AngleSharp;
 namespace PickAll
 {
     /// <summary>
-    /// Represents a searching service managed by <see cref="SearchContext">.
+    /// Represents a searching service managed by <see cref="SearchContext"/>.
     /// </summary>
     public abstract class Searcher
     {

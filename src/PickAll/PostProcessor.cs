@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace PickAll
 {
     /// <summary>
-    /// Represents a post processor service managed by <see cref="SearchContext">.
+    /// Represents a post processor service managed by <see cref="SearchContext"/>.
     /// </summary>
     public abstract class PostProcessor
     {

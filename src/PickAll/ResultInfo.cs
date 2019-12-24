@@ -6,7 +6,7 @@ namespace PickAll
     public class ResultInfo
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="ResultInfo">.
+        /// Initializes a new instance of <see cref="ResultInfo"/>.
         /// </summary>
         /// <param name="originator">The searcher which originated the result.</param>
         /// <param name="index">The result index.</param>
