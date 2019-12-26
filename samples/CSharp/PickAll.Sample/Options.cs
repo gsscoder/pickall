@@ -1,5 +1,4 @@
 using CommandLine;
-using CommandLine.Text;
 using System.Collections.Generic;
 
 namespace PickAll.Simple
