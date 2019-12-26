@@ -8,7 +8,7 @@ namespace PickAll
     /// <summary>
     /// A set of useful extensions for <see cref="SearchContext"/>.
     /// </summary>
-    public static partial class SearchContextExtensions
+    public static class SearchContextExtensions
     {
         /// <summary>
         /// Registers an instance of <see cref="Searcher"> or <see cref="PostProcessor">
@@ -40,7 +40,7 @@ namespace PickAll
         /// <param name="settings">The optional settings instance for the service.</param>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext"/>
         /// or <see cref="PostProcessor"/>.</typeparam>
-        /// <returns>A <see cref="SearchContext"/> with the given service added.</returns>       
+        /// <returns>A <see cref="SearchContext"/> with the given service added.</returns>
         public static SearchContext With(this SearchContext context, string serviceName,
                                          object settings = null)
         {
@@ -135,7 +135,7 @@ namespace PickAll
         }
 
         /// <summary>
-        /// Builds a new search context with same services of the current. 
+        /// Builds a new search context with same services of the current.
         /// </summary>
         /// <param name="context">The search context to clone.</param>
         /// <returns>A cloned <see cref="SearchContext"/> instance.</returns>
