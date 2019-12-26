@@ -9,7 +9,7 @@ PickAll is primarily designed to collect a limited amount of results (possibly t
 ## Install via NuGet
 
 ```sh
-$ dotnet add package PickAll --version 0.15.0-alpha
+$ dotnet add package PickAll --version 0.16.0-alpha
 ```
 
 ## Build and sample
