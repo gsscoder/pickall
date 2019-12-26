@@ -4,6 +4,7 @@ using Xunit;
 using FluentAssertions;
 using PickAll.PostProcessors;
 using PickAll.Tests.Fakes;
+using CSharpx;
 
 namespace PickAll.Tests.Unit
 {
@@ -14,7 +15,7 @@ namespace PickAll.Tests.Unit
         {
             var results = new List<ResultInfo>();
             results.AddRange(ResultInfoGenerator.GenerateUnique("random", 10));
-            results.Add(results.Random().WithIndex(0));
+            results.Add(results.ToArray().Choice().UsingIndex(0));
             var sut = new Uniqueness(null);
             var processed = sut.Process(results);
 

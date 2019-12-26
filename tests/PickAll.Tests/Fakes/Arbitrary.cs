@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CSharpx;
 
 namespace PickAll.Tests.Fakes
 {
@@ -45,7 +46,7 @@ namespace PickAll.Tests.Fakes
 
         public static string Generate()
         {
-            return $"{_domains.Random()}{_paths.Random()}";
+            return $"{_domains.Choice()}{_paths.Choice()}";
         }
     }
 
@@ -69,7 +70,7 @@ namespace PickAll.Tests.Fakes
 
         public static string Generate()
         {
-            return $"{_descriptions.Random()}";
+            return $"{_descriptions.Choice()}";
         }
     }
 
