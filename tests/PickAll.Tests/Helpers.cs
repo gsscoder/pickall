@@ -22,13 +22,13 @@ namespace CSharpx
             return true;
         }
 
-        public static string Repeat(this string @string, int count)
+        public static string Repeat(this string @string, int count, string separator = " ")
         {
             if (count < 0) {
                 throw new ArgumentException(nameof(count));
             }
 
-            return string.Join(" ", Enumerable.Repeat(@string, count).ToArray());
+            return string.Join(separator, Enumerable.Repeat(@string, count).ToArray());
         }
     }
 
