@@ -26,7 +26,7 @@ namespace PickAll.Tests.Unit
             var second = titles.ElementAt(1)
                 .ApplyToWord(titles.ElementAt(1).WordIndex(), word => word.Mangle());
 
-            var fakeResults = new ResultInfo[] {
+            var fakeResults = new [] {
                 ResultInfoHelper.OnlyDescription(first),
                 ResultInfoHelper.OnlyDescription(second),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
@@ -52,7 +52,7 @@ namespace PickAll.Tests.Unit
                     .BetweenWords("repetition".Repeat(50))
                     .BetweenWords("hello".Repeat(25)));
 
-            var fakeResults = new ResultInfo[] {
+            var fakeResults = new [] {
                 ResultInfoHelper.OnlyDescription(titles.First()),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(1)),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
@@ -82,7 +82,7 @@ namespace PickAll.Tests.Unit
                     .BetweenWords("word".Repeat(25))
                     .BetweenWords("of").Repeat(30));
 
-            var fakeResults = new ResultInfo[] {
+            var fakeResults = new [] {
                 ResultInfoHelper.OnlyDescription(titles.First()),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(1)),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(2))

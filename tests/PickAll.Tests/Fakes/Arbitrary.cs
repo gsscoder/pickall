@@ -7,7 +7,7 @@ namespace PickAll.Tests.Fakes
 {
     static class Urls
     {
-        private static string[] _domains = new string[] {
+        private static string[] _domains = {
             "https://www.google.com",
             "https://duckduckgo.com",
             "https://yahoo.com",
@@ -27,7 +27,7 @@ namespace PickAll.Tests.Fakes
             "https://unix.stackexchange.com"
         };
 
-        private static string[] _paths = new string[] {
+        private static string[] _paths = {
             "/",
             "/index.htm",
             "/index.html",

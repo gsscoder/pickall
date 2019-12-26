@@ -63,7 +63,7 @@ namespace CSharpx
             }
 
             var nonAlphanumeric =
-                new string[] {"!", "\"", "£", "$", "%", "&", "/", "(", ")", "="}.Choice();
+                new[] {"!", "\"", "£", "$", "%", "&", "/", "(", ")", "="}.Choice();
             var prefix = new Random().Next(0, 1);
             if (prefix == 1) {
                 return $"{word}{nonAlphanumeric}";
