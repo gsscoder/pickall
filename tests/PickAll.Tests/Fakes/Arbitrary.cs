@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using WaffleGenerator;
 using CSharpx;
 
 namespace PickAll.Tests.Fakes
@@ -50,37 +51,13 @@ namespace PickAll.Tests.Fakes
         }
     }
 
-    static class Descriptions
-    {
-        private static string[] _descriptions = new string[] {
-            "Home",
-            "Wellcome",
-            "Google",
-            "Yahoo",
-            "DuckDuckGo",
-            "Google Translate",
-            "Gmail",
-            "Search",
-            "Advanced Search",
-            "Contacts",
-            "Info",
-            "About",
-            "Credits"
-        };
-
-        public static string Generate()
-        {
-            return $"{_descriptions.Choice()}";
-        }
-    }
-
     static class ResultInfoGenerator
     {
         public static IEnumerable<ResultInfo> Generate(string originator, ushort samples)
         {
             for (ushort index = 0; index <= samples - 1; index++) {
                 yield return new ResultInfo(
-                    originator, index, Urls.Generate(), Descriptions.Generate(), null);
+                    originator, index, Urls.Generate(), WaffleEngine.Title(), null);
             } 
         }
 
@@ -89,7 +66,7 @@ namespace PickAll.Tests.Fakes
             var generated = new List<ResultInfo>();
             for (ushort index = 0; index <= samples - 1; index++) {
                 var url = Urls.Generate();
-                var description = Descriptions.Generate();
+                var description = WaffleEngine.Title();
                 var searched = from @this in generated
                                where @this.Url == url || @this.Description == description
                                select @this;

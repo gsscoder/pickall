@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using CSharpx;
+using WaffleGenerator;
+
 namespace PickAll.Tests
 {
     static class ResultInfoExtensions
@@ -22,6 +28,20 @@ namespace PickAll.Tests
                 "http://fake-url.com/",
                 text,
                 null);
+        }
+    }
+
+    static class WaffleHelper
+    {
+        public static IEnumerable<string> Titles(int times, Func<string, string> modifier = null)
+        {
+            Func<string, string> _nullModifier = @string => @string;
+            var _modifier = modifier ?? _nullModifier;
+
+            for (var i = 0; i < times; i++) {
+                var title = WaffleEngine.Title();
+                yield return _modifier(title);
+            }
         }
     }
 }

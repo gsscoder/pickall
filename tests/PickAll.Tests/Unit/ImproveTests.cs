@@ -1,3 +1,4 @@
+using System.Linq;
 using CSharpx;
 using Xunit;
 using FluentAssertions;
@@ -13,18 +14,25 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext();
             await context.SearchAsync("query");
 
+            var titles = WaffleHelper.Titles(3);
+
             var sut = new Improve(new ImproveSettings {
-                WordCount = 2});
+                WordCount = (ushort)titles.ToWords().Count()});
             sut.Context = context;
 
+            var first = titles.First()
+                .ApplyToWord(titles.First().WordIndex(), word => word.Mangle())
+                .ApplyToWord(titles.First().WordIndex(word => word.IsAlphanumeric()), word => word.Mangle());
+            var second = titles.ElementAt(1)
+                .ApplyToWord(titles.ElementAt(1).WordIndex(), word => word.Mangle());
+
             var fakeResults = new ResultInfo[] {
-                ResultInfoHelper.OnlyDescription("hello from tests"),
-                ResultInfoHelper.OnlyDescription("@ll ok"),
-                ResultInfoHelper.OnlyDescription(".this excluded")
+                ResultInfoHelper.OnlyDescription(first),
+                ResultInfoHelper.OnlyDescription(second),
+                ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
             };
 
             sut.FoldDescriptions(fakeResults).Should().NotBeEmpty()
-                .And.HaveCount(2)
                 .And.OnlyContain(word => word.IsAlphanumeric());
         }
 
@@ -38,16 +46,16 @@ namespace PickAll.Tests.Unit
                 WordCount = 2});
             sut.Context = context;
 
+            var titles = WaffleHelper.Titles(3, title => title
+                    .BetweenWords("massive".Repeat(50))
+                    .BetweenWords("something".Repeat(25))
+                    .BetweenWords("repetition".Repeat(50))
+                    .BetweenWords("hello".Repeat(25)));
+
             var fakeResults = new ResultInfo[] {
-                ResultInfoHelper.OnlyDescription(
-                    "this is a fake result " + "hello".Repeat(10) + "word".Repeat(3) +
-                    "massive".Repeat(50) + "repetition".Repeat(50)),
-                ResultInfoHelper.OnlyDescription(
-                    "this too " + "ok".Repeat(8) + "something".Repeat(10) + 
-                    "massive".Repeat(50) + "repetition".Repeat(50)),
-                ResultInfoHelper.OnlyDescription(
-                    "this also " + "hello".Repeat(5) + "something".Repeat(20) +
-                    "massive".Repeat(50) + "repetition".Repeat(50))
+                ResultInfoHelper.OnlyDescription(titles.First()),
+                ResultInfoHelper.OnlyDescription(titles.ElementAt(1)),
+                ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
             };
 
             sut.FoldDescriptions(fakeResults).Should().NotBeEmpty()
@@ -66,17 +74,18 @@ namespace PickAll.Tests.Unit
                 NoiseLength = 3});
             sut.Context = context;
 
+            var titles = WaffleHelper.Titles(3, title => title
+                    .BetweenWords("massive".Repeat(50))
+                    .BetweenWords("catch".Repeat(25))
+                    .BetweenWords("a".Repeat(30))
+                    .BetweenWords("repetition".Repeat(50))
+                    .BetweenWords("word".Repeat(25))
+                    .BetweenWords("of").Repeat(30));
+
             var fakeResults = new ResultInfo[] {
-                ResultInfoHelper.OnlyDescription(
-                    "this is " + "a".Repeat(100) + " fake result " +
-                    "catch".Repeat(50) + " " + "word".Repeat(50) +
-                    "massive".Repeat(100) + "repetition".Repeat(100)),
-                ResultInfoHelper.OnlyDescription(
-                    "this too " + "a".Repeat(100) + " description with noise " +
-                    "massive".Repeat(100) + "repetition".Repeat(100)),
-                ResultInfoHelper.OnlyDescription(
-                    "the".Repeat(100) + " should be removed " +
-                    "massive".Repeat(100) + "repetition".Repeat(100))
+                ResultInfoHelper.OnlyDescription(titles.First()),
+                ResultInfoHelper.OnlyDescription(titles.ElementAt(1)),
+                ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
             };
 
             sut.FoldDescriptions(fakeResults).Should().NotBeEmpty()
