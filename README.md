@@ -6,6 +6,12 @@
 
 PickAll is primarily designed to collect a limited amount of results (possibly the more relavant) from different sources and process them in a chain of steps. Results are essentially URLs and descriptions, but more data can be handled.
 
+## Install via NuGet
+
+```sh
+$ dotnet add package PickAll --version 0.15.0-alpha
+```
+
 ## Build and sample
 
 **NOTE**: .NET Core 3.0 or higher is required.
@@ -85,4 +91,4 @@ results |> Seq.iter (fun x -> printfn "%s %s" x.Url x.Description)
 ```
 
 ### Notes
-- This is a pre-release, since it's under development API can change until stable version.
+- PickAll is still under development and API could change until latest beta versions.
