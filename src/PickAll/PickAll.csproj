@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>PickAll</AssemblyName>
-    <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>.NET agile and extensible web searching API</Title>
     <Version>0.14.0</Version>
@@ -10,7 +8,6 @@
     <Copyright>Copyright © Giacomo Stelluti Scala, 2019</Copyright>
     <PackageProjectUrl>https://github.com/gsscoder/pickall</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gsscoder/pickall</RepositoryUrl>
-    <Company />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
