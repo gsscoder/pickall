@@ -13,7 +13,7 @@ namespace PickAll.Tests.Fakes
     {
         private readonly ArbitrarySearcherSettings _settings;
 
-        public ArbitrarySearcher(object settings) : base(settings)  
+        public ArbitrarySearcher(object settings) : base(settings)
         {
             _settings = Settings as ArbitrarySearcherSettings;
             if (_settings == null) {
