@@ -9,11 +9,7 @@ namespace PickAll.Tests.Fakes
     {
         public static string[] schemes =
         {
-            "http",
-            "https",
-            "ftp",
-            "ssh",
-            "git"
+            "http", "https", "ftp", "ssh", "git"
         };
 
         public static string[] domainsSub =
