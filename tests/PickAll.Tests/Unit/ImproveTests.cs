@@ -21,10 +21,10 @@ namespace PickAll.Tests.Unit
             sut.Context = context;
 
             var first = titles.First()
-                .ApplyToWord(titles.First().WordIndex(), word => word.Mangle())
-                .ApplyToWord(titles.First().WordIndex(word => word.IsAlphanumeric()), word => word.Mangle());
+                .ApplyToWord(titles.First().RandomWordIndex(), word => word.Mangle())
+                .ApplyToWord(titles.First().RandomWordIndex(word => word.IsAlphanumeric()), word => word.Mangle());
             var second = titles.ElementAt(1)
-                .ApplyToWord(titles.ElementAt(1).WordIndex(), word => word.Mangle());
+                .ApplyToWord(titles.ElementAt(1).RandomWordIndex(), word => word.Mangle());
 
             var fakeResults = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(first),
