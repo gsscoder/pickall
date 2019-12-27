@@ -121,7 +121,7 @@ namespace PickAll.Tests.Fakes
             return builder.ToString();
         }
 
-        private string Choice(IEnumerable<string> source, bool unique = true)
+        string Choice(IEnumerable<string> source, bool unique = true)
         {
             var item = source.ElementAt(_random.Next(0, source.Count() - 1));
             var exists = _chosen.Contains(item);
