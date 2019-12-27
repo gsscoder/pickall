@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using CSharpx;
 using WaffleGenerator;
+using PickAll.Tests.Fakes;
 
 namespace PickAll.Tests
 {
@@ -42,6 +41,11 @@ namespace PickAll.Tests
                 var title = WaffleEngine.Title();
                 yield return _modifier(title);
             }
+        }
+
+        public static string Link()
+        {
+            return new UrlEngine().Build(false, new Random().Next(0, 3));
         }
     }
 }
