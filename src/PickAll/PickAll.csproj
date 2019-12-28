@@ -9,7 +9,7 @@
     <Copyright>Copyright © Giacomo Stelluti Scala, 2019</Copyright>
     <PackageProjectUrl>https://github.com/gsscoder/pickall</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gsscoder/pickall</RepositoryUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/gsscoder/pickall/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>web;scraping;api;library</PackageTags>  
   </PropertyGroup>
 
