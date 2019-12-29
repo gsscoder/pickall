@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using WaffleGenerator;
 using PickAll.Tests.Fakes;
+using AngleSharp;
+using AngleSharp.Dom;
 
 namespace PickAll.Tests
 {
@@ -47,5 +49,15 @@ namespace PickAll.Tests
         {
             return new UrlEngine().Build(false, new Random().Next(0, 3));
         }
+
+        public static IDocument Page(int paragraphs = 1)
+        {
+            var context = BrowsingContext.New(Configuration.Default.WithDefaultLoader());
+            return context.OpenAsync(request => request.Content(
+                    WaffleEngine.Html(
+                        paragraphs: paragraphs,
+                        includeHeading: true,
+                        includeHeadAndBody: true))).GetAwaiter().GetResult();
+        } 
     }
 }
