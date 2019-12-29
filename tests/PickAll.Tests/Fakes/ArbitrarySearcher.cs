@@ -26,7 +26,7 @@ namespace PickAll.Tests.Fakes
             return await Task.Run(() => _());
             IEnumerable<ResultInfo> _() {
                 var originator = Guid.NewGuid().ToString();
-                return ResultInfoGenerator.Generate(originator, _settings.Samples);
+                return ResultInfoBuilder.Generate(originator, _settings.Samples);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace PickAll.Tests.Unit
         [Fact]
         public void Matching_text_with_minimum_distance_of_zero_excludes_other_results()
         {
-            var results = ResultInfoGenerator.GenerateUnique("Choice", 10);
+            var results = ResultInfoBuilder.GenerateUnique("tests", 10);
             var expected = results.ToArray().Choice();
 
             var sut = new FuzzyMatch(new FuzzyMatchSettings { Text = expected.Description });

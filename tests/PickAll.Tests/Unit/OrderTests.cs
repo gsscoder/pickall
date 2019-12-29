@@ -12,8 +12,8 @@ namespace PickAll.Tests.Unit
         public void Should_ordered_by_index()
         {
             var results = new List<ResultInfo>();
-            results.AddRange(ResultInfoGenerator.Generate("Choice1", 3));
-            results.AddRange(ResultInfoGenerator.Generate("Choice2", 5));
+            results.AddRange(ResultInfoBuilder.Generate("Choice1", 3));
+            results.AddRange(ResultInfoBuilder.Generate("Choice2", 5));
             var sut = new Order(null);
             var processed = sut.Process(results);
 

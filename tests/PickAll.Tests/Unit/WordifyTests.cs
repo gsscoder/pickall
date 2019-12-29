@@ -11,7 +11,7 @@ namespace PickAll.Tests.Unit
         [Fact]
         public void Should_extract_words_from_a_page()
         {
-            IDocument page = WaffleHelper.Page(paragraphs: 3);
+            IDocument page = WaffleBuilder.GeneratePage(paragraphs: 3);
 
             var sut = new Wordify(new WordifySettings());
             var words = sut.TextFromDocument(page);

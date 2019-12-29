@@ -15,7 +15,7 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext();
             await context.SearchAsync("query");
 
-            var titles = WaffleHelper.Titles(3);
+            var titles = WaffleBuilder.GenerateTitle(3);
 
             var sut = new Improve(new ImproveSettings {
                 WordCount = (ushort)titles.ToWords().Count()});
@@ -27,13 +27,13 @@ namespace PickAll.Tests.Unit
             var second = titles.ElementAt(1)
                 .ApplyToWord(titles.ElementAt(1).RandomWordIndex(), word => word.Mangle());
 
-            var fakeResults = new ResultInfo[] {
+            var results = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(first),
                 ResultInfoHelper.OnlyDescription(second),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
             };
 
-            sut.FoldDescriptions(fakeResults).Should().NotBeEmpty()
+            sut.FoldDescriptions(results).Should().NotBeEmpty()
                 .And.OnlyContain(word => word.IsAlphanumeric());
         }
 
@@ -47,19 +47,19 @@ namespace PickAll.Tests.Unit
                 WordCount = 2});
             sut.Context = context;
 
-            var titles = WaffleHelper.Titles(3, title => title
+            var titles = WaffleBuilder.GenerateTitle(3, title => title
                     .BetweenWords("massive".Repeat(50))
                     .BetweenWords("something".Repeat(25))
                     .BetweenWords("repetition".Repeat(50))
                     .BetweenWords("hello".Repeat(25)));
 
-            var fakeResults = new ResultInfo[] {
+            var results = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(titles.First()),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(1)),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
             };
 
-            sut.FoldDescriptions(fakeResults).Should().NotBeEmpty()
+            sut.FoldDescriptions(results).Should().NotBeEmpty()
                 .And.HaveCount(2)
                 .And.BeEquivalentTo("something", "hello");
         }
@@ -75,7 +75,7 @@ namespace PickAll.Tests.Unit
                 NoiseLength = 3});
             sut.Context = context;
 
-            var titles = WaffleHelper.Titles(3, title => title
+            var titles = WaffleBuilder.GenerateTitle(3, title => title
                     .BetweenWords("massive".Repeat(50))
                     .BetweenWords("catch".Repeat(25))
                     .BetweenWords("a".Repeat(30))
@@ -83,13 +83,13 @@ namespace PickAll.Tests.Unit
                     .BetweenWords("word".Repeat(25))
                     .BetweenWords("of").Repeat(30));
 
-            var fakeResults = new ResultInfo[] {
+            var results = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(titles.First()),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(1)),
                 ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
             };
 
-            sut.FoldDescriptions(fakeResults).Should().NotBeEmpty()
+            sut.FoldDescriptions(results).Should().NotBeEmpty()
                 .And.HaveCount(2)
                 .And.BeEquivalentTo("catch", "word");
         }

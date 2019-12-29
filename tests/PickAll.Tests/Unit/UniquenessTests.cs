@@ -14,7 +14,7 @@ namespace PickAll.Tests.Unit
         public void Should_exclude_duplicate_urls()
         {
             var results = new List<ResultInfo>();
-            results.AddRange(ResultInfoGenerator.GenerateUnique("random", 10));
+            results.AddRange(ResultInfoBuilder.GenerateUnique("random", 10));
             results.Add(results.ToArray().Choice().UsingIndex(0));
             var sut = new Uniqueness(null);
             var processed = sut.Process(results);
