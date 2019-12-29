@@ -41,6 +41,12 @@ namespace PickAll.Simple
                         WordCount = 2,
                         NoiseLength = 3});
             }
+            if (options.Wordify) {
+                context = context.With<Wordify>(
+                    new WordifySettings {
+                        IncludeTitle = true
+                    });
+            }
 
             var results = await context.SearchAsync(options.Query);
             foreach (var result in results) {

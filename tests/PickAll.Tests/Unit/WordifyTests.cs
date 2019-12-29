@@ -14,7 +14,7 @@ namespace PickAll.Tests.Unit
             IDocument page = WaffleBuilder.GeneratePage(paragraphs: 3);
 
             var sut = new Wordify(new WordifySettings());
-            var words = sut.TextFromDocument(page);
+            var words = sut.ExtractText(page);
 
             words.Should().NotBeEmpty()
                 .And.OnlyContain(word => word.IsAlphanumeric());
