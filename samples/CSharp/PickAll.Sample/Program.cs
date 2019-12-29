@@ -44,7 +44,8 @@ namespace PickAll.Simple
             if (options.Wordify) {
                 context = context.With<Wordify>(
                     new WordifySettings {
-                        IncludeTitle = true});
+                        IncludeTitle = true,
+                        NoiseLength = 3});
             }
 
             var results = await context.SearchAsync(options.Query);
