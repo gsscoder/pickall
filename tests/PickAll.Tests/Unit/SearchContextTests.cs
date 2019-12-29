@@ -242,9 +242,9 @@ namespace PickAll.Tests.Unit
         }
 
         [Fact]
-        public async void A_cloned_SearchContext_retains_services_not_query()
+        public async void A_cloned_SearchContext_retains_services_and_maximum_results_not_query()
         {
-            var context = new SearchContext()
+            var context = new SearchContext(maximumResults: 5)
                 .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 1 })
                 .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 2 })
                 .With<Order>();
@@ -253,6 +253,9 @@ namespace PickAll.Tests.Unit
             var sut = context.Clone();
 
             sut.Query.Should().BeNull();
+            sut.MaximumResults.Should().NotBeNull()
+                .And.HaveValue()
+                .And.Be(5);
             sut.Services.Should().NotBeEmpty()
                 .And.HaveCount(context.Services.Count())
                 .And.BeEquivalentTo(context.Services);
@@ -296,6 +299,18 @@ namespace PickAll.Tests.Unit
             sut = sut.WithoutAll<PostProcessor>();
 
             sut.Services.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async void Should_limit_results_if_maximumResults_is_set()
+        {
+            var sut = new SearchContext(maximumResults: 10)
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20 });
+            
+            var results = await sut.SearchAsync("query");
+
+            results.Should().NotBeEmpty()
+                .And.HaveCount(10);
         }
     }
 }

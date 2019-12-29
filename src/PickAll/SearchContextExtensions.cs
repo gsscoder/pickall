@@ -28,7 +28,8 @@ namespace PickAll
 
             var service = Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
-                context.Services.Concat(service).Cast<Service>());
+                context.Services.Concat(service).Cast<Service>(),
+                context.MaximumResults);
         }
 
         /// <summary>
@@ -64,7 +65,8 @@ namespace PickAll
 
             var service =  Activator.CreateInstance(type, settings);
             return new SearchContext(
-                context.Services.Concat(service).Cast<Service>());
+                context.Services.Concat(service).Cast<Service>(),
+                context.MaximumResults);
         }
 
         /// <summary>
@@ -82,7 +84,9 @@ namespace PickAll
                     "T must inherit from Searcher or PostProcessor");
             }
 
-            return new SearchContext(context.Services.Exclude(typeof(T)));
+            return new SearchContext(
+                context.Services.Exclude(typeof(T)),
+                context.MaximumResults);
         }
 
         /// <summary>
@@ -109,7 +113,8 @@ namespace PickAll
             if (service == null) {
                 throw new InvalidOperationException($"{serviceName} not registred as service");
             }
-            return new SearchContext(context.Services.Exclude(service.GetType()));
+            return new SearchContext(
+                context.Services.Exclude(service.GetType()), context.MaximumResults);
         }
 
         /// <summary>
@@ -131,7 +136,7 @@ namespace PickAll
             return new SearchContext(
                 from service in context.Services
                 where !service.GetType().IsSubclassOf(typeof(T))
-                select service);
+                select service, context.MaximumResults);
         }
 
         /// <summary>
@@ -143,7 +148,7 @@ namespace PickAll
         {
             return new SearchContext(
                 from service in context.Services
-                select UnbindContext(service));
+                select UnbindContext(service), context.MaximumResults);
         }
 
         static Service UnbindContext(Service service)

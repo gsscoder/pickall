@@ -24,12 +24,17 @@ namespace PickAll
                 typeof(Uniqueness),
                 typeof(Order)));
 
-        internal SearchContext(IEnumerable<Service> services)
+        internal SearchContext(IEnumerable<Service> services, uint? maximumResults)
         {
             Services = services;
+            MaximumResults = maximumResults;
         }
 
-        public SearchContext() : this(Enumerable.Empty<Service>())
+        public SearchContext() : this(Enumerable.Empty<Service>(), null)
+        {
+        }
+
+        public SearchContext(uint maximumResults) : this(Enumerable.Empty<Service>(), maximumResults)
         {
         }
 
@@ -58,6 +63,12 @@ namespace PickAll
         }
 
         public string Query
+        {
+            get;
+            private set;
+        }
+
+        internal uint? MaximumResults
         {
             get;
             private set;
@@ -95,6 +106,10 @@ namespace PickAll
                 select searcher.SearchAsync(query));
             var results = resultGroup.SelectMany(group => group).ToList();
 
+            if (MaximumResults != null) {
+                results = new List<ResultInfo>(results.Take((int)MaximumResults.Value));
+            }
+
             // Invoke post processors in sync
             var processors = (from service in Services
                               where service.GetType().IsPostProcessor()
@@ -104,6 +119,7 @@ namespace PickAll
                 results = new List<ResultInfo>();
                 results.AddRange(current);
             }
+
             return results;
         }
 
