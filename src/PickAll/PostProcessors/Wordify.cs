@@ -27,6 +27,11 @@ namespace PickAll.PostProcessors
         /// An high limit with numerous pages to scrape can be resource intensive.
         /// </remarks>
         public uint? MaximumLength;
+
+        /// <summary>
+        /// Length of words to be considered noise.
+        /// </summary>
+        public ushort NoiseLength;
     }
 
     /// <summary>
@@ -94,6 +99,9 @@ namespace PickAll.PostProcessors
 #endif
         IEnumerable<string> ExtractText(IDocument document)
         {
+            Func<string, bool> couldBeNoise = _settings.NoiseLength == 0
+                ? couldBeNoise =  _ => false
+                : w => w.Length <= _settings.NoiseLength;
             var result = new List<String>();
             if (_settings.IncludeTitle) {
                 result.AddRange(document.Title.Split());
@@ -107,7 +115,9 @@ namespace PickAll.PostProcessors
                     "div", "p", "h1", "h2","h3", "h4", "h5", "h6");
                 foreach (var element in elements) {
                     var words = element.Text().Sanitize(normalizeWhiteSpace: true).Split();
-                    foreach (var word in words) {
+                    foreach (var word in from @this in words
+                                         where !couldBeNoise(@this)
+                                         select @this) {
                         if (word.Trim().Length > 0) {
                             yield return word;
                         }
@@ -115,7 +125,5 @@ namespace PickAll.PostProcessors
                 }
             }
         }
-
-
     }
 }

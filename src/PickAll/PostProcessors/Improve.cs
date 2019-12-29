@@ -39,6 +39,9 @@ namespace PickAll.PostProcessors
 
         internal IEnumerable<string> FoldDescriptions(IEnumerable<ResultInfo> results)
         {
+            Func<string, bool> couldBeNoise = _settings.NoiseLength == 0
+                ? couldBeNoise =  _ => false
+                : w => w.Length <= _settings.NoiseLength;
             var words = from result in results
                         from word in result.Description.Split()
                         where word.IsAlphanumeric()
@@ -54,7 +57,7 @@ namespace PickAll.PostProcessors
                 var queryWords = query.ToLower().Split();
                 refined = from computed in folded
                           where !queryWords.Contains(computed.Item1.ToLower())
-                          && !CouldBeNoise(computed.Item1)
+                          && !couldBeNoise.Invoke(computed.Item1)
                           select computed;
 
             return (from computed in refined
@@ -73,14 +76,6 @@ namespace PickAll.PostProcessors
                        .With<Uniqueness>()
                        .With<Order>()
                        .SearchAsync(builder.ToString()).GetAwaiter().GetResult();
-        }
-
-        bool CouldBeNoise(string word)
-        {
-            if (_settings.NoiseLength == 0) {
-                return false;
-            }
-            return word.Length <= _settings.NoiseLength;
         }
     }
 }
