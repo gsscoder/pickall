@@ -69,7 +69,7 @@ var context = new SearchContext(maximumResults: 30)
     // repeat a search using more frequent words of previous results
     .With<Improve>(new ImproveSettings {WordCount = 2, NoiseLength = 3})
     // scrape result pages and extract distinct words
-    .With<Wordify>(new WordifySettings {IncludeTitle = true});
+    .With<Wordify>(new WordifySettings {IncludeTitle = true, NoiseLength = 3});
 // execute services (order of addition)
 var results = await context.SearchAsync("quantum physics");
 // do anything you need with LINQ
