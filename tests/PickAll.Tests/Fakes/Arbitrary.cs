@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bogus;
 using WaffleGenerator;
 using AngleSharp;
 using AngleSharp.Dom;
@@ -12,8 +13,12 @@ namespace PickAll.Tests.Fakes
         public static IEnumerable<ResultInfo> Generate(string originator, ushort samples)
         {
             for (ushort index = 0; index <= samples - 1; index++) {
-                yield return new ResultInfo(
-                    originator, index, WaffleBuilder.GenerateLink(), WaffleEngine.Title(), null);
+                var faker = new Faker<ResultInfo>()
+                    .RuleFor(o => o.Originator, _ => originator)
+                    .RuleFor(o => o.Index, _ => index)
+                    .RuleFor(o => o.Url, f => f.Internet.UrlWithPath(fileExt: "html"))
+                    .RuleFor(o => o.Description, f => f.WaffleTitle());
+                yield return faker.Generate();
             } 
         }
 
@@ -21,15 +26,17 @@ namespace PickAll.Tests.Fakes
         {
             var generated = new List<ResultInfo>();
             for (ushort index = 0; index <= samples - 1; index++) {
-                var url = WaffleBuilder.GenerateLink();
-                var description = WaffleEngine.Title();
+                var faker = new Faker<ResultInfo>()
+                    .RuleFor(o => o.Originator, _ => originator)
+                    .RuleFor(o => o.Index, _ => index)
+                    .RuleFor(o => o.Url, f => f.Internet.UrlWithPath(fileExt: "html"))
+                    .RuleFor(o => o.Description, f => f.WaffleTitle());
+                var candidate = faker.Generate();
                 var searched = from @this in generated
-                               where @this.Url == url || @this.Description == description
+                               where @this.Url == candidate.Url || @this.Description == candidate.Description
                                select @this;
                 if (searched.Count() == 0) {
-                    var result = new ResultInfo(
-                        originator, index, url, description, null);
-                    generated.Add(result);
+                    generated.Add(candidate);
                 }
                 else {
                     index--;
@@ -50,11 +57,6 @@ namespace PickAll.Tests.Fakes
                 var title = WaffleEngine.Title();
                 yield return _modifier(title);
             }
-        }
-
-        public static string GenerateLink()
-        {
-            return new UrlEngine().Build(false, new Random().Next(0, 3));
         }
 
         public static IDocument GeneratePage(int paragraphs = 1)

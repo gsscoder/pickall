@@ -5,6 +5,11 @@ namespace PickAll
     /// </summary>
     public class ResultInfo
     {
+#if DEBUG
+        public ResultInfo()
+        {
+        }
+#endif
         /// <summary>
         /// Initializes a new instance of <see cref="ResultInfo"/>.
         /// </summary>
@@ -25,26 +30,65 @@ namespace PickAll
         /// <summary>
         /// The searcher which originated the result.
         /// </summary>
-        public string Originator { get; private set;}
+        public string Originator
+        {
+            get;
+#if DEBUG
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// The result index.
         /// </summary>
-        public ushort Index { get; private set; }
+        public ushort Index
+        {
+            get;
+#if !DEBUG
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// The result URL
         /// </summary>
-        public string Url { get; private set; }
+        public string Url
+        {
+            get;
+#if !DEBUG
+            private set;
+#else
+            internal set;
+#endif
+        }
 
         /// <summary>
         /// The result description.
         /// </summary>
-        public string Description { get; private set; }
-
+        public string Description 
+        {
+            get;
+#if !DEBUG
+            private set;
+#else
+            internal set;
+#endif
+        }
         /// <summary>
         /// Additional data supplied by the service. 
         /// </summary>
-        public object Data { get; private set; }
+        public object Data
+        {
+            get;
+#if !DEBUG
+            private set;
+#else
+            internal set;
+#endif
+        }
     } 
 }
