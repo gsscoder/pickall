@@ -22,7 +22,7 @@ namespace PickAll.PostProcessors
     }
 
     /// <summary>
-    /// Post processor to improve results computing word frequency to perform a subsequent search.
+    /// Improves results computing word frequency to perform a subsequent search.
     /// </summary>
     public class Improve : PostProcessor
     {

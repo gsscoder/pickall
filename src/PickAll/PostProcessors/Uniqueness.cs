@@ -4,7 +4,7 @@ using PickAll.Internal;
 namespace PickAll.PostProcessors
 {
     /// <summary>
-    /// Post processor to remove duplicate results by URL. 
+    /// Removes duplicate results by URL. 
     /// </summary>
     public class Uniqueness : PostProcessor
     {

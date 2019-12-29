@@ -27,7 +27,7 @@ namespace PickAll.PostProcessors
     }
 
     /// <summary>
-    /// Post processor to compare a string against results descriptions
+    /// Compares a string against results descriptions.
     /// </summary>
     public class FuzzyMatch : PostProcessor
     {

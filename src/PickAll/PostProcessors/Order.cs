@@ -4,7 +4,7 @@ using System.Linq;
 namespace PickAll.PostProcessors
 {
     /// <summary>
-    /// Post processor to order results placing indexes of same number close by each other.
+    /// Orders results placing indexes of same number close by each other.
     /// </summary>
     public class Order : PostProcessor
     {
