@@ -1,7 +1,8 @@
 using Xunit;
 using FluentAssertions;
-using PickAll.PostProcessors;
 using AngleSharp.Dom;
+using PickAll.PostProcessors;
+using PickAll.Tests.Fakes;
 
 namespace PickAll.Tests.Unit
 {
