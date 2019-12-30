@@ -38,7 +38,7 @@ namespace PickAll.PostProcessors
         }
 
 #if DEBUG
-        internal
+        public
 #endif
         IEnumerable<string> FoldDescriptions(IEnumerable<ResultInfo> results)
         {

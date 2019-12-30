@@ -1,9 +1,9 @@
 using System.Linq;
-using CSharpx;
 using Xunit;
 using FluentAssertions;
 using PickAll.PostProcessors;
 using PickAll.Tests.Fakes;
+using CSharpx;
 
 namespace PickAll.Tests.Unit
 {
@@ -17,15 +17,17 @@ namespace PickAll.Tests.Unit
 
             var titles = WaffleBuilder.GenerateTitle(3);
 
-            var sut = new Improve(new ImproveSettings {
-                WordCount = (ushort)titles.ToWords().Count()});
+            var sut = new Improve(new ImproveSettings
+            {
+                WordCount = (ushort)titles.FlattenOnce().Count()
+            });
             sut.Context = context;
 
             var first = titles.First()
-                .ApplyToWord(titles.First().RandomWordIndex(), word => word.Mangle())
-                .ApplyToWord(titles.First().RandomWordIndex(word => word.IsAlphanumeric()), word => word.Mangle());
+                .ApplyAt(titles.First().ChoiceOfIndex(), word => word.Mangle())
+                .ApplyAt(titles.First().ChoiceOfIndex(word => word.IsAlphanumeric()), word => word.Mangle());
             var second = titles.ElementAt(1)
-                .ApplyToWord(titles.ElementAt(1).RandomWordIndex(), word => word.Mangle());
+                .ApplyAt(titles.ElementAt(1).ChoiceOfIndex(), word => word.Mangle());
 
             var results = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(first),
@@ -43,15 +45,17 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext();
             await context.SearchAsync("massive repetition");
 
-            var sut = new Improve(new ImproveSettings {
-                WordCount = 2});
+            var sut = new Improve(new ImproveSettings
+            {
+                WordCount = 2
+            });
             sut.Context = context;
 
             var titles = WaffleBuilder.GenerateTitle(3, title => title
-                    .BetweenWords("massive".Repeat(50))
-                    .BetweenWords("something".Repeat(25))
-                    .BetweenWords("repetition".Repeat(50))
-                    .BetweenWords("hello".Repeat(25)));
+                    .Intersperse("massive".Replicate(50))
+                    .Intersperse("something".Replicate(25))
+                    .Intersperse("repetition".Replicate(50))
+                    .Intersperse("hello".Replicate(25)));
 
             var results = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(titles.First()),
@@ -70,18 +74,20 @@ namespace PickAll.Tests.Unit
             var context = new SearchContext();
             await context.SearchAsync("massive repetition");
 
-            var sut = new Improve(new ImproveSettings {
+            var sut = new Improve(new ImproveSettings
+            {
                 WordCount = 2,
-                NoiseLength = 3});
+                NoiseLength = 3
+            });
             sut.Context = context;
 
             var titles = WaffleBuilder.GenerateTitle(3, title => title
-                    .BetweenWords("massive".Repeat(50))
-                    .BetweenWords("catch".Repeat(25))
-                    .BetweenWords("a".Repeat(30))
-                    .BetweenWords("repetition".Repeat(50))
-                    .BetweenWords("word".Repeat(25))
-                    .BetweenWords("of").Repeat(30));
+                    .Intersperse("massive".Replicate(50))
+                    .Intersperse("catch".Replicate(25))
+                    .Intersperse("a".Replicate(30))
+                    .Intersperse("repetition".Replicate(50))
+                    .Intersperse("word".Replicate(25))
+                    .Intersperse("of").Replicate(30));
 
             var results = new ResultInfo[] {
                 ResultInfoHelper.OnlyDescription(titles.First()),

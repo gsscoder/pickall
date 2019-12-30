@@ -95,7 +95,7 @@ namespace PickAll.PostProcessors
         }
 
 #if DEBUG
-        internal
+        public
 #endif
         IEnumerable<string> ExtractText(IDocument document)
         {

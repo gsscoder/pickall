@@ -3,6 +3,7 @@ using FluentAssertions;
 using AngleSharp.Dom;
 using PickAll.PostProcessors;
 using PickAll.Tests.Fakes;
+using CSharpx;
 
 namespace PickAll.Tests.Unit
 {

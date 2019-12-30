@@ -1,9 +1,8 @@
-using System.Linq;
 using Xunit;
 using FluentAssertions;
-using CSharpx;
 using PickAll.PostProcessors;
 using PickAll.Tests.Fakes;
+using CSharpx;
 
 namespace PickAll.Tests.Unit
 {
@@ -13,7 +12,7 @@ namespace PickAll.Tests.Unit
         public void Matching_text_with_minimum_distance_of_zero_excludes_other_results()
         {
             var results = ResultInfoBuilder.GenerateUnique("tests", 10);
-            var expected = results.ToArray().Choice();
+            var expected = results.Choice();
 
             var sut = new FuzzyMatch(new FuzzyMatchSettings { Text = expected.Description });
             var processed = sut.Process(results);

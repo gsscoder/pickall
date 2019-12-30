@@ -68,13 +68,21 @@ namespace PickAll
             private set;
         }
 
+#if DEBUG
+        public uint? MaximumResults
+#else
         internal uint? MaximumResults
+#endif
         {
             get;
             private set;
         }
 
+#if DEBUG
+        public IEnumerable<Service> Services
+#else
         internal IEnumerable<Service> Services
+#endif
         {
             get; private set;
         }
