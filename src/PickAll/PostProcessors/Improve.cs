@@ -37,7 +37,10 @@ namespace PickAll.PostProcessors
             }
         }
 
-        internal IEnumerable<string> FoldDescriptions(IEnumerable<ResultInfo> results)
+#if DEBUG
+        internal
+#endif
+        IEnumerable<string> FoldDescriptions(IEnumerable<ResultInfo> results)
         {
             Func<string, bool> couldBeNoise = _settings.NoiseLength == 0
                 ? couldBeNoise =  _ => false
