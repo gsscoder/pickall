@@ -94,21 +94,44 @@ namespace CSharpx
             return ChoiceOfIndex(value, validator);
         }
 
-        /// <summary>
-        /// Mangles a word with a non alphanumeric character as prefix or suffix.
-        /// </summary>
-        public static string Mangle(this string word)
-        {
-            if (word.IsWhiteSpace()) throw new ArgumentException(nameof(word));
+        private static string[] _mangleChars =
+            {"!", "\"", "£", "$", "%", "&", "/", "(", ")", "=", "?", "^", "[", "]", "*", "@", "°",
+             "#", "§", ",", ";", ".", ":", "-", "_"};
 
-            var chars =
-                new char[] {'!', '"', '£', '$', '%', '&', '/', '(', ')', '='};
-            var nonAlphanumeric = (new Random()).Next(0, chars.Length - 1);
-            var prefix = new Random().Next(0, 1);
-            if (prefix == 1) {
-                return $"{word}{nonAlphanumeric}";
+        /// <summary>
+        /// Mangles a string with a given number of non alphanumeric character in random positions.
+        /// </summary>
+        public static string Mangle(this string value, uint times = 1, uint maxLength = 1)
+        {
+            if (times > value.Length) throw new ArgumentException(nameof(times));
+            if (times == 0 || maxLength == 0) return value;
+
+            var random = new Random();
+            var indexes = new List<int>((int)times);
+            int uniqueNext()
+                {
+                    var index = random.Next(0, value.Length - 1);
+                    if (indexes.Contains(index)) {
+                        return uniqueNext();
+                    }
+                    return index;
+                };
+            for (var i = 0; i < times; i++) {
+                indexes.Add(uniqueNext());
             }
-            return $"{nonAlphanumeric}{word}";
+            var mutations = indexes.OrderBy(index => index);
+
+            var mangled = new StringBuilder(value.Length + (int)times * (int)maxLength);
+            for (var i = 0; i < value.Length; i++) {
+                mangled.Append(value[i]);
+                if (mutations.Contains(i)) {
+                    mangled.Append(
+                        _mangleChars[random.Next(0, _mangleChars.Length - 1)]
+                        .Replicate(maxLength, string.Empty));
+                    
+                }
+            }
+            return mangled.ToString();
         }
 
         /// <summary>
