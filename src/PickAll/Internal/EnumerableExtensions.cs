@@ -31,11 +31,6 @@ namespace PickAll.Internal
             }
         }
 
-        // public static IEnumerable<T> Exclude<T>(this IEnumerable<T> collection)
-        // {
-        //     return collection.Exclude(typeof(T));
-        // }
-
         /// <summary>
         /// Based on MoreLINQ one (github.com/morelinq).
         /// </summary>
