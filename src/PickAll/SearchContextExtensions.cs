@@ -28,7 +28,7 @@ namespace PickAll
 
             var service = Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
-                context.Services.Concat(service).Cast<Service>(),
+                context.Services.Add(service).Cast<Service>(),
                 context.MaximumResults);
         }
 
@@ -65,7 +65,7 @@ namespace PickAll
 
             var service =  Activator.CreateInstance(type, settings);
             return new SearchContext(
-                context.Services.Concat(service).Cast<Service>(),
+                context.Services.Add(service).Cast<Service>(),
                 context.MaximumResults);
         }
 
@@ -85,7 +85,7 @@ namespace PickAll
             }
 
             return new SearchContext(
-                context.Services.Exclude(typeof(T)),
+                context.Services.Remove(typeof(T)),
                 context.MaximumResults);
         }
 
@@ -114,7 +114,7 @@ namespace PickAll
                 throw new InvalidOperationException($"{serviceName} not registred as service");
             }
             return new SearchContext(
-                context.Services.Exclude(service.GetType()), context.MaximumResults);
+                context.Services.Remove(service.GetType()), context.MaximumResults);
         }
 
         /// <summary>

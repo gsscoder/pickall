@@ -5,7 +5,7 @@ namespace PickAll.Internal
 {
     static class EnumerableExtensions
     {
-        public static IEnumerable<T> Concat<T>(this IEnumerable<T> collection, T newElement)
+        public static IEnumerable<T> Add<T>(this IEnumerable<T> collection, T newElement)
         {
             foreach (var element in collection) {
                 yield return element;
@@ -13,7 +13,7 @@ namespace PickAll.Internal
             yield return newElement;
         }
 
-        public static IEnumerable<T> Exclude<T>(this IEnumerable<T> collection, Type type)
+        public static IEnumerable<T> Remove<T>(this IEnumerable<T> collection, Type type)
         {
             bool removed = false;
             foreach (var element in collection) {
