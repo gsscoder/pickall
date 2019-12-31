@@ -4,7 +4,7 @@
 
 ## Philosophy
 
-PickAll is primarily designed to collect a limited amount of results (possibly the more relavant) from different sources and process them in a chain of steps. Results are essentially URLs and descriptions, but more data can be handled.
+PickAll is primarily designed to collect a limited amount of results (possibly the more relavant) from different sources and process these in a chain of steps. Results are essentially URLs and descriptions, but more data can be handled.
 
 ## Install via NuGet
 
