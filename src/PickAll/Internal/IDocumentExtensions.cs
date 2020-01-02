@@ -5,6 +5,9 @@ using CSharpx;
 
 namespace PickAll.Internal
 {
+#if DEBUG
+    public
+#endif
     static class IDocumentExtensions
     {
         public static IEnumerable<string> TextSelectorAll(this IDocument document, bool includeTitle)
