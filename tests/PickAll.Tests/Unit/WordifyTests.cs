@@ -15,7 +15,7 @@ namespace PickAll.Tests.Unit
             IDocument page = WaffleBuilder.GeneratePage(paragraphs: 3);
 
             var sut = new Wordify(new WordifySettings());
-            var words = sut.ExtractText(page);
+            var words = sut.ExtractWords(page);
 
             words.Should().NotBeEmpty()
                 .And.OnlyContain(word => word.IsAlphanumeric());
@@ -27,7 +27,7 @@ namespace PickAll.Tests.Unit
             IDocument page = WaffleBuilder.GeneratePage(paragraphs: 3);
 
             var sut = new Wordify(new WordifySettings{NoiseLength = 2});
-            var words = sut.ExtractText(page);
+            var words = sut.ExtractWords(page);
 
             words.Should().NotBeEmpty()
                 .And.OnlyContain(word => word.IsAlphanumeric())

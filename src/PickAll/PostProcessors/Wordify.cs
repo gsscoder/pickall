@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AngleSharp;
 using AngleSharp.Dom;
-using CSharpx;
 using PickAll.Internal;
 
 namespace PickAll.PostProcessors
@@ -52,6 +51,9 @@ namespace PickAll.PostProcessors
 
         public override string ToString()
         {
+            if (Words.Count() == 0) {
+                return string.Empty;
+            }
             var builder = new StringBuilder();
             foreach (var word in Words) {
                 builder.Append(word);
@@ -85,7 +87,7 @@ namespace PickAll.PostProcessors
                     .GetAwaiter().GetResult())
                 {
                     if (document.ToHtml().Length <= limit) {
-                        yield return result.Clone(new WordifyData(ExtractText(document)));
+                        yield return result.Clone(new WordifyData(ExtractWords(document)));
                     }
                     else {
                         yield return result;
@@ -97,30 +99,19 @@ namespace PickAll.PostProcessors
 #if DEBUG
         public
 #endif
-        IEnumerable<string> ExtractText(IDocument document)
+        IEnumerable<string> ExtractWords(IDocument document)
         {
             Func<string, bool> couldBeNoise = _settings.NoiseLength == 0
                 ? couldBeNoise =  _ => false
                 : w => w.Length <= _settings.NoiseLength;
-            var result = new List<String>();
-            if (_settings.IncludeTitle) {
-                result.AddRange(document.Title.Split());
-            }
-            result.AddRange(TextFromDocument());
-            return result.Distinct();
-
-            IEnumerable<string> TextFromDocument()
-            {
-                var elements =  document.SelectElements(
-                    "div", "p", "h1", "h2","h3", "h4", "h5", "h6");
-                foreach (var element in elements) {
-                    var words = element.Text().Sanitize(normalizeWhiteSpace: true).Split();
-                    foreach (var word in from @this in words
-                                         where !couldBeNoise(@this)
-                                         select @this) {
-                        if (word.Trim().Length > 0) {
-                            yield return word;
-                        }
+            var texts = document.TextSelectorAll(_settings.IncludeTitle);
+            foreach (var text in texts) {
+                var words = text.Split();
+                foreach (var word in from @this in words
+                                     where !couldBeNoise(@this)
+                                     select @this) {
+                    if (word.Trim().Length > 0) {
+                        yield return word;
                     }
                 }
             }
