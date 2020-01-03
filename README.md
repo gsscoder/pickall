@@ -13,7 +13,7 @@ An initial draft is available on the project [Wiki](https://github.com/gsscoder/
 ## Install via NuGet
 
 ```sh
-$ dotnet add package PickAll --version 0.18.3-alpha
+$ dotnet add package PickAll --version 0.18.3-beta
 ```
 
 ## Build and sample
