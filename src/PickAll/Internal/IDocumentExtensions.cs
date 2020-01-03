@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AngleSharp.Dom;
@@ -10,8 +11,13 @@ namespace PickAll.Internal
 #endif
     static class IDocumentExtensions
     {
-        public static IEnumerable<string> TextSelectorAll(this IDocument document, bool includeTitle)
+        public static IEnumerable<string> TextSelectorAll(
+            this IDocument document, bool includeTitle, bool sanitizeText)
         {
+            Func<string, string> nullSanitize = text => text;
+            var sanitize = sanitizeText
+                ? text => text.Sanitize(normalizeWhiteSpace: true)
+                : nullSanitize;
             var result = new List<string>();
             if (includeTitle) {
                 result.AddRange(document.Title.Split());
@@ -24,7 +30,7 @@ namespace PickAll.Internal
                 var elements =  SelectElements(
                     "div", "p", "h1", "h2","h3", "h4", "h5", "h6");
                 foreach (var element in elements) {
-                    yield return element.Text().Sanitize(normalizeWhiteSpace: true);
+                    yield return sanitize(element.Text());
                 }
             }
 

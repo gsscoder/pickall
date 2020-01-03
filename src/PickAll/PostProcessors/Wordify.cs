@@ -104,7 +104,7 @@ namespace PickAll.PostProcessors
             Func<string, bool> couldBeNoise = _settings.NoiseLength == 0
                 ? couldBeNoise =  _ => false
                 : w => w.Length <= _settings.NoiseLength;
-            var texts = document.TextSelectorAll(_settings.IncludeTitle);
+            var texts = document.TextSelectorAll(_settings.IncludeTitle, sanitizeText: true);
             foreach (var text in texts) {
                 var words = text.Split();
                 foreach (var word in from @this in words

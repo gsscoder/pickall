@@ -17,6 +17,11 @@ namespace PickAll.PostProcessors
         public bool IncludeTitle;
 
         /// <summary>
+        /// If set to true, extracted text is sanitized.
+        /// </summary>
+        public bool SanitizeText;
+
+        /// <summary>
         /// Maximum allowed length of page to scrape. If null, will be to to a default
         /// of 100000.
         /// </summary>
@@ -71,7 +76,8 @@ namespace PickAll.PostProcessors
                 {
                     if (document.ToHtml().Length <= limit) {
                         yield return result.Clone(new TextifyData(
-                            BuildText(document.TextSelectorAll(_settings.IncludeTitle))));
+                            BuildText(document.TextSelectorAll(
+                                _settings.IncludeTitle, _settings.SanitizeText))));
                     }
                     else {
                         yield return result;
