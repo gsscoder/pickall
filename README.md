@@ -1,4 +1,4 @@
-# PickAll
+# <img src="/assets/icon.png" height="30px" alt="PickAll Logo"> PickAll
 
 .NET agile and extensible web searching API. Built with [AngleSharp](https://github.com/AngleSharp/AngleSharp).
 
