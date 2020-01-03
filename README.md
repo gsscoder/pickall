@@ -92,5 +92,10 @@ let results = context.SearchAsync("quantum physics")
 results |> Seq.iter (fun x -> printfn "%s %s" x.Url x.Description)
 ```
 
+## Icon
+
+[Search Engine](https://thenounproject.com/search/?q=sharp&i=1808600) icon designed by Vectors Market from [The Noun Project](https://thenounproject.com/)
+
 ### Notes
+
 - PickAll is still under development and API could change until latest beta versions.
