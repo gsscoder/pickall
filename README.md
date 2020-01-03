@@ -6,6 +6,10 @@
 
 PickAll is primarily designed to collect a limited amount of results (possibly the more relavant) from different sources and process these in a chain of steps. Results are essentially URLs and descriptions, but more data can be handled.
 
+## Documentation
+
+An initial draft is available on project [Wiki](https://github.com/gsscoder/pickall/wiki).
+
 ## Install via NuGet
 
 ```sh
