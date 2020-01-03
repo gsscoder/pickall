@@ -8,7 +8,7 @@ PickAll is primarily designed to collect a limited amount of results (possibly t
 
 ## Documentation
 
-An initial draft is available on the project [Wiki](https://github.com/gsscoder/pickall/wiki).
+An initial draft is available in the project [Wiki](https://github.com/gsscoder/pickall/wiki).
 
 ## Install via NuGet
 
