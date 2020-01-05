@@ -25,7 +25,7 @@ $ git clone https://github.com/gsscoder/pickall.git
 
 # build the package
 $ cd pickall/src/PickAll
-$ dotnet build -c Release.
+$ dotnet build -c release
 
 # execute sample
 $ cd pickall/samples/PickAll.Sample
