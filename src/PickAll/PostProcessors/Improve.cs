@@ -66,7 +66,7 @@ namespace PickAll.PostProcessors
 
             return (from computed in refined
                     select computed.Item1).Take(_settings.WordCount);
-        } 
+        }
 
         public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
