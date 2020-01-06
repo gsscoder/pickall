@@ -23,7 +23,7 @@ namespace PickAll
         {
             if (!typeof(T).IsSearcher() && !typeof(T).IsPostProcessor()) {
                 throw new NotSupportedException(
-                    "T must inherit from Searcher or PostProcessor");
+                    $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
             }
 
             var service = Activator.CreateInstance(typeof(T), settings);
@@ -60,7 +60,7 @@ namespace PickAll
             }
             if (!type.IsSearcher() && !type.IsPostProcessor()) {
                 throw new NotSupportedException(
-                    "T must inherit from Searcher or PostProcessor");
+                    $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
             }
 
             var service =  Activator.CreateInstance(type, settings);
@@ -81,7 +81,7 @@ namespace PickAll
         {
             if (!typeof(T).IsSearcher() && !typeof(T).IsPostProcessor()) {
                 throw new NotSupportedException(
-                    "T must inherit from Searcher or PostProcessor");
+                    $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
             }
 
             return new SearchContext(
@@ -130,7 +130,7 @@ namespace PickAll
             if (typeof(T) != typeof(Searcher) && typeof(T) != typeof(PostProcessor))
             {
                 throw new NotSupportedException(
-                    "T must be or inherit from Searcher or PostProcessor");
+                    $"T must be or inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
             }
 
             return new SearchContext(
