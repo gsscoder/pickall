@@ -1,4 +1,5 @@
 //#define CSX_STRING_EXT_INTERNAL // Uncomment or define at build time to set StringExtensions accessibility to internal.
+//#define CSX_REM_CRYPTORAND // Uncomment or define at build time to remove dependency to CryptoRandom.cs.
 
 using System;
 using System.Text;
@@ -12,6 +13,12 @@ namespace CSharpx
 #endif
     static class StringExtensions
     {
+#if CSX_REM_CRYPTORAND
+        private static readonly Random _random = new Random();
+#else
+        private static readonly CryptoRandom _random = new CryptoRandom();
+#endif
+
         /// <summary>
         /// Determines if a string is composed only by letter characters.
         /// </summary>
@@ -87,7 +94,7 @@ namespace CSharpx
             var _validator = validator ?? _nullValidator;
 
             var words = value.Split();
-            var index = new Random().Next(0,  words.Length - 1);
+            var index = _random.Next(words.Length - 1);
             if (_validator(words[index])) {
                 return index;
             }
@@ -106,11 +113,10 @@ namespace CSharpx
             if (times > value.Length) throw new ArgumentException(nameof(times));
             if (times == 0 || maxLength == 0) return value;
 
-            var random = new Random();
             var indexes = new List<int>((int)times);
             int uniqueNext()
                 {
-                    var index = random.Next(0, value.Length - 1);
+                    var index = _random.Next(value.Length - 1);
                     if (indexes.Contains(index)) {
                         return uniqueNext();
                     }
@@ -126,7 +132,7 @@ namespace CSharpx
                 mangled.Append(value[i]);
                 if (mutations.Contains(i)) {
                     mangled.Append(
-                        _mangleChars[random.Next(0, _mangleChars.Length - 1)]
+                        _mangleChars[_random.Next(_mangleChars.Length - 1)]
                         .Replicate(maxLength, string.Empty));
                     
                 }
