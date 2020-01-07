@@ -18,7 +18,7 @@ $ dotnet add package PickAll --version 0.18.4-beta
 
 ## Build and sample
 
-**Target**: .NET Standard 2.0, .NET Framework 4.6.1
+**Target**: .NET Standard 2.0 and .NET Framework 4.6.1
 ```sh
 # clone the repository
 $ git clone https://github.com/gsscoder/pickall.git
