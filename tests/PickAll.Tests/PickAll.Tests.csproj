@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <DefineConstants>$(DefineConstants);CSX_ARRAY_EXT_INTERNAL;CSX_ENUM_INTERNAL;CSX_REM_MAYBE_FUNC;CSX_STRING_EXT_INTERNAL;CSX_CRYPTORAND_INTERNAL</DefineConstants>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
