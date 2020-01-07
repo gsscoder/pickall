@@ -10,6 +10,10 @@ PickAll is primarily designed to collect a limited amount of results (possibly t
 
 An initial draft is available in the project [Wiki](https://github.com/gsscoder/pickall/wiki).
 
+## Targets
+- .NET Standard 2.0
+- .NET Framework 4.6.1
+
 ## Install via NuGet
 
 ```sh
@@ -18,7 +22,6 @@ $ dotnet add package PickAll --version 0.18.4-beta
 
 ## Build and sample
 
-**Target**: .NET Standard 2.0 and .NET Framework 4.6.1
 ```sh
 # clone the repository
 $ git clone https://github.com/gsscoder/pickall.git
