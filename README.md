@@ -13,12 +13,12 @@ An initial draft is available in the project [Wiki](https://github.com/gsscoder/
 ## Install via NuGet
 
 ```sh
-$ dotnet add package PickAll --version 0.18.3-beta
+$ dotnet add package PickAll --version 0.18.4-beta
 ```
 
 ## Build and sample
 
-**NOTE**: .NET Core 3.0 or higher is required.
+**Target**: .NET Standard 2.0, .NET Framework 4.6.1
 ```sh
 # clone the repository
 $ git clone https://github.com/gsscoder/pickall.git
