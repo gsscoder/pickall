@@ -18,7 +18,7 @@ An initial draft is available in the project [Wiki](https://github.com/gsscoder/
 ## Install via NuGet
 
 ```sh
-$ dotnet add package PickAll --version 0.18.4-beta
+$ dotnet add package PickAll --version 0.19.0-beta
 ```
 
 ## Build and sample
@@ -35,13 +35,13 @@ $ dotnet build -c release
 $ cd pickall/samples/PickAll.Sample
 $ dotnet build -c Release
 $ cd ../../artifacts/PickAll.Sample/Release/netcoreapp3.0/PickAll.Sample
-./PickAll.Sample "Steve Jobs" -e YAHOO:DuckDuckGo --fuzzy "Steve Jobs Biography"
-[0] Yahoo: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
+./PickAll.Sample "Steve Jobs" -e bing:duckduckgo
+[0] Bing: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
+[0] DuckDuckGo: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
+[1] DuckDuckGo: "Steve Jobs - Apple, Family & Death - Biography": "https://www.biography.com/business-figure/steve-jobs"
+[2] Bing: "CC-BY-SA licenza": "http://creativecommons.org/licenses/by-sa/3.0/"
 [2] DuckDuckGo: "Steve Jobs - IMDb": "https://www.imdb.com/name/nm0423418/"
-[8] Yahoo: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
-[10] Yahoo: "Steve Jobs – Wikipedia": "https://de.wikipedia.org/wiki/Steve_Jobs"
-[13] DuckDuckGo: "Steve Jobs - Biography - IMDb": "https://www.imdb.com/name/nm0423418/bio"
-[28] DuckDuckGo: "Steve Jobs - Forbes": "https://www.forbes.com/profile/steve-jobs/"
+[3] Bing: "Biografia di Steve Jobs - Biografieonline": "https://biografieonline.it/biografia.htm?BioID=1560&biografia=Steve+Jobs"
 ```
 
 ## Test
