@@ -8,11 +8,12 @@
     <Authors>gsscoder</Authors>
     <Copyright>Copyright © Giacomo Stelluti Scala, 2019</Copyright>
     <PackageProjectUrl>https://github.com/gsscoder/pickall</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/gsscoder/pickall/master/assets/icon.png</PackageIconUrl>
+    <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/gsscoder/pickall</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>web;scraping;api;library</PackageTags>  
-    <DefineConstants>$(DefineConstants);CSX_STRING_EXT_INTERNAL;CSX_REM_CRYPTORAND</DefineConstants>
+    <DefineConstants>$(DefineConstants);CSX_STRING_EXT_INTERNAL;CSX_REM_CRYPTORAND</DefineConstants>  
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,6 +26,13 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0-alpha-787" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
