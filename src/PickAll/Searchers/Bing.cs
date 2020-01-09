@@ -29,7 +29,6 @@ namespace PickAll.Searchers
                                     "http",
                                     StringComparison.OrdinalIgnoreCase)
                                 select link;
-
                     return links.Select((link, index) =>
                         CreateResult((ushort)index, link.Attributes["href"].Value, link.Text));
                 }
