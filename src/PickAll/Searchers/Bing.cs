@@ -25,7 +25,8 @@ namespace PickAll.Searchers
                 using (var result = await form.SubmitAsync(form)) {
                     // Select only actual results
                     var links = from link in result.QuerySelectorAll<IHtmlAnchorElement>("li.b_algo a")
-                                where link.Attributes["href"].Value.StartsWith("http",
+                                where link.Attributes["href"].Value.StartsWith(
+                                    "http",
                                     StringComparison.OrdinalIgnoreCase)
                                 select link;
 
