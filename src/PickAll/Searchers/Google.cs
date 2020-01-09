@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,8 +47,10 @@ namespace PickAll.Searchers
         private static bool Validate(string url)
         {
             return
-                url.StartsWith("/url?") &&
-                !url.StartsWith("/url?q=http://webcache.googleusercontent.com");
+                url.StartsWith(
+                    "/url?", StringComparison.OrdinalIgnoreCase) &&
+                !url.StartsWith(
+                    "/url?q=http://webcache.googleusercontent.com",StringComparison.OrdinalIgnoreCase);
         }
 
         private static string Normalize(string url)
