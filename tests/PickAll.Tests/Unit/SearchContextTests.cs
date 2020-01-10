@@ -253,7 +253,7 @@ namespace PickAll.Tests.Unit
             var sut = context.Clone();
 
             sut.Query.Should().BeNull();
-            sut.MaximumResults.Should().NotBeNull()
+            sut.Settings.MaximumResults.Should().NotBeNull()
                 .And.HaveValue()
                 .And.Be(5);
             sut.Services.Should().NotBeEmpty()

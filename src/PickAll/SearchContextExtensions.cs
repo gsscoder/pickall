@@ -29,7 +29,7 @@ namespace PickAll
             var service = Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
                 context.Services.Add(service).Cast<Service>(),
-                context.MaximumResults);
+                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace PickAll
             var service =  Activator.CreateInstance(type, settings);
             return new SearchContext(
                 context.Services.Add(service).Cast<Service>(),
-                context.MaximumResults);
+                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace PickAll
 
             return new SearchContext(
                 context.Services.Remove(typeof(T)),
-                context.MaximumResults);
+                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
         /// <summary>
@@ -114,7 +114,8 @@ namespace PickAll
                 throw new InvalidOperationException($"{serviceName} not registred as service");
             }
             return new SearchContext(
-                context.Services.Remove(service.GetType()), context.MaximumResults);
+                context.Services.Remove(service.GetType()),
+                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
         /// <summary>
@@ -136,7 +137,8 @@ namespace PickAll
             return new SearchContext(
                 from service in context.Services
                 where !service.GetType().IsSubclassOf(typeof(T))
-                select service, context.MaximumResults);
+                select service,
+                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
         /// <summary>
@@ -148,7 +150,8 @@ namespace PickAll
         {
             return new SearchContext(
                 from service in context.Services
-                select UnbindContext(service), context.MaximumResults);
+                select UnbindContext(service),
+                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
         static Service UnbindContext(Service service)

@@ -24,17 +24,22 @@ namespace PickAll
                 typeof(Uniqueness),
                 typeof(Order)));
 
-        internal SearchContext(IEnumerable<Service> services, uint? maximumResults)
+        internal SearchContext(IEnumerable<Service> services, ContextSettings settings)
         {
             Services = services;
-            MaximumResults = maximumResults;
+            Settings = settings;
         }
 
-        public SearchContext() : this(Enumerable.Empty<Service>(), null)
+        public SearchContext(ContextSettings settings): this(Enumerable.Empty<Service>(), settings)
         {
         }
 
-        public SearchContext(uint maximumResults) : this(Enumerable.Empty<Service>(), maximumResults)
+        public SearchContext() : this(Enumerable.Empty<Service>(), new ContextSettings())
+        {
+        }
+
+        public SearchContext(uint maximumResults)
+            : this(Enumerable.Empty<Service>(), new ContextSettings{ MaximumResults = maximumResults })
         {
         }
 
@@ -42,7 +47,7 @@ namespace PickAll
         /// Builds a new search context with a given types.
         /// </summary>
         /// <param name="services">A list of service types.</param>
-        public SearchContext(params Type[] services)
+        public SearchContext(params Type[] services) : this()
         {
             var servicesCount = (from service in services
                                  where service.IsService()
@@ -69,9 +74,9 @@ namespace PickAll
         }
 
 #if DEBUG
-        public uint? MaximumResults
+        public ContextSettings Settings
 #else
-        internal uint? MaximumResults
+        internal ContextSettings Settings
 #endif
         {
             get;
@@ -114,8 +119,8 @@ namespace PickAll
                 select searcher.SearchAsync(query));
             var results = resultGroup.SelectMany(group => group).ToList();
 
-            if (MaximumResults != null) {
-                results = new List<ResultInfo>(results.Take((int)MaximumResults.Value));
+            if (Settings.MaximumResults != null) {
+                results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
             }
 
             // Invoke post processors in sync
