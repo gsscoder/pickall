@@ -34,7 +34,7 @@ namespace PickAll.PostProcessors
     /// <summary>
     /// Data produced by <see cref="Textify"/> post processor.
     /// </summary>
-    public class TextifyData
+    public struct TextifyData
     {
         public TextifyData(string text)
         {

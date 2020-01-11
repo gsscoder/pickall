@@ -36,7 +36,7 @@ namespace PickAll.PostProcessors
     /// <summary>
     /// Data produced by <see cref="Wordify"/> post processor.
     /// </summary>
-    public class WordifyData
+    public struct WordifyData
     {
         public WordifyData(IEnumerable<string> words)
         {
