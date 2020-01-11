@@ -110,7 +110,7 @@ namespace PickAll
             Query = query;
             
             Services = from service in Services
-                       select BindContext(service);
+                       select BindContext(this, service);
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -146,9 +146,9 @@ namespace PickAll
             get { return _default.Value; }
         }
 
-        Service BindContext(Service service)
+        static Service BindContext(SearchContext context, Service service)
         {
-            service.Context = this;
+            service.Context = context;
             return service;
         }
 
