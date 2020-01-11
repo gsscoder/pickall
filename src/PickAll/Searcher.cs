@@ -8,10 +8,11 @@ namespace PickAll
     /// </summary>
     public abstract class Searcher : Service
     {
-        public Searcher(object settings)
+        public Searcher(object settings, RuntimePolicy policy)
         {
             Settings = settings;
             Name = GetType().Name;
+            Policy = policy;
         }
 
         /// <summary>
@@ -25,6 +26,12 @@ namespace PickAll
         /// The searcher identifier set to class name.
         /// </summary>
         public string Name
+        {
+            get;
+            private set;
+        }
+
+        public RuntimePolicy Policy
         {
             get;
             private set;

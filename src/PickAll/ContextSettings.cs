@@ -16,5 +16,10 @@ namespace PickAll
         /// Timeout for each HTTP request performed.
         /// </summary>
         public TimeSpan? Timeout;
+
+        internal RuntimePolicy ToPolicy()
+        {
+            return new RuntimePolicy(MaximumResults);
+        }
     }
 }

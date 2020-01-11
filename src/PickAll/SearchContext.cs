@@ -65,7 +65,9 @@ namespace PickAll
             }
 
             Services = (from service in services
-                        select Activator.CreateInstance(service, new object[] { null }))
+                        select service.IsSearcher()
+                               ? Activator.CreateInstance(service, new object[] { null, new RuntimePolicy() })
+                               : Activator.CreateInstance(service, new object[] { null }))
                         .Cast<Service>();
         }
 
