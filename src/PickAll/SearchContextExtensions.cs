@@ -154,9 +154,6 @@ namespace PickAll
         public static SearchContext WithConfiguration(this SearchContext context,
             ContextSettings settings)
         {
-            if (settings == null) throw new ArgumentNullException(nameof(settings),
-                $"{nameof(settings)} cannot be null");
-
             return new SearchContext(context.Services, settings);
         }
 

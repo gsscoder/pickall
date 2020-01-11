@@ -5,7 +5,7 @@ namespace PickAll
     /// <summary>
     /// Settings for a search context.
     /// </summary>
-    public class ContextSettings
+    public struct ContextSettings
     {
         /// <summary>
         /// Maximum results a search is allowed to return.
