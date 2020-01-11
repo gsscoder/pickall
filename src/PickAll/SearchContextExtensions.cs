@@ -123,7 +123,7 @@ namespace PickAll
         /// or <see cref="PostProcessor"/>.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
-        /// <typeparam name="T"><see cref="Searcher"> or <see cref="PostProcessor"> type.</typeparam>
+        /// <typeparam name="T"><see cref="Searcher"> or <see cref="PostProcessor"/> type.</typeparam>
         /// <returns>A <see cref="SearchContext"/> instance with all searcher
         /// or all postprocessor removed.</returns>
         public static SearchContext WithoutAll<T>(this SearchContext context)
@@ -139,6 +139,21 @@ namespace PickAll
                 where !service.GetType().IsSubclassOf(typeof(T))
                 select service,
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
+        }
+
+        /// <summary>
+        /// Configure a search context with a <see cref="ContextSettings"/> instance.
+        /// </summary>
+        /// <param name="context">The search context to alter.</param>
+        /// <param name="settings">The settings to configure in the search context.</param>
+        /// <returns>A <see cref="SearchContext"/> instance with new configuration settings.</returns>
+        public static SearchContext WithConfiguration(this SearchContext context,
+            ContextSettings settings)
+        {
+            if (settings == null) throw new ArgumentNullException(nameof(settings),
+                $"{nameof(settings)} cannot be null");
+
+            return new SearchContext(context.Services, settings);
         }
 
         /// <summary>

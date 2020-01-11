@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0-alpha-787" />
+    <PackageReference Include="AngleSharp.Io" Version="0.13.1" />
   </ItemGroup>
 
   <ItemGroup>

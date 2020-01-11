@@ -1,3 +1,5 @@
+using System;
+
 namespace PickAll
 {
     /// <summary>
@@ -9,5 +11,7 @@ namespace PickAll
         /// Maximum results a search is allowed to return.
         /// </summary>
         public uint? MaximumResults;
+
+        public TimeSpan? Timeout;
     }
 }

@@ -10,6 +10,9 @@ namespace PickAll.Simple
                 Required = true)]
         public string Query { get; set; }
 
+        [Option('t', "timeout", HelpText = "Maximum timeout for HTTP requests in seconds")]
+        public uint? Timeout { get; set; }
+
         [Option('f', "fuzzy", HelpText = "Fuzzy matching of Levenshtein distance 0-10")]
         public string FuzzyMatch { get; set; }
 

@@ -29,6 +29,10 @@ namespace PickAll.Simple
                     .With<Uniqueness>()
                     .With<Order>();
             }
+            if (options.Timeout != null) {
+                context = context.WithConfiguration(
+                    new ContextSettings { Timeout = TimeSpan.FromSeconds(options.Timeout.Value) });
+            }
             if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
                 context = context.With<FuzzyMatch>(
                     new FuzzyMatchSettings {

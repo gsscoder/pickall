@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Http;
 using AngleSharp;
+using AngleSharp.Io.Network;
 using PickAll.Internal;
 using PickAll.Searchers;
 using PickAll.PostProcessors;
@@ -15,8 +17,7 @@ namespace PickAll
     /// </summary>
     public sealed class SearchContext
     {   
-        private static readonly Lazy<IBrowsingContext> _activeContext = new Lazy<IBrowsingContext>(
-            () => BrowsingContext.New(Configuration.Default.WithDefaultLoader()));
+        private Lazy<IBrowsingContext> _activeContext;
         private static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
             () => new SearchContext(
                 typeof(Google),
@@ -28,6 +29,7 @@ namespace PickAll
         {
             Services = services;
             Settings = settings;
+            _activeContext = new Lazy<IBrowsingContext>(() => BuildContext(settings));
         }
 
         public SearchContext(ContextSettings settings): this(Enumerable.Empty<Service>(), settings)
@@ -148,6 +150,20 @@ namespace PickAll
         {
             service.Context = this;
             return service;
+        }
+
+        static IBrowsingContext BuildContext(ContextSettings settings)
+        {
+            if (settings.Timeout.HasValue) {
+                var client = new HttpClient();
+                client.Timeout =  settings.Timeout.Value;
+                var requester = new HttpClientRequester();
+                return BrowsingContext.New(
+                    Configuration.Default
+                        .WithRequester(requester)
+                        .WithDefaultLoader());
+            }
+            return BrowsingContext.New(Configuration.Default.WithDefaultLoader());
         }
     }
 }
