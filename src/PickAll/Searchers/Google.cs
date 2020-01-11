@@ -18,7 +18,7 @@ namespace PickAll.Searchers
         private static readonly Regex _expression = new Regex(@"^/url\?q=([^&]*)&.*",
             RegexOptions.Compiled);
 
-        public Google(object settings, RuntimePolicy policy) : base(settings, policy)  
+        public Google(object settings) : base(settings)  
         {
         }
 

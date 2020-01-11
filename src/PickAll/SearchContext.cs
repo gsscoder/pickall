@@ -68,9 +68,7 @@ namespace PickAll
             }
 
             Services = (from service in services
-                        select service.IsSearcher()
-                               ? Activator.CreateInstance(service, new object[] { null, new RuntimePolicy() })
-                               : Activator.CreateInstance(service, new object[] { null }))
+                        select Activator.CreateInstance(service, new object[] { null }))
                         .Cast<Service>();
         }
 
@@ -111,9 +109,9 @@ namespace PickAll
                 $"{nameof(query)} cannot be empty or contains only white spaces", nameof(query));
 
             Query = query;
-            
-            Services = from service in Services
-                       select BindContext(this, service);
+
+            // Bind context and partition maximum results
+            Services = ConfigureServices(this);
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -126,8 +124,10 @@ namespace PickAll
 
             if (Settings.MaximumResults != null) {
 #if !DEBUG
+                // Default behaviour
                 results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
 #else
+                // Useful for debugging
                 if (DebugEnforceMaximumResults) {
                     results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
                 }
@@ -155,10 +155,40 @@ namespace PickAll
             get { return _default.Value; }
         }
 
-        static Service BindContext(SearchContext context, Service service)
+        static IEnumerable<Service> ConfigureServices(SearchContext context)
         {
-            service.Context = context;
-            return service;
+            var searchers = (from service in context.Services
+                             where service.GetType().IsSearcher()
+                             select service).Cast<Searcher>();
+            uint? maximumResults = context.Settings.MaximumResults.HasValue
+                 ? context.Settings.MaximumResults / (uint?)searchers.Count()
+                 : null;
+            var services = from service in context.Services
+                           select Configure(service);
+            if (searchers.Count() > 0) {
+                var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
+                Func<Service, Service> reconfigure = service =>
+                    {
+                        if (service.GetHashCode().Equals(searchers.First().GetHashCode())) {
+                            var searcher = (Searcher)service;
+                            searcher.Policy = new RuntimePolicy(searcher.Policy.MaximumResults + remainder);
+                        }
+                        return service;
+                    };
+                services = from service in services
+                           select reconfigure(service);
+            }
+            return services;
+
+            Service Configure(Service service)
+            {
+                service.Context = context;
+                if (service.GetType().IsSearcher()) {
+                    var searcher = (Searcher)service;
+                    searcher.Policy = new RuntimePolicy(maximumResults);
+                }
+                return service;
+            }
         }
 
         static IBrowsingContext BuildContext(ContextSettings settings)

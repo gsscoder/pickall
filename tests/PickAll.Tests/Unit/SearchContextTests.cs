@@ -325,5 +325,25 @@ namespace PickAll.Tests.Unit
             results.Should().NotBeEmpty()
                 .And.HaveCount(10);
         }
+
+        [Fact]
+        public async void Maximum_results_should_be_partitioned_per_searcher()
+        {
+            var sut = new SearchContext(maximumResults: 10)
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20 })
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20 })
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20 })
+                .With<Order>()
+                .With<Uniqueness>();
+            sut.DebugEnforceMaximumResults = false;
+
+            await sut.SearchAsync("query");
+
+            sut.Services.Take(3).Cast<Searcher>().Should()
+                .SatisfyRespectively(
+                    item => item.Policy.MaximumResults.Should().Be(4),
+                    item => item.Policy.MaximumResults.Should().Be(3),
+                    item => item.Policy.MaximumResults.Should().Be(3));
+        }
     }
 }

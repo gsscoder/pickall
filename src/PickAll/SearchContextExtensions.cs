@@ -26,9 +26,7 @@ namespace PickAll
                     $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
             }
 
-            var service = typeof(T).IsSearcher() 
-                ? Activator.CreateInstance(typeof(T), settings, context.Settings.ToPolicy())
-                : Activator.CreateInstance(typeof(T), settings);
+            var service = Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
                 context.Services.Add(service).Cast<Service>(),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
@@ -65,9 +63,7 @@ namespace PickAll
                     $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
             }
 
-            var service = type.IsSearcher()
-                ? Activator.CreateInstance(type, settings, context.Settings.ToPolicy())
-                : Activator.CreateInstance(type, settings);
+            var service = Activator.CreateInstance(type, settings);
             return new SearchContext(
                 context.Services.Add(service).Cast<Service>(),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });

@@ -13,7 +13,7 @@ namespace PickAll.Searchers
     /// </summary>
     public class Bing : Searcher
     {
-        public Bing(object settings, RuntimePolicy policy) : base(settings, policy)  
+        public Bing(object settings) : base(settings)  
         {
         }
 

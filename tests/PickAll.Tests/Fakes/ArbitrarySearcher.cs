@@ -16,7 +16,7 @@ namespace PickAll.Tests.Fakes
     {
         private readonly ArbitrarySearcherSettings _settings;
 
-        public ArbitrarySearcher(object settings, RuntimePolicy policy) : base(settings, policy)  
+        public ArbitrarySearcher(object settings) : base(settings)  
         {
             if (!(Settings is ArbitrarySearcherSettings)) {
                 throw new NotSupportedException();
