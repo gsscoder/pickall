@@ -41,7 +41,12 @@ namespace PickAll
         }
 
         public SearchContext(uint maximumResults)
-            : this(Enumerable.Empty<Service>(), new ContextSettings{ MaximumResults = maximumResults })
+            : this(Enumerable.Empty<Service>(), new ContextSettings { MaximumResults = maximumResults })
+        {
+        }
+
+        public SearchContext(TimeSpan timeout)
+            : this(Enumerable.Empty<Service>(), new ContextSettings { Timeout = timeout })
         {
         }
 
