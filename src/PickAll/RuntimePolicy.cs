@@ -2,7 +2,7 @@ namespace PickAll
 {
     public struct RuntimePolicy
     {
-        public RuntimePolicy(uint? maximumResults)
+        internal RuntimePolicy(uint? maximumResults)
         {
             MaximumResults = maximumResults;
         }
