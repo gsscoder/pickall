@@ -30,6 +30,9 @@ namespace PickAll
             Services = services;
             Settings = settings;
             _activeContext = new Lazy<IBrowsingContext>(() => BuildContext(settings));
+#if DEBUG
+            DebugEnforceMaximumResults = true;
+#endif
         }
 
         public SearchContext(ContextSettings settings): this(Enumerable.Empty<Service>(), settings)
@@ -90,6 +93,8 @@ namespace PickAll
         public ContextSettings Settings { get; private set; }
 
         public IEnumerable<Service> Services { get; private set; }
+
+        public bool DebugEnforceMaximumResults { get; set; }
 #endif
 
         /// <summary>
@@ -120,7 +125,13 @@ namespace PickAll
             var results = resultGroup.SelectMany(group => group).ToList();
 
             if (Settings.MaximumResults != null) {
+#if !DEBUG
                 results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
+#else
+                if (DebugEnforceMaximumResults) {
+                    results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
+                }
+#endif
             }
 
             // Invoke post processors in sync
