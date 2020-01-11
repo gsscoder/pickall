@@ -11,12 +11,12 @@ namespace PickAll.PostProcessors
     /// <summary>
     /// Settings for <see cref="Wordify"/> post processor.
     /// </summary>
-    public class WordifySettings
+    public struct WordifySettings
     {
         /// <summary>
         /// If set to true, page title will be included in result.
         /// </summary>
-        public bool IncludeTitle;
+        public bool IncludeTitle { get; set; }
 
         /// <summary>
         /// Maximum allowed length of page to scrape. If null, will be to to a default
@@ -25,12 +25,12 @@ namespace PickAll.PostProcessors
         /// <remarks>
         /// An high limit with numerous pages to scrape can be resource intensive.
         /// </remarks>
-        public uint? MaximumLength;
+        public uint? MaximumLength { get; set; }
 
         /// <summary>
         /// Length of words to be considered noise.
         /// </summary>
-        public ushort NoiseLength;
+        public ushort NoiseLength { get; set; }
     }
 
     /// <summary>
@@ -72,11 +72,11 @@ namespace PickAll.PostProcessors
 
         public Wordify(object settings) : base(settings)
         {
-            _settings = settings as WordifySettings;
-            if (_settings == null) {
+            if (!(settings is WordifySettings)) {
                 throw new NotSupportedException(
                     $"{nameof(settings)} must be of {nameof(WordifySettings)} type");
             }
+            _settings = (WordifySettings)Settings;
         }
 
         public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)

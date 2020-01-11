@@ -9,17 +9,17 @@ namespace PickAll.PostProcessors
     /// <summary>
     /// Settings for <see cref="Improve"/> post processor.
     /// </summary>
-    public class ImproveSettings
+    public struct ImproveSettings
     {
         /// <summary>
         /// Number of word with highest frequency to use in subsequent search.
         /// </summary>
-        public ushort WordCount;
+        public ushort WordCount { get; set; }
 
         /// <summary>
         /// Length of words to be considered noise.
         /// </summary>
-        public ushort NoiseLength;
+        public ushort NoiseLength { get; set; }
     }
 
     /// <summary>
@@ -31,11 +31,11 @@ namespace PickAll.PostProcessors
 
         public Improve(object settings) : base(settings)
         {
-            _settings = settings as ImproveSettings;
-            if (_settings == null) {
+            if (!(settings is ImproveSettings)) {
                 throw new NotSupportedException(
                     $"{nameof(settings)} must be of ImproveSettings type");
             }
+            _settings = (ImproveSettings)Settings;
         }
 
 #if DEBUG

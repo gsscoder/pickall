@@ -8,22 +8,22 @@ namespace PickAll.PostProcessors
     /// <summary>
     /// Settings for <see cref="FuzzyMatch"/> post processor.
     /// </summary>
-    public class FuzzyMatchSettings
+    public struct FuzzyMatchSettings
     {
         /// <summary>
         /// String to compare against descriptions.
         /// </summary>
-        public string Text;
+        public string Text { get; set; }
 
         /// <summary>
         /// Minimum distance of permutations. 
         /// </summary>
-        public uint MinimumDistance;
+        public uint MinimumDistance { get; set; }
 
         /// <summary>
         /// Maximum distance of permutations.
         /// </summary>
-        public uint MaximumDistance;
+        public uint MaximumDistance { get; set; }
     }
 
     /// <summary>
@@ -35,10 +35,10 @@ namespace PickAll.PostProcessors
 
         public FuzzyMatch(object settings) : base(settings)
         {
-            _settings = Settings as FuzzyMatchSettings;
-            if (_settings == null) {
+            if (!(Settings is FuzzyMatchSettings)) {
                 throw new NotSupportedException($"{nameof(settings)} must be of FuzzyMatchSettings type");
             }
+            _settings = (FuzzyMatchSettings)Settings;
         }
 
         public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
