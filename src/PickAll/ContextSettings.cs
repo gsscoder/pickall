@@ -12,6 +12,9 @@ namespace PickAll
         /// </summary>
         public uint? MaximumResults;
 
+        /// <summary>
+        /// Timeout for each HTTP request performed.
+        /// </summary>
         public TimeSpan? Timeout;
     }
 }
