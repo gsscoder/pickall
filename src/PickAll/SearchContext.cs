@@ -82,24 +82,15 @@ namespace PickAll
             private set;
         }
 
-#if DEBUG
-        public ContextSettings Settings
-#else
-        internal ContextSettings Settings
-#endif
-        {
-            get;
-            private set;
-        }
+#if !DEBUG
+        internal ContextSettings Settings { get; private set; }
 
-#if DEBUG
-        public IEnumerable<Service> Services
+        internal IEnumerable<Service> Services { get; private set; }
 #else
-        internal IEnumerable<Service> Services
+        public ContextSettings Settings { get; private set; }
+
+        public IEnumerable<Service> Services { get; private set; }
 #endif
-        {
-            get; private set;
-        }
 
         /// <summary>
         /// Executes a search asynchronously, invoking all <see cref="Searcher"/>
