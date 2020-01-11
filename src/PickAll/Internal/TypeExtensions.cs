@@ -16,7 +16,7 @@ namespace PickAll.Internal
 
         public static bool IsService(this Type type)
         {
-            return IsSearcher(type) || IsPostProcessor(type);
+            return type.IsSubclassOf(typeof(Service));
         }
     }
 }
