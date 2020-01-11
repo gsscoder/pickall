@@ -9,7 +9,7 @@ using AngleSharp.Dom;
 namespace PickAll.Searchers
 {
     /// <summary>
-    /// <see cref="Searcher"> that searches on Bing search engine.
+    /// <see cref="Searcher"/> that searches on Bing search engine.
     /// </summary>
     public class Bing : Searcher
     {

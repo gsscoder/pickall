@@ -11,13 +11,13 @@ namespace PickAll
     public static partial class SearchContextExtensions
     {
         /// <summary>
-        /// Registers an instance of <see cref="Searcher"> or <see cref="PostProcessor">
+        /// Registers an instance of <see cref="Searcher"/> or <see cref="PostProcessor"/>
         /// without settings, using its type.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
         /// <param name="settings">The optional settings instance for the service.</param>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext"/>
-        /// or <see cref="PostProcessor">.</typeparam>
+        /// or <see cref="PostProcessor"/>.</typeparam>
         /// <returns>A <see cref="SearchContext"/> with the given service added.</returns>
         public static SearchContext With<T>(this SearchContext context, object settings = null)
         {
@@ -75,7 +75,7 @@ namespace PickAll
         /// </summary>
         /// <param name="context">The search context to alter.</param>
         /// <typeparam name="T">A type that inherits from <see cref="SearchContext"/>
-        /// or <see cref="PostProcessor">.</typeparam>
+        /// or <see cref="PostProcessor"/>.</typeparam>
         /// <returns>A <see cref="SearchContext"/> instance with the given service removed.</returns>
         public static SearchContext Without<T>(this SearchContext context)
         {
@@ -95,7 +95,7 @@ namespace PickAll
         /// </summary>
         /// <param name="context">The search context to alter.</param>
         /// <param name="serviceName">Name of the service to register (case insensitive).</param>
-        /// or <see cref="PostProcessor">.</typeparam>
+        /// or <see cref="PostProcessor"/>.</typeparam>
         /// <returns>A <see cref="SearchContext"/> instance with the given service removed.</returns>
         public static SearchContext Without(this SearchContext context, string serviceName)
         {
@@ -123,7 +123,7 @@ namespace PickAll
         /// or <see cref="PostProcessor"/>.
         /// </summary>
         /// <param name="context">The search context to alter.</param>
-        /// <typeparam name="T"><see cref="Searcher"> or <see cref="PostProcessor"/> type.</typeparam>
+        /// <typeparam name="T"><see cref="Searcher"/> or <see cref="PostProcessor"/> type.</typeparam>
         /// <returns>A <see cref="SearchContext"/> instance with all searcher
         /// or all postprocessor removed.</returns>
         public static SearchContext WithoutAll<T>(this SearchContext context)

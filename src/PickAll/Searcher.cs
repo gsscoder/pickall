@@ -18,7 +18,7 @@ namespace PickAll
         /// Performs the actual search.
         /// </summary>
         /// <param name="query">A query string.</param>
-        /// <returns>A collection of <see cref="ResultInfo"> with search results.</returns>
+        /// <returns>A collection of <see cref="ResultInfo"/> with search results.</returns>
         public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
 
         /// <summary>

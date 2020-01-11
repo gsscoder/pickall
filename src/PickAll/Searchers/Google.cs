@@ -11,7 +11,7 @@ using PickAll.Internal;
 namespace PickAll.Searchers
 {
     /// <summary>
-    /// <see cref="Searcher"> that searches on Google search engine.
+    /// <see cref="Searcher"/> that searches on Google search engine.
     /// </summary>
     public class Google : Searcher
     {
