@@ -23,10 +23,10 @@ namespace PickAll.Tests.Fakes
             } 
         }
 
-        public static IEnumerable<ResultInfo> GenerateRandom(string originator, ushort maxSamples)
+        public static IEnumerable<ResultInfo> GenerateRandom(string originator, ushort minSamples, ushort maxSamples)
         {
-            var samples = new CryptoRandom().Next(maxSamples - 1);
-            for (ushort index = 0; index <= samples; index++) {
+            var samples = new CryptoRandom().Next(minSamples, maxSamples);
+            for (ushort index = 0; index <= samples - 1; index++) {
                 var faker = new Faker<ResultInfo>()
                     .RuleFor(o => o.Originator, _ => originator)
                     .RuleFor(o => o.Index, _ => index)

@@ -9,7 +9,7 @@ namespace PickAll.Tests.Fakes
     {
         public ushort Samples { get; set; }
 
-        public bool Random { get; set; }
+        public ushort? AtLeast { get; set; }
     }
 
     class ArbitrarySearcher : Searcher
@@ -29,8 +29,8 @@ namespace PickAll.Tests.Fakes
             return await Task.Run(() => _());
             IEnumerable<ResultInfo> _() {
                 var originator = Guid.NewGuid().ToString();
-                var results = _settings.Random
-                    ? ResultInfoBuilder.GenerateRandom(originator, _settings.Samples)
+                var results = _settings.AtLeast.HasValue
+                    ? ResultInfoBuilder.GenerateRandom(originator, _settings.AtLeast ?? 1, _settings.Samples)
                     : ResultInfoBuilder.Generate(originator, _settings.Samples);
                 if (Policy.MaximumResults.HasValue) {
                     results = results.Take((int)Policy.MaximumResults.Value);

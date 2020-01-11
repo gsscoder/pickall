@@ -312,5 +312,18 @@ namespace PickAll.Tests.Unit
             results.Should().NotBeEmpty()
                 .And.HaveCount(10);
         }
+
+        [Fact]
+        public async void A_searcher_shoulld_limit_results_directly()
+        {
+            var sut = new SearchContext(maximumResults: 10)
+                .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20, AtLeast = 15 });
+            sut.DebugEnforceMaximumResults = false;
+
+            var results = await sut.SearchAsync("query");
+
+            results.Should().NotBeEmpty()
+                .And.HaveCount(10);
+        }
     }
 }
