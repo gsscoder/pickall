@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PickAll.Tests.Fakes
 {
-    class ArbitrarySearcherSettings
+    struct ArbitrarySearcherSettings
     {
-        public ushort Samples;
+        public ushort Samples { get; set; }
+
+        public bool Random { get; set; }
     }
 
     class ArbitrarySearcher : Searcher
@@ -15,10 +18,10 @@ namespace PickAll.Tests.Fakes
 
         public ArbitrarySearcher(object settings, RuntimePolicy policy) : base(settings, policy)  
         {
-            _settings = Settings as ArbitrarySearcherSettings;
-            if (_settings == null) {
+            if (!(Settings is ArbitrarySearcherSettings)) {
                 throw new NotSupportedException();
             }
+            _settings = (ArbitrarySearcherSettings)Settings;
         }
 
         public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
@@ -26,7 +29,13 @@ namespace PickAll.Tests.Fakes
             return await Task.Run(() => _());
             IEnumerable<ResultInfo> _() {
                 var originator = Guid.NewGuid().ToString();
-                return ResultInfoBuilder.Generate(originator, _settings.Samples);
+                var results = _settings.Random
+                    ? ResultInfoBuilder.GenerateRandom(originator, _settings.Samples)
+                    : ResultInfoBuilder.Generate(originator, _settings.Samples);
+                if (Policy.MaximumResults.HasValue) {
+                    results = results.Take((int)Policy.MaximumResults.Value);
+                }
+                return results;
             }
         }
     }

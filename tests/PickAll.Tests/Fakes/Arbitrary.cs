@@ -5,6 +5,7 @@ using Bogus;
 using WaffleGenerator;
 using AngleSharp;
 using AngleSharp.Dom;
+using CSharpx;
 
 namespace PickAll.Tests.Fakes
 {
@@ -13,6 +14,19 @@ namespace PickAll.Tests.Fakes
         public static IEnumerable<ResultInfo> Generate(string originator, ushort samples)
         {
             for (ushort index = 0; index <= samples - 1; index++) {
+                var faker = new Faker<ResultInfo>()
+                    .RuleFor(o => o.Originator, _ => originator)
+                    .RuleFor(o => o.Index, _ => index)
+                    .RuleFor(o => o.Url, f => f.Internet.UrlWithPath(fileExt: "html"))
+                    .RuleFor(o => o.Description, f => f.WaffleTitle());
+                yield return faker.Generate();
+            } 
+        }
+
+        public static IEnumerable<ResultInfo> GenerateRandom(string originator, ushort maxSamples)
+        {
+            var samples = new CryptoRandom().Next(maxSamples - 1);
+            for (ushort index = 0; index <= samples; index++) {
                 var faker = new Faker<ResultInfo>()
                     .RuleFor(o => o.Originator, _ => originator)
                     .RuleFor(o => o.Index, _ => index)
