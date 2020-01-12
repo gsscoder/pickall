@@ -117,7 +117,7 @@ results |> Seq.iter (fun x -> printfn "%s %s" x.Url x.Description)
 
 ## Icon
 
-[Search Engine](https://thenounproject.com/search/?q=search%20engine&i=2054907) icon designed by Vectors Market from [The Noun Project](https://thenounproject.com/).
+- [Search Engine](https://thenounproject.com/search/?q=search%20engine&i=2054907) icon designed by Vectors Market from [The Noun Project](https://thenounproject.com/).
 
 ### Notes
 
