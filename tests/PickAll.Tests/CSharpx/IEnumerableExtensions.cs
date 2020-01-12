@@ -1,5 +1,6 @@
 //#define CSX_ENUM_INTERNAL // Uncomment or define at build time to set accessibility to internal.
 //#define CSX_REM_MAYBE_FUNC // Uncomment or define at build time to remove dependency to Maybe.cs.
+//#define CSX_REM_CRYPTORAND // Uncomment or define at build time to remove dependency to CryptoRandom.cs.
 
 using System;
 using System.Collections;
@@ -15,7 +16,7 @@ namespace CSharpx
 #if !CSX_ENUM_INTERNAL
     public
 #endif
-    static class EnumerableExtensions
+    static class IEnumerableExtensions
     {
 #if !CSX_REM_MAYBE_FUNC
         /// <summary>
@@ -408,7 +409,11 @@ namespace CSharpx
         /// </summary>
         public static T Choice<T>(this IEnumerable<T> source)
         {
+#if CSX_REM_CRYPTORAND
             var index = new Random().Next(source.Count() - 1);
+#else
+            var index = new CryptoRandom().Next(source.Count() - 1);
+#endif
             return source.ElementAt(index);
         }
 
