@@ -1,6 +1,6 @@
 # <img src="/assets/icon.png" height="30px" alt="PickAll Logo"> PickAll
 
-.NET agile and extensible web searching API. Built with [AngleSharp](https://github.com/AngleSharp/AngleSharp).
+.NET agile and extensible web searching API. Built with [AngleSharp](https://anglesharp.github.io/).
 
 ## Philosophy
 
@@ -99,6 +99,21 @@ let results = context.SearchAsync("quantum physics")
 
 results |> Seq.iter (fun x -> printfn "%s %s" x.Url x.Description)
 ```
+
+## Libraries
+
+- [AngleSharp](https://github.com/AngleSharp/AngleSharp)
+- [AngleSharp.Io](https://github.com/AngleSharp/AngleSharp.Io)
+- [CSharpx](https://github.com/gsscoder/csharpx)
+- [CommandLineParser](https://github.com/commandlineparser/commandline)
+- [xUnit.net](https://github.com/xunit/xunit)
+- [FluentAssertions](https://github.com/fluentassertions/fluentassertions)
+- [WaffleGenerator](https://github.com/SimonCropp/WaffleGenerator)
+- [Bogus](https://github.com/bchavez/Bogus)
+
+## Tools
+
+- [Paket](https://github.com/fsprojects/Paket)
 
 ## Icon
 
