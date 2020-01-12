@@ -111,7 +111,7 @@ namespace PickAll
             Query = query;
 
             // Bind context and partition maximum results
-            Services = ConfigureServices(this).ToArray();
+            Services = ConfigureServices(this).Memoize();
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
