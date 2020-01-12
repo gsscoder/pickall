@@ -111,7 +111,7 @@ namespace PickAll
             Query = query;
 
             // Bind context and partition maximum results
-            Services = ConfigureServices(this);
+            Services = ConfigureServices(this).ToArray();
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -157,37 +157,31 @@ namespace PickAll
 
         static IEnumerable<Service> ConfigureServices(SearchContext context)
         {
-            var searchers = (from service in context.Services
-                             where service.GetType().IsSearcher()
-                             select service).Cast<Searcher>();
+            var searchers = context.Services.CastOnlySubclassOf<Searcher>();
             uint? maximumResults = context.Settings.MaximumResults.HasValue
                  ? context.Settings.MaximumResults / (uint?)searchers.Count()
                  : null;
-            var services = from service in context.Services
-                           select Configure(service);
-            if (searchers.Count() > 0) {
-                var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
-                Func<Service, Service> reconfigure = service =>
-                    {
-                        if (service.GetHashCode().Equals(searchers.First().GetHashCode())) {
-                            var searcher = (Searcher)service;
-                            searcher.Policy = new RuntimePolicy(searcher.Policy.MaximumResults + remainder);
-                        }
-                        return service;
-                    };
-                services = from service in services
-                           select reconfigure(service);
-            }
-            return services;
-
-            Service Configure(Service service)
-            {
+            var seenFirst = false;
+            foreach (var service in context.Services) {
                 service.Context = context;
-                if (service.GetType().IsSearcher()) {
-                    var searcher = (Searcher)service;
-                    searcher.Policy = new RuntimePolicy(maximumResults);
+                var searcher = service as Searcher;
+                // Post processors need only search context
+                if (searcher == null) {
+                    yield return service;
                 }
-                return service;
+                else {
+                    // Searchers need also runtime policy
+                    if (seenFirst) {
+                        searcher.Policy = new RuntimePolicy(maximumResults);
+                    }
+                    else {
+                        seenFirst = true;
+                        // First searcher maybe burdened to handle extra results
+                        var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
+                        searcher.Policy = new RuntimePolicy(maximumResults + remainder);
+                    }
+                    yield return searcher;
+                }
             }
         }
 

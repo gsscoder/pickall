@@ -31,9 +31,16 @@ namespace PickAll.Internal
             }
         }
 
-        /// <summary>
-        /// Based on MoreLINQ one (github.com/morelinq).
-        /// </summary>
+        public static IEnumerable<T> CastOnlySubclassOf<T>(this IEnumerable<object> collection)
+        {
+            foreach (var element in collection) {
+                if (element.GetType().IsSubclassOf(typeof(T))) {
+                    yield return (T)element;
+                }
+            }
+        }
+
+        // Based on MoreLINQ one (github.com/morelinq).
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(
             this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
             IEqualityComparer<TKey> comparer = null)
