@@ -1,0 +1,8 @@
+Bogus
+FluentAssertions
+Microsoft.NET.Test.Sdk
+WaffleGenerator
+WaffleGenerator.Bogus
+xunit
+xunit.runner.visualstudio
+coverlet.collector

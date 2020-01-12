@@ -1,21 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <DefineConstants>$(DefineConstants);CSX_ARRAY_EXT_INTERNAL;CSX_ENUM_INTERNAL;CSX_REM_MAYBE_FUNC;CSX_STRING_EXT_INTERNAL;CSX_CRYPTORAND_INTERNAL</DefineConstants>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="28.4.4" />
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="WaffleGenerator" Version="4.0.2" />
-    <PackageReference Include="WaffleGenerator.Bogus" Version="4.0.2" />
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-    <PackageReference Include="coverlet.collector" Version="1.0.1" />
     <ProjectReference Include="../../src/PickAll/PickAll.csproj" />
   </ItemGroup>
-
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

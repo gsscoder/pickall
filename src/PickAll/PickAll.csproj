@@ -1,5 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Title>.NET agile and extensible web searching API</Title>
@@ -8,32 +8,26 @@
     <Authors>gsscoder</Authors>
     <Copyright>Copyright © Giacomo Stelluti Scala, 2019</Copyright>
     <PackageProjectUrl>https://github.com/gsscoder/pickall</PackageProjectUrl>
-    <PackageIconUrl></PackageIconUrl>
+    <PackageIconUrl>
+    </PackageIconUrl>
     <RepositoryUrl>https://github.com/gsscoder/pickall</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>web;scraping;api;library</PackageTags>  
-    <DefineConstants>$(DefineConstants);CSX_STRING_EXT_INTERNAL;CSX_REM_CRYPTORAND</DefineConstants>  
+    <PackageTags>web;scraping;api;library</PackageTags>
+    <DefineConstants>$(DefineConstants);CSX_STRING_EXT_INTERNAL;CSX_REM_CRYPTORAND</DefineConstants>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>../../artifacts/PickAll/Debug</OutputPath>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>../../artifacts/PickAll/Release</OutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.14.0-alpha-787" />
-    <PackageReference Include="AngleSharp.Io" Version="0.13.1" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Include="../../assets/icon.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>
+      </PackagePath>
     </None>
   </ItemGroup>
-
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

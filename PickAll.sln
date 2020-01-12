@@ -2,6 +2,11 @@
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{F2416294-558A-41FA-A2CC-843435B27551}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{511A8755-CF2A-46F0-A7F8-3A88028B6C82}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll", "src/PickAll/PickAll.csproj", "{C515F17A-5E67-45CD-B9FF-EB36848756AB}"
