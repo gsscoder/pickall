@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PickAll.Internal
 {
-    static class EnumerableExtensions
+    static class IEnumerableExtensions
     {
         public static IEnumerable<T> Add<T>(this IEnumerable<T> collection, T newElement)
         {
