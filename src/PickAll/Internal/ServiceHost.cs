@@ -29,6 +29,7 @@ class ServiceHost
     /// <summary>The sequence of managed services instances.</summary>
     public IEnumerable<object> Services { get; private set; }
 
+    /// <summary>Types and/or base types allowed as services.</summary>
     public Type[] Allowed { get; private set; }
 
     /// <summary>Returns a new <c>ServiceHost</c> instance with the given service added.</summary>
