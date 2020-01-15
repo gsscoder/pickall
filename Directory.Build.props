@@ -1,6 +1,5 @@
 <Project>
 	<PropertyGroup>
-		<NoWarn>CS1591;CS0219;8002;NU5125</NoWarn>
 		<SolutionDirectory Condition="'$(SolutionDirectory)'==''">$(MSBuildThisFileDirectory)</SolutionDirectory>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	</PropertyGroup>
@@ -13,6 +12,5 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 </Project>

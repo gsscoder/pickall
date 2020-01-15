@@ -17,6 +17,7 @@ namespace PickAll
     /// </summary>
     public sealed class SearchContext
     {   
+        private static Type[] _types = { typeof(Searcher), typeof(PostProcessor) };
         private Lazy<IBrowsingContext> _activeContext;
         private static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
             () => new SearchContext(
@@ -25,31 +26,31 @@ namespace PickAll
                 typeof(Uniqueness),
                 typeof(Order)));
 
-        internal SearchContext(IEnumerable<Service> services, ContextSettings settings)
+        internal SearchContext(ServiceHost host, ContextSettings settings)
         {
-            Services = services;
+            Host = host;
             Settings = settings;
             _activeContext = new Lazy<IBrowsingContext>(() => BuildContext(settings));
 #if DEBUG
-            DebugEnforceMaximumResults = true;
+            EnforceMaximumResults = true;
 #endif
         }
 
-        public SearchContext(ContextSettings settings): this(Enumerable.Empty<Service>(), settings)
+        public SearchContext(ContextSettings settings): this(new ServiceHost(_types), settings)
         {
         }
 
-        public SearchContext() : this(Enumerable.Empty<Service>(), new ContextSettings())
+        public SearchContext() : this(new ServiceHost(_types), new ContextSettings())
         {
         }
 
         public SearchContext(uint maximumResults)
-            : this(Enumerable.Empty<Service>(), new ContextSettings { MaximumResults = maximumResults })
+            : this(new ServiceHost(_types), new ContextSettings { MaximumResults = maximumResults })
         {
         }
 
         public SearchContext(TimeSpan timeout)
-            : this(Enumerable.Empty<Service>(), new ContextSettings { Timeout = timeout })
+            : this(new ServiceHost(_types), new ContextSettings { Timeout = timeout })
         {
         }
 
@@ -59,17 +60,10 @@ namespace PickAll
         /// <param name="services">A list of service types.</param>
         public SearchContext(params Type[] services) : this()
         {
-            var servicesCount = (from service in services
-                                 where service.IsService()
-                                 select service).Count();
-            if (servicesCount < services.Count()) {
-                throw new NotSupportedException(
-                    "All types must inherit from Searcher or PostProcessor");
+            Host = new ServiceHost(_types);
+            foreach (var type in services) {
+                Host = Host.Add(type, () => Activator.CreateInstance(type, new object[] { null }));
             }
-
-            Services = (from service in services
-                        select Activator.CreateInstance(service, new object[] { null }))
-                        .Cast<Service>();
         }
 
         public IBrowsingContext ActiveContext
@@ -79,20 +73,21 @@ namespace PickAll
 
         public string Query
         {
-            get;
-            private set;
+            get; private set;
         }
+
+        internal ServiceHost Host { get; private set; }
 
 #if !DEBUG
         internal ContextSettings Settings { get; private set; }
 
-        internal IEnumerable<Service> Services { get; private set; }
+        internal ServiceHost Host { get; private set; }
 #else
         public ContextSettings Settings { get; private set; }
 
-        public IEnumerable<Service> Services { get; private set; }
+        public IEnumerable<object> Services { get { return Host.Services; } } // Debug only
 
-        public bool DebugEnforceMaximumResults { get; set; }
+        public bool EnforceMaximumResults { get; set; } // Debug only
 #endif
 
         /// <summary>
@@ -111,12 +106,12 @@ namespace PickAll
             Query = query;
 
             // Bind context and partition maximum results
-            Services = ConfigureServices(this).Memoize();
+            Host = ConfigureServices(this);
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
                 from searcher in 
-                    (from service in Services
+                    (from service in Host.Services
                      where service.GetType().IsSearcher()
                      select service).Cast<Searcher>()
                 select searcher.SearchAsync(query));
@@ -128,14 +123,14 @@ namespace PickAll
                 results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
 #else
                 // Useful for debugging
-                if (DebugEnforceMaximumResults) {
+                if (EnforceMaximumResults) {
                     results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
                 }
 #endif
             }
 
             // Invoke post processors in sync
-            var processors = (from service in Services
+            var processors = (from service in Host.Services
                               where service.GetType().IsPostProcessor()
                               select service).Cast<PostProcessor>();
             foreach (var processor in processors) {
@@ -155,32 +150,35 @@ namespace PickAll
             get { return _default.Value; }
         }
 
-        static IEnumerable<Service> ConfigureServices(SearchContext context)
+        static ServiceHost ConfigureServices(SearchContext context)
         {
-            var searchers = context.Services.CastOnlySubclassOf<Searcher>();
-            uint? maximumResults = context.Settings.MaximumResults.HasValue
-                 ? context.Settings.MaximumResults / (uint?)searchers.Count()
-                 : null;
-            var seenFirst = false;
-            foreach (var service in context.Services) {
-                service.Context = context;
-                var searcher = service as Searcher;
-                // Post processors need only search context
-                if (searcher == null) {
-                    yield return service;
-                }
-                else {
-                    // Searchers need also runtime policy
-                    if (seenFirst) {
-                        searcher.Policy = new RuntimePolicy(maximumResults);
+            return new ServiceHost(impl().Memoize(), context.Host.Allowed);
+            IEnumerable<object> impl() {
+                var searchers = context.Host.Services.CastOnlySubclassOf<Searcher>();
+                uint? maximumResults = context.Settings.MaximumResults.HasValue
+                    ? context.Settings.MaximumResults / (uint?)searchers.Count()
+                    : null;
+                var seenFirst = false;
+                foreach (var service in context.Host.Services.Cast<Service>()) {
+                    service.Context = context;
+                    var searcher = service as Searcher;
+                    // Post processors need only search context
+                    if (searcher == null) {
+                        yield return service;
                     }
                     else {
-                        seenFirst = true;
-                        // First searcher maybe burdened to handle extra results
-                        var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
-                        searcher.Policy = new RuntimePolicy(maximumResults + remainder);
+                        // Searchers need also runtime policy
+                        if (seenFirst) {
+                            searcher.Policy = new RuntimePolicy(maximumResults);
+                        }
+                        else {
+                            seenFirst = true;
+                            // First searcher maybe burdened to handle extra results
+                            var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
+                            searcher.Policy = new RuntimePolicy(maximumResults + remainder);
+                        }
+                        yield return searcher;
                     }
-                    yield return searcher;
                 }
             }
         }

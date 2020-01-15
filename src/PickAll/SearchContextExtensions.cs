@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using PickAll.Internal;
 
 namespace PickAll
 {
@@ -21,14 +20,9 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"/> with the given service added.</returns>
         public static SearchContext With<T>(this SearchContext context, object settings = null)
         {
-            if (!typeof(T).IsSearcher() && !typeof(T).IsPostProcessor()) {
-                throw new NotSupportedException(
-                    $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
-            }
-
             var service = Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
-                context.Services.Add(service).Cast<Service>(),
+                context.Host.Clone().Add(service),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
@@ -58,14 +52,10 @@ namespace PickAll
             if (type == null) {
                 throw new NotSupportedException($"{serviceName} service not found");
             }
-            if (!type.IsSearcher() && !type.IsPostProcessor()) {
-                throw new NotSupportedException(
-                    $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
-            }
 
             var service = Activator.CreateInstance(type, settings);
             return new SearchContext(
-                context.Services.Add(service).Cast<Service>(),
+                context.Host.Clone().Add(service),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
@@ -79,13 +69,8 @@ namespace PickAll
         /// <returns>A <see cref="SearchContext"/> instance with the given service removed.</returns>
         public static SearchContext Without<T>(this SearchContext context)
         {
-            if (!typeof(T).IsSearcher() && !typeof(T).IsPostProcessor()) {
-                throw new NotSupportedException(
-                    $"T must inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
-            }
-
             return new SearchContext(
-                context.Services.Remove(typeof(T)),
+                context.Host.Clone().Remove<T>(),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
@@ -106,7 +91,7 @@ namespace PickAll
                 throw new ArgumentException($"{nameof(serviceName)} cannot be empty or contain only space", nameof(serviceName));
             }
 
-            var service = (from @this in context.Services
+            var service = (from @this in context.Host.Services
                            where @this.GetType().Name.Equals(
                                serviceName, StringComparison.OrdinalIgnoreCase)
                            select @this).FirstOrDefault();
@@ -114,7 +99,7 @@ namespace PickAll
                 throw new InvalidOperationException($"{serviceName} not registred as service");
             }
             return new SearchContext(
-                context.Services.Remove(service.GetType()),
+                context.Host.Clone().Remove(service.GetType()),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
@@ -128,16 +113,8 @@ namespace PickAll
         /// or all postprocessor removed.</returns>
         public static SearchContext WithoutAll<T>(this SearchContext context)
         {
-            if (typeof(T) != typeof(Searcher) && typeof(T) != typeof(PostProcessor))
-            {
-                throw new NotSupportedException(
-                    $"T must be or inherit from {nameof(Searcher)} or {nameof(PostProcessor)}");
-            }
-
             return new SearchContext(
-                from service in context.Services
-                where !service.GetType().IsSubclassOf(typeof(T))
-                select service,
+                context.Host.Clone().RemoveAll<T>(),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
@@ -150,7 +127,7 @@ namespace PickAll
         public static SearchContext WithConfiguration(this SearchContext context,
             ContextSettings settings)
         {
-            return new SearchContext(context.Services, settings);
+            return new SearchContext(context.Host.Clone(), settings);
         }
 
         /// <summary>
@@ -161,14 +138,13 @@ namespace PickAll
         public static SearchContext Clone(this SearchContext context)
         {
             return new SearchContext(
-                from service in context.Services
-                select UnbindContext(service),
+                context.Host.Map(service => UnbindContext(service)),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
 
-        static Service UnbindContext(Service service)
+        static object UnbindContext(object service)
         {
-            var unbound = service;
+            var unbound = (Service)service;
             unbound.Context = null;
             return service;
         }

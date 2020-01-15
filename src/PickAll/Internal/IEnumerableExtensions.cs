@@ -6,32 +6,6 @@ namespace PickAll.Internal
 {
     static class IEnumerableExtensions
     {
-        public static IEnumerable<T> Add<T>(this IEnumerable<T> collection, T newElement)
-        {
-            foreach (var element in collection) {
-                yield return element;
-            }
-            yield return newElement;
-        }
-
-        public static IEnumerable<T> Remove<T>(this IEnumerable<T> collection, Type type)
-        {
-            bool removed = false;
-            foreach (var element in collection) {
-                if (element.GetType() != type) {
-                    yield return element;
-                }
-                else {
-                    if (!removed) {
-                        removed = true;
-                    }
-                    else {
-                        yield return element;
-                    }
-                }
-            }
-        }
-
         public static IEnumerable<T> CastOnlySubclassOf<T>(this IEnumerable<object> collection)
         {
             foreach (var element in collection) {

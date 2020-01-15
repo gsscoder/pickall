@@ -38,7 +38,7 @@ namespace PickAll.Tests.Unit
                 typeof(int));
             
             action.Should().ThrowExactly<NotSupportedException>()
-                .WithMessage("All types must inherit from Searcher or PostProcessor");
+                .WithMessage("Type must be or inherit from Searcher or PostProcessor");
         }
 
         [Fact]
@@ -273,7 +273,7 @@ namespace PickAll.Tests.Unit
             var sut = context.Clone();
 
             sut.Query.Should().BeNull();
-            sut.Services.Should().NotBeEmpty()
+            sut.Services.Cast<Service>().Should().NotBeEmpty()
                 .And.HaveCount(context.Services.Count())
                 .And.OnlyContain(service => service.Context == null);
         }
@@ -318,7 +318,7 @@ namespace PickAll.Tests.Unit
         {
             var sut = new SearchContext(maximumResults: 10)
                 .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20, AtLeast = 15 });
-            sut.DebugEnforceMaximumResults = false;
+            sut.EnforceMaximumResults = false;
 
             var results = await sut.SearchAsync("query");
 
@@ -335,7 +335,7 @@ namespace PickAll.Tests.Unit
                 .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20 })
                 .With<Order>()
                 .With<Uniqueness>();
-            sut.DebugEnforceMaximumResults = false;
+            sut.EnforceMaximumResults = false;
 
             await sut.SearchAsync("query");
 

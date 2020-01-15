@@ -4,16 +4,14 @@
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Title>.NET agile and extensible web searching API</Title>
     <Description>.NET agile and extensible web searching API</Description>
-    <Version>0.21.0-beta</Version>
+    <Version>0.23.0-beta</Version>
     <Authors>gsscoder</Authors>
     <Copyright>Copyright © Giacomo Stelluti Scala, 2019</Copyright>
     <PackageProjectUrl>https://github.com/gsscoder/pickall</PackageProjectUrl>
-    <PackageIconUrl>
-    </PackageIconUrl>
     <RepositoryUrl>https://github.com/gsscoder/pickall</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>web;scraping;api;library</PackageTags>
-    <DefineConstants>$(DefineConstants);CSX_STRING_EXT_INTERNAL;CSX_REM_CRYPTORAND</DefineConstants>
+    <DefineConstants>$(DefineConstants);CSX_STRING_EXT_INTERNAL;CSX_REM_CRYPTORAND;CATALOQ_INTERNAL</DefineConstants>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
