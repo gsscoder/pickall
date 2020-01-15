@@ -80,8 +80,6 @@ namespace PickAll
 
 #if !DEBUG
         internal ContextSettings Settings { get; private set; }
-
-        internal ServiceHost Host { get; private set; }
 #else
         public ContextSettings Settings { get; private set; }
 
