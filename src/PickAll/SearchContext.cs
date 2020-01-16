@@ -150,35 +150,31 @@ namespace PickAll
 
         static ServiceHost ConfigureServices(SearchContext context)
         {
-            return new DefaultServiceHost(impl().Memoize(), context.Host.Allowed);
-            IEnumerable<object> impl() {
-                var searchers = context.Host.Services.CastOnlySubclassOf<Searcher>();
-                uint? maximumResults = context.Settings.MaximumResults.HasValue
-                    ? context.Settings.MaximumResults / (uint?)searchers.Count()
-                    : null;
-                var seenFirst = false;
-                foreach (var service in context.Host.Services.Cast<Service>()) {
-                    service.Context = context;
-                    var searcher = service as Searcher;
-                    // Post processors need only search context
-                    if (searcher == null) {
-                        yield return service;
+            var searchers = context.Host.Services.CastOnlySubclassOf<Searcher>();
+            var first = searchers.FirstOrDefault();
+            uint? maximumResults = context.Settings.MaximumResults.HasValue
+                ? context.Settings.MaximumResults / (uint?)searchers.Count()
+                : null;
+            return context.Host.Map(service => {
+                ((Service)service).Context = context;
+                var searcher = service as Searcher;
+                // Post processors need only search context
+                if (searcher == null) {
+                    return service;
+                }
+                else {
+                    // Searchers need also runtime policy
+                    if (first != null && service.GetHashCode().Equals(first.GetHashCode())) {
+                        // First searcher maybe burdened to handle extra results
+                        var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
+                        searcher.Policy = new RuntimePolicy(maximumResults + remainder);
                     }
                     else {
-                        // Searchers need also runtime policy
-                        if (seenFirst) {
-                            searcher.Policy = new RuntimePolicy(maximumResults);
-                        }
-                        else {
-                            seenFirst = true;
-                            // First searcher maybe burdened to handle extra results
-                            var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
-                            searcher.Policy = new RuntimePolicy(maximumResults + remainder);
-                        }
-                        yield return searcher;
+                        searcher.Policy = new RuntimePolicy(maximumResults);
                     }
+                    return searcher;
                 }
-            }
+            });
         }
 
         static IBrowsingContext BuildContext(ContextSettings settings)
