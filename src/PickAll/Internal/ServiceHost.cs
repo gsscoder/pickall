@@ -26,12 +26,14 @@ abstract class ServiceHost
     {
     }
 
-    public static ServiceHost Default(params Type[] allowed)
+    /// <summary>Builds a new default service host instance with allowed types.</summary>
+    public static ServiceHost DefaultHost(params Type[] allowed)
     {
         return new DefaultServiceHost(allowed);
     }
 
-    public static ServiceHost Blocking(params Type[] allowed)
+    /// <summary>Builds a new thread-safe service host instance with allowed types.</summary>
+    public static ServiceHost BlockingHost(params Type[] allowed)
     {
         return new BlockingServiceHost(allowed);
     }
