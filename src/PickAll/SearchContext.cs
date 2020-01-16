@@ -36,21 +36,21 @@ namespace PickAll
 #endif
         }
 
-        public SearchContext(ContextSettings settings): this(new ServiceHost(_types), settings)
+        public SearchContext(ContextSettings settings): this(ServiceHost.Default(_types), settings)
         {
         }
 
-        public SearchContext() : this(new ServiceHost(_types), new ContextSettings())
+        public SearchContext() : this(ServiceHost.Default(_types), new ContextSettings())
         {
         }
 
         public SearchContext(uint maximumResults)
-            : this(new ServiceHost(_types), new ContextSettings { MaximumResults = maximumResults })
+            : this(ServiceHost.Default(_types), new ContextSettings { MaximumResults = maximumResults })
         {
         }
 
         public SearchContext(TimeSpan timeout)
-            : this(new ServiceHost(_types), new ContextSettings { Timeout = timeout })
+            : this(ServiceHost.Default(_types), new ContextSettings { Timeout = timeout })
         {
         }
 
@@ -60,7 +60,7 @@ namespace PickAll
         /// <param name="services">A list of service types.</param>
         public SearchContext(params Type[] services) : this()
         {
-            Host = new ServiceHost(_types);
+            Host = ServiceHost.Default(_types);
             foreach (var type in services) {
                 Host = Host.Add(type, () => Activator.CreateInstance(type, new object[] { null }));
             }
@@ -150,7 +150,7 @@ namespace PickAll
 
         static ServiceHost ConfigureServices(SearchContext context)
         {
-            return new ServiceHost(impl().Memoize(), context.Host.Allowed);
+            return new DefaultServiceHost(impl().Memoize(), context.Host.Allowed);
             IEnumerable<object> impl() {
                 var searchers = context.Host.Services.CastOnlySubclassOf<Searcher>();
                 uint? maximumResults = context.Settings.MaximumResults.HasValue
