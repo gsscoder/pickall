@@ -155,26 +155,22 @@ namespace PickAll
             uint? maximumResults = context.Settings.MaximumResults.HasValue
                 ? context.Settings.MaximumResults / (uint?)searchers.Count()
                 : null;
-            return context.Host.Map(service => {
-                ((Service)service).Context = context;
-                var searcher = service as Searcher;
-                // Post processors need only search context
-                if (searcher == null) {
-                    return service;
-                }
-                else {
-                    // Searchers need also runtime policy
-                    if (first != null && service.GetHashCode().Equals(first.GetHashCode())) {
-                        // First searcher maybe burdened to handle extra results
-                        var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
-                        searcher.Policy = new RuntimePolicy(maximumResults + remainder);
-                    }
-                    else {
-                        searcher.Policy = new RuntimePolicy(maximumResults);
-                    }
+            var host = context.Host
+                .Map<Service>(service => {
+                    service.Context = context;
+                    return service; })
+                .Map<Searcher>(searcher => {
+                    searcher.Policy = new RuntimePolicy(maximumResults);
+                    return searcher; });
+            if (first != null) {
+                host = host.Map<Searcher>(searcher => {
+                    var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
+                    searcher.Policy = new RuntimePolicy(searcher.Policy.MaximumResults + remainder);
                     return searcher;
-                }
-            });
+                    },
+                    searcher => searcher.GetHashCode().Equals(first.GetHashCode()));
+            }
+            return host;
         }
 
         static IBrowsingContext BuildContext(ContextSettings settings)
