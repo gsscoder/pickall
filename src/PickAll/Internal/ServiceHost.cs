@@ -66,9 +66,17 @@ abstract class ServiceHost
     /// given type removed.</summary>
     public abstract ServiceHost RemoveAll<T>();
 
-    /// <summary>Returns a new <c>ServiceHost</c> instance with mapping a given function on each
+    /// <summary>Returns a new <c>ServiceHost</c> instance mapping a given function on each
     /// service.</summary>
     public abstract ServiceHost Map(Func<object, object> func);
+
+    /// <summary>Returns a new <c>ServiceHost</c> instance mapping a given function on each
+    /// service of a given type or that inherits from it.</summary>
+    public abstract ServiceHost Map<T>(Func<T, T> func);
+
+    /// <summary>Returns a new <c>ServiceHost</c> instance mapping a given function on each
+    /// service that observes the predicate.</summary>
+    public abstract ServiceHost Map(Func<object, object> func, Func<object, bool> predicate);
 
     /// <summary>Clones a <c>ServiceHost</c> instance.</summary>
     public abstract ServiceHost Clone();
@@ -217,6 +225,41 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
+    public override ServiceHost Map<T>(Func<T, T> func)
+    {
+        if (func == null) throw new ArgumentNullException(nameof(func));
+
+        return new DefaultServiceHost(impl(), Allowed);
+        IEnumerable<object> impl() {
+            foreach (var element in Services) {
+                if (element.GetType().Equals(typeof(T)) ||
+                    element.GetType().IsSubclassOf(typeof(T))) {
+                        yield return func((T)element);
+                    }
+                else {
+                    yield return element;
+                }
+            }
+        }
+    }
+
+    public override ServiceHost Map(Func<object, object> func, Func<object, bool> predicate)
+    {
+        if (func == null) throw new ArgumentNullException(nameof(func));
+        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+
+        return new DefaultServiceHost(impl(), Allowed);
+        IEnumerable<object> impl() {
+            foreach (var element in Services) {
+                if (predicate(element)) {
+                    yield return func(element);
+                } else {
+                    yield return element;
+                }
+            }
+        }
+    }
+
     public override ServiceHost Clone()
     {
         return new DefaultServiceHost(Services, Allowed);
@@ -282,6 +325,16 @@ class BlockingServiceHost : DefaultServiceHost
     public override ServiceHost Map(Func<object, object> func)
     {
         lock (this) { return base.Map(func); }
+    }
+
+    public override ServiceHost Map<T>(Func<T, T> func)
+    {
+        lock (this) { return base.Map(func); }
+    }
+
+    public override ServiceHost Map(Func<object, object> func, Func<object, bool> predicate)
+    {
+        lock (this) { return base.Map(func, predicate); }
     }
 
     public override ServiceHost Clone()
