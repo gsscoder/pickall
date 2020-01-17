@@ -156,18 +156,14 @@ namespace PickAll
                 ? context.Settings.MaximumResults / (uint?)searchers.Count()
                 : null;
             var host = context.Host
-                .Map<Service>(service => {
-                    service.Context = context;
-                    return service; })
-                .Map<Searcher>(searcher => {
-                    searcher.Policy = new RuntimePolicy(maximumResults);
-                    return searcher; });
+                .Configure<Service>(service => service.Context = context)
+                .Configure<Searcher>(searcher => searcher.Policy = new RuntimePolicy(maximumResults));
             if (first != null) {
-                host = host.Map<Searcher>(searcher => {
-                    var remainder = context.Settings.MaximumResults % (uint?)searchers.Count();
-                    searcher.Policy = new RuntimePolicy(searcher.Policy.MaximumResults + remainder);
-                    return searcher;
-                    },
+                // first service maybe burdened of handling extra results 
+                host = host.Configure<Searcher>(searcher =>
+                    searcher.Policy = new RuntimePolicy(
+                        searcher.Policy.MaximumResults +
+                        context.Settings.MaximumResults % (uint?)searchers.Count()),
                     searcher => searcher.GetHashCode().Equals(first.GetHashCode()));
             }
             return host;

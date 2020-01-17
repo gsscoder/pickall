@@ -82,6 +82,14 @@ abstract class ServiceHost
     /// service of a given type or that inherits from it and observes the predicate.</summary>
     public abstract ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate);
 
+    /// <summary>Returns a new <c>ServiceHost</c> instance executing a given function on each
+    /// service of a given type or that inherits from it.</summary>
+    public abstract ServiceHost Configure<T>(Action<T> action);
+
+    /// <summary>Returns a new <c>ServiceHost</c> instance executing a given function on each
+    /// service of a given type or that inherits from it and observes the predicate.</summary>
+    public abstract ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate);
+
     /// <summary>Clones a <c>ServiceHost</c> instance.</summary>
     public abstract ServiceHost Clone();
 
@@ -283,6 +291,21 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
+    public override ServiceHost Configure<T>(Action<T> action)
+    {
+        return Map<T>(service => {
+            action(service);
+            return service; });
+    }
+
+    public override ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate)
+    {
+        return Map<T>(service => {
+            action(service);
+            return service; },
+            predicate);
+    }
+
     public override ServiceHost Clone()
     {
         return new DefaultServiceHost(Services, Allowed);
@@ -363,6 +386,16 @@ class BlockingServiceHost : DefaultServiceHost
     public override ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate)
     {
         lock (this) { return base.Map(func, predicate); }
+    }
+
+    public override ServiceHost Configure<T>(Action<T> action)
+    {
+        lock (this) { return base.Configure(action); }
+    }
+
+    public override ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate)
+    {
+        lock (this) { return base.Configure(action, predicate); }
     }
 
     public override ServiceHost Clone()
