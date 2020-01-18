@@ -91,10 +91,8 @@ public sealed class SearchContext
     /// <returns>A colection of <see cref="ResultInfo"/>.</returns>
     public async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
     {
-        if (query == null) throw new ArgumentNullException(nameof(query),
-            $"{nameof(query)} cannot be null");
-        if (query.Trim() == string.Empty) throw new ArgumentException(
-            $"{nameof(query)} cannot be empty or contains only white spaces", nameof(query));
+        Guard.AgainstNull(nameof(query), query);
+        Guard.AgainstEmptyWhiteSpace(nameof(query), query);
 
         Query = query;
 
