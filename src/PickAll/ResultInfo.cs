@@ -18,6 +18,12 @@ public class ResultInfo
     /// <param name="data">TAdditional data supplied by the service.</param>
     public ResultInfo(string originator, ushort index, string url, string description, object data)
     {
+        Guard.AgainstNull(nameof(originator), originator);
+        Guard.AgainstEmptyWhiteSpace(nameof(originator), originator);
+        Guard.AgainstNull(nameof(url), url);
+        Guard.AgainstEmptyWhiteSpace(nameof(url), url);
+        Guard.AgainstNull(nameof(description), description);
+
         Originator = originator;
         Index = index;
         Url = url;
