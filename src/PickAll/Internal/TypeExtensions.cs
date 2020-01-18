@@ -1,22 +1,19 @@
 using System;
 
-namespace PickAll.Internal
+static class TypeExtensions
 {
-    static class TypeExtensions
+    public static bool IsSearcher(this Type type)
     {
-        public static bool IsSearcher(this Type type)
-        {
-            return type.IsSubclassOf(typeof(Searcher)); 
-        }
-        
-        public static bool IsPostProcessor(this Type type)
-        {
-            return type.IsSubclassOf(typeof(PostProcessor)); 
-        }
+        return type.IsSubclassOf(typeof(Searcher)); 
+    }
+    
+    public static bool IsPostProcessor(this Type type)
+    {
+        return type.IsSubclassOf(typeof(PostProcessor)); 
+    }
 
-        public static bool IsService(this Type type)
-        {
-            return type.IsSubclassOf(typeof(Service));
-        }
+    public static bool IsService(this Type type)
+    {
+        return type.IsSubclassOf(typeof(Service));
     }
 }

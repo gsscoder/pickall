@@ -4,82 +4,79 @@ using System.Collections.Generic;
 using System.Linq;
 using CSharpx;
 
-namespace PickAll.PostProcessors
+/// <summary>
+/// Settings for <see cref="Improve"/> post processor.
+/// </summary>
+public struct ImproveSettings
 {
     /// <summary>
-    /// Settings for <see cref="Improve"/> post processor.
+    /// Number of word with highest frequency to use in subsequent search.
     /// </summary>
-    public struct ImproveSettings
-    {
-        /// <summary>
-        /// Number of word with highest frequency to use in subsequent search.
-        /// </summary>
-        public ushort WordCount { get; set; }
-
-        /// <summary>
-        /// Length of words to be considered noise.
-        /// </summary>
-        public ushort NoiseLength { get; set; }
-    }
+    public ushort WordCount { get; set; }
 
     /// <summary>
-    /// Improves results computing word frequency to perform a subsequent search.
+    /// Length of words to be considered noise.
     /// </summary>
-    public class Improve : PostProcessor
-    {
-        private readonly ImproveSettings _settings;
+    public ushort NoiseLength { get; set; }
+}
 
-        public Improve(object settings) : base(settings)
-        {
-            if (!(settings is ImproveSettings)) {
-                throw new NotSupportedException(
-                    $"{nameof(settings)} must be of ImproveSettings type");
-            }
-            _settings = (ImproveSettings)Settings;
+/// <summary>
+/// Improves results computing word frequency to perform a subsequent search.
+/// </summary>
+public class Improve : PostProcessor
+{
+    private readonly ImproveSettings _settings;
+
+    public Improve(object settings) : base(settings)
+    {
+        if (!(settings is ImproveSettings)) {
+            throw new NotSupportedException(
+                $"{nameof(settings)} must be of ImproveSettings type");
         }
+        _settings = (ImproveSettings)Settings;
+    }
 
 #if DEBUG
-        public
+    public
 #endif
-        IEnumerable<string> FoldDescriptions(IEnumerable<ResultInfo> results)
-        {
-            Func<string, bool> couldBeNoise = _settings.NoiseLength == 0
-                ? couldBeNoise =  _ => false
-                : w => w.Length <= _settings.NoiseLength;
-            var words = from result in results
-                        from word in result.Description.Split()
-                        where word.IsAlphanumeric()
-                        select word;
-            var folded =  from w in
-                              from word in words
-                              group word by word into g
-                              select new Tuple<string, int>(g.Key, g.Count())
-                          orderby w.Item2 descending
-                          select w;
-            IEnumerable<Tuple<string, int>> refined;
-                var query = Context.Query ?? string.Empty;
-                var queryWords = query.ToLower().Split();
-                refined = from computed in folded
-                          where !queryWords.Contains(computed.Item1.ToLower())
-                          && !couldBeNoise.Invoke(computed.Item1)
-                          select computed;
+    IEnumerable<string> FoldDescriptions(IEnumerable<ResultInfo> results)
+    {
+        Func<string, bool> couldBeNoise = _settings.NoiseLength == 0
+            ? couldBeNoise =  _ => false
+            : w => w.Length <= _settings.NoiseLength;
+        var words = from result in results
+                    from word in result.Description.Split()
+                    where word.IsAlphanumeric()
+                    select word;
+        var folded =  from w in
+                            from word in words
+                            group word by word into g
+                            select new Tuple<string, int>(g.Key, g.Count())
+                        orderby w.Item2 descending
+                        select w;
+        IEnumerable<Tuple<string, int>> refined;
+            var query = Context.Query ?? string.Empty;
+            var queryWords = query.ToLower().Split();
+            refined = from computed in folded
+                        where !queryWords.Contains(computed.Item1.ToLower())
+                        && !couldBeNoise.Invoke(computed.Item1)
+                        select computed;
 
-            return (from computed in refined
-                    select computed.Item1).Take(_settings.WordCount);
-        }
+        return (from computed in refined
+                select computed.Item1).Take(_settings.WordCount);
+    }
 
-        public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
-        {
-            var builder = new StringBuilder();
-            builder.Append(string.Join(" ", FoldDescriptions(results).ToArray()));
-            builder.Append(' ');
-            builder.Append(Context.Query);
+    public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
+    {
+        var builder = new StringBuilder();
+        builder.Append(string.Join(" ", FoldDescriptions(results).ToArray()));
+        builder.Append(' ');
+        builder.Append(Context.Query);
 
-            return Context
-                       .WithoutAll<PostProcessor>()
-                       .With<Uniqueness>()
-                       .With<Order>()
-                       .SearchAsync(builder.ToString()).GetAwaiter().GetResult();
-        }
+        return Context
+                    .WithoutAll<PostProcessor>()
+                    .With<Uniqueness>()
+                    .With<Order>()
+                    .SearchAsync(builder.ToString()).GetAwaiter().GetResult();
     }
 }

@@ -1,29 +1,25 @@
 using CommandLine;
-using CommandLine.Text;
 using System.Collections.Generic;
 
-namespace PickAll.Simple
+sealed class Options
 {
-    class Options
-    {
-        [Value(0, MetaName = "search query", HelpText = "Query to submit to search engines",
-                Required = true)]
-        public string Query { get; set; }
+    [Value(0, MetaName = "search query", HelpText = "Query to submit to search engines",
+            Required = true)]
+    public string Query { get; set; }
 
-        [Option('t', "timeout", HelpText = "Maximum timeout for HTTP requests in seconds")]
-        public uint? Timeout { get; set; }
+    [Option('t', "timeout", HelpText = "Maximum timeout for HTTP requests in seconds")]
+    public uint? Timeout { get; set; }
 
-        [Option('f', "fuzzy", HelpText = "Fuzzy matching of Levenshtein distance 0-10")]
-        public string FuzzyMatch { get; set; }
+    [Option('f', "fuzzy", HelpText = "Fuzzy matching of Levenshtein distance 0-10")]
+    public string FuzzyMatch { get; set; }
 
-        [Option('i', "improve", HelpText = "Enable improve search post processor")]
-        public bool Improve { get; set; }
+    [Option('i', "improve", HelpText = "Enable improve search post processor")]
+    public bool Improve { get; set; }
 
-        [Option('w', "wordify", HelpText = "Enable improve wordify post processor")]
-        public bool Wordify { get; set; }       
+    [Option('w', "wordify", HelpText = "Enable improve wordify post processor")]
+    public bool Wordify { get; set; }       
 
-        [Option('e', "engines", HelpText = "Search engines to use separated by ':'",
-            Separator = ':')]
-        public IEnumerable<string> Engines { get; set; }
-    }
+    [Option('e', "engines", HelpText = "Search engines to use separated by ':'",
+        Separator = ':')]
+    public IEnumerable<string> Engines { get; set; }
 }
