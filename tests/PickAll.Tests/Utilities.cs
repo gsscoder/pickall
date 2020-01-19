@@ -1,3 +1,5 @@
+using PickAll;
+
 static class ResultInfoExtensions
 {
     public static ResultInfo UsingIndex(this ResultInfo result, ushort index)

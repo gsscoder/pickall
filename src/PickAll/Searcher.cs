@@ -1,42 +1,45 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-/// <summary>
-/// Represents a searching service managed by <see cref="SearchContext"/>.
-/// </summary>
-public abstract class Searcher : Service
+namespace PickAll
 {
-    public Searcher(object settings)
-    {
-        Settings = settings;
-        Name = GetType().Name;
-    }
-
     /// <summary>
-    /// Performs the actual search.
+    /// Represents a searching service managed by <see cref="SearchContext"/>.
     /// </summary>
-    /// <param name="query">A query string.</param>
-    /// <returns>A collection of <see cref="ResultInfo"/> with search results.</returns>
-    public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
-
-    /// <summary>
-    /// The searcher identifier set to class name.
-    /// </summary>
-    public string Name
+    public abstract class Searcher : Service
     {
-        get;
-        private set;
-    }
+        public Searcher(object settings)
+        {
+            Settings = settings;
+            Name = GetType().Name;
+        }
 
-    public RuntimePolicy Policy
-    {
-        get;
-        internal set;
-    }
+        /// <summary>
+        /// Performs the actual search.
+        /// </summary>
+        /// <param name="query">A query string.</param>
+        /// <returns>A collection of <see cref="ResultInfo"/> with search results.</returns>
+        public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
 
-    protected ResultInfo CreateResult(
-        ushort index, string url, string description, object data = null)
-    {
-        return new ResultInfo(Name, index, url, description, data);
+        /// <summary>
+        /// The searcher identifier set to class name.
+        /// </summary>
+        public string Name
+        {
+            get;
+            private set;
+        }
+
+        public RuntimePolicy Policy
+        {
+            get;
+            internal set;
+        }
+
+        protected ResultInfo CreateResult(
+            ushort index, string url, string description, object data = null)
+        {
+            return new ResultInfo(Name, index, url, description, data);
+        }
     }
 }

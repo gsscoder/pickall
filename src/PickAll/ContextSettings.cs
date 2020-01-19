@@ -1,22 +1,25 @@
 using System;
 
-/// <summary>
-/// Settings for a search context.
-/// </summary>
-public struct ContextSettings
+namespace PickAll
 {
     /// <summary>
-    /// Maximum results a search is allowed to return.
+    /// Settings for a search context.
     /// </summary>
-    public uint? MaximumResults;
-
-    /// <summary>
-    /// Timeout for each HTTP request performed.
-    /// </summary>
-    public TimeSpan? Timeout;
-
-    internal RuntimePolicy ToPolicy()
+    public struct ContextSettings
     {
-        return new RuntimePolicy(MaximumResults);
+        /// <summary>
+        /// Maximum results a search is allowed to return.
+        /// </summary>
+        public uint? MaximumResults;
+
+        /// <summary>
+        /// Timeout for each HTTP request performed.
+        /// </summary>
+        public TimeSpan? Timeout;
+
+        internal RuntimePolicy ToPolicy()
+        {
+            return new RuntimePolicy(MaximumResults);
+        }
     }
 }

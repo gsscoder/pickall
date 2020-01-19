@@ -1,13 +1,16 @@
-public static class ResultInfoExtensions
+namespace PickAll
 {
-    public static ResultInfo Clone(this ResultInfo resultInfo, object data = null)
+    public static class ResultInfoExtensions
     {
-        var _data = data ?? resultInfo.Data;
-        return new ResultInfo(
-            resultInfo.Originator,
-            resultInfo.Index,
-            resultInfo.Url,
-            resultInfo.Description,
-            _data);
+        public static ResultInfo Clone(this ResultInfo resultInfo, object data = null)
+        {
+            var _data = data ?? resultInfo.Data;
+            return new ResultInfo(
+                resultInfo.Originator,
+                resultInfo.Index,
+                resultInfo.Url,
+                resultInfo.Description,
+                _data);
+        }
     }
 }

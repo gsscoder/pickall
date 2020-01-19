@@ -64,8 +64,6 @@ $ dotnet test
 **CSharp:**
 ```csharp
 using PickAll;
-using PickAll.Searchers;
-using PickAll.PostProcessors;
 
 var context = new SearchContext(maximumResults: 30)
     .With<Google>() // search on google.com

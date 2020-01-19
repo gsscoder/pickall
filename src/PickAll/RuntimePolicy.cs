@@ -1,12 +1,15 @@
-public struct RuntimePolicy
+namespace PickAll
 {
-    internal RuntimePolicy(uint? maximumResults)
+    public struct RuntimePolicy
     {
-        MaximumResults = maximumResults;
-    }
+        internal RuntimePolicy(uint? maximumResults)
+        {
+            MaximumResults = maximumResults;
+        }
 
-    public uint? MaximumResults
-    {
-        get; private set;
+        public uint? MaximumResults
+        {
+            get; private set;
+        }
     }
 }

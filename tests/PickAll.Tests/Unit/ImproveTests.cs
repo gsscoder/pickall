@@ -2,6 +2,7 @@ using System.Linq;
 using Xunit;
 using FluentAssertions;
 using CSharpx;
+using PickAll;
 
 public class ImproveTests
 {

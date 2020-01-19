@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Xunit;
 using FluentAssertions;
+using PickAll;
 
 public class SearchContextTests
 {

@@ -6,6 +6,7 @@ using WaffleGenerator;
 using AngleSharp;
 using AngleSharp.Dom;
 using CSharpx;
+using PickAll;
 
 static class ResultInfoBuilder
 {

@@ -1,6 +1,7 @@
 using Xunit;
 using FluentAssertions;
 using CSharpx;
+using PickAll;
 
 public class FuzzyMatchTests
 {
