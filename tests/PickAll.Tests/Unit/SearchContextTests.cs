@@ -32,7 +32,7 @@ public class SearchContextTests
             typeof(string),
             typeof(Uniqueness),
             typeof(int));
-        
+
         action.Should().ThrowExactly<NotSupportedException>()
             .WithMessage("Type must be or inherit from Searcher or PostProcessor");
     }
@@ -43,7 +43,7 @@ public class SearchContextTests
         var sut = new SearchContext()
             .With("DuckDuckGo")
             .With("Uniqueness");
-        
+
         sut.Services.Should().NotBeEmpty()
             .And.HaveCount(2)
             .And.SatisfyRespectively(
@@ -57,7 +57,7 @@ public class SearchContextTests
         var sut = new SearchContext()
             .With("DUCKDUCKgo")
             .With("uniQueness");
-        
+
         sut.Services.Should().NotBeEmpty()
             .And.HaveCount(2)
             .And.SatisfyRespectively(
@@ -73,7 +73,7 @@ public class SearchContextTests
             .With<Uniqueness>()
             .Without("DUCKDUCKgo")
             .Without("uniQueness");
-        
+
         sut.Services.Should().BeEmpty();
     }
 
@@ -81,8 +81,8 @@ public class SearchContextTests
     public void Can_add_post_processor_service_with_parameters_by_name()
     {
         var sut = new SearchContext()
-            .With("FuzzyMatch", new FuzzyMatchSettings {Text = "nothing", MaximumDistance = 10 });
-        
+            .With("FuzzyMatch", new FuzzyMatchSettings { Text = "nothing", MaximumDistance = 10 });
+
         sut.Services.Should().NotBeEmpty()
             .And.ContainSingle()
             .And.ContainItemsAssignableTo<FuzzyMatch>();
@@ -124,7 +124,7 @@ public class SearchContextTests
         var sut = new SearchContext();
 
         Action action = () => sut.With("ArbitrarySearcher", new ArbitrarySearcherSettings());
-        
+
         action.Should().ThrowExactly<NotSupportedException>()
             .WithMessage("ArbitrarySearcher service not found");
     }
@@ -135,7 +135,7 @@ public class SearchContextTests
         var sut = new SearchContext();
 
         Action action = () => sut.With("Marker", new MarkerSettings());
-        
+
         action.Should().ThrowExactly<NotSupportedException>()
             .WithMessage("Marker service not found");
     }
@@ -167,10 +167,10 @@ public class SearchContextTests
     {
         var sut = new SearchContext()
             .With<Marker>(
-                new MarkerSettings{ Stamp = "stamp0" })
+                new MarkerSettings { Stamp = "stamp0" })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 5 })
-            .With<Marker>(new MarkerSettings{ Stamp = "stamp1" })
-            .With<Marker>(new MarkerSettings{ Stamp = "stamp2" });
+            .With<Marker>(new MarkerSettings { Stamp = "stamp1" })
+            .With<Marker>(new MarkerSettings { Stamp = "stamp2" });
         var results = await sut.SearchAsync("search");
 
         results.First().Description.Should().StartWith("stamp2|stamp1|");
@@ -194,7 +194,7 @@ public class SearchContextTests
     {
         var sut = new SearchContext()
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 5 })
-            .With<Marker>(new MarkerSettings { Stamp = "stamp"})
+            .With<Marker>(new MarkerSettings { Stamp = "stamp" })
             .Without<Marker>();
         var results = await sut.SearchAsync("query");
 
@@ -282,7 +282,7 @@ public class SearchContextTests
             typeof(Yahoo),
             typeof(Order),
             typeof(Uniqueness));
-        
+
         var sut = context.WithoutAll<Searcher>();
 
         sut.Services.Should().NotBeEmpty()
@@ -302,7 +302,7 @@ public class SearchContextTests
     {
         var sut = new SearchContext(maximumResults: 10)
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20 });
-        
+
         var results = await sut.SearchAsync("query");
 
         results.Should().NotBeEmpty()
@@ -340,5 +340,25 @@ public class SearchContextTests
                 item => item.Policy.MaximumResults.Should().Be(4),
                 item => item.Policy.MaximumResults.Should().Be(3),
                 item => item.Policy.MaximumResults.Should().Be(3));
+    }
+
+    [Fact]
+    public async void Should_fire_SearchStart_event()
+    {
+        var evidence = string.Empty;
+
+        var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
+            .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
+
+        sut.SearchBegin += sut_SearchBegin;
+
+        await sut.SearchAsync("query");
+
+        evidence.Should().Be("query");
+
+        void sut_SearchBegin(object sender, SearchBeginEventArgs e)
+        {
+            evidence = e.Query;
+        }
     }
 }

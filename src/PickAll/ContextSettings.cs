@@ -26,5 +26,15 @@ namespace PickAll
         {
             return new RuntimePolicy(MaximumResults);
         }
+
+        internal ContextSettings Clone()
+        {
+            return new ContextSettings
+                {
+                    MaximumResults = MaximumResults,
+                    Timeout = Timeout,
+                    EnableRaisingEvents = EnableRaisingEvents
+                };
+        }
     }
 }

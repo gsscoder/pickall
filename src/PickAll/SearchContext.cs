@@ -8,6 +8,11 @@ using AngleSharp.Io.Network;
 
 namespace PickAll
 {
+    public class SearchBeginEventArgs : EventArgs
+    {
+        public string Query { get; set; }
+    }
+
     /// <summary>
     /// Manages <see cref="Searcher"/> and <see cref="PostProcessor"/> instances to gather and
     /// elaborate results.
@@ -63,6 +68,8 @@ namespace PickAll
             }
         }
 
+        public event EventHandler<SearchBeginEventArgs> SearchBegin;
+
         public IBrowsingContext ActiveContext
         {
             get { return _activeContext.Value; }
@@ -94,6 +101,13 @@ namespace PickAll
             Guard.AgainstEmptyWhiteSpace(nameof(query), query);
 
             Query = query;
+
+            if (Settings.EnableRaisingEvents) {
+                if (SearchBegin != null) {
+                    var handler = SearchBegin;
+                    handler(this, new SearchBeginEventArgs { Query = Query });
+                }
+            }
 
             // Bind context and partition maximum results
             Host = ConfigureServices(this);

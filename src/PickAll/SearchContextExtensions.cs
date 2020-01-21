@@ -23,7 +23,7 @@ namespace PickAll
             var service = Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
                 context.Host.Clone().Add(service),
-                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
+                context.Settings.Clone());
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace PickAll
             var service = Activator.CreateInstance(type, settings);
             return new SearchContext(
                 context.Host.Clone().Add(service),
-                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
+                context.Settings.Clone());
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace PickAll
         {
             return new SearchContext(
                 context.Host.Clone().Remove<T>(),
-                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
+                context.Settings.Clone());
         }
 
         /// <summary>
@@ -92,15 +92,15 @@ namespace PickAll
             }
 
             var service = (from @this in context.Host.Services
-                            where @this.GetType().Name.Equals(
-                                serviceName, StringComparison.OrdinalIgnoreCase)
-                            select @this).FirstOrDefault();
+                           where @this.GetType().Name.Equals(
+                                 serviceName, StringComparison.OrdinalIgnoreCase)
+                           select @this).FirstOrDefault();
             if (service == null) {
                 throw new InvalidOperationException($"{serviceName} not registred as service");
             }
             return new SearchContext(
                 context.Host.Clone().Remove(service.GetType()),
-                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
+                context.Settings.Clone());
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace PickAll
         {
             return new SearchContext(
                 context.Host.Clone().RemoveAll<T>(),
-                new ContextSettings { MaximumResults = context.Settings.MaximumResults });
+                context.Settings.Clone());
         }
 
         /// <summary>
