@@ -8,9 +8,14 @@ using AngleSharp.Io.Network;
 
 namespace PickAll
 {
-    public class SearchBeginEventArgs : EventArgs
+    public sealed class SearchBeginEventArgs : EventArgs
     {
-        public string Query { get; set; }
+        public SearchBeginEventArgs(string query)
+        {
+            Query = query;
+        }
+
+        public string Query { get; private set; }
     }
 
     /// <summary>
@@ -97,7 +102,7 @@ namespace PickAll
             Query = query;
 
             EventHelper.RaiseEvent(this, SearchBegin,
-                () => new SearchBeginEventArgs { Query = Query }, Settings.EnableRaisingEvents);
+                () => new SearchBeginEventArgs(Query), Settings.EnableRaisingEvents);
 
             // Bind context and partition maximum results
             Host = ConfigureServices(this);
