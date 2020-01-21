@@ -6,7 +6,7 @@ namespace SharpRhythm.Algorithms
     /// <summary>
     /// Levenshtein distance fuzzy match algorithm.
     /// </summary>
-    public class LevenshteinFuzzyMatch : IFuzzyMatch
+    class LevenshteinFuzzyMatch : IFuzzyMatch
     {
         public uint Compare(string first, string second)
         {
