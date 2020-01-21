@@ -69,23 +69,14 @@ namespace PickAll
         }
 
         public event EventHandler<SearchBeginEventArgs> SearchBegin;
-
-        public IBrowsingContext ActiveContext
-        {
-            get { return _activeContext.Value; }
-        }
-
+        public IBrowsingContext ActiveContext { get { return _activeContext.Value; } }
         public string Query { get; private set; }
-
         internal ServiceHost Host { get; private set; }
-
     #if !DEBUG
         internal ContextSettings Settings { get; private set; }
     #else
         public ContextSettings Settings { get; private set; }
-
         public IEnumerable<object> Services { get { return Host.Services; } } // Debug only
-
         public bool EnforceMaximumResults { get; set; } // Debug only
     #endif
 
