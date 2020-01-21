@@ -1,4 +1,5 @@
 using PickAll;
+using Bogus;
 
 static class ResultInfoExtensions
 {
@@ -6,7 +7,8 @@ static class ResultInfoExtensions
     {
         return new ResultInfo(
             result.Originator,
-            index, result.Url,
+            index,
+            result.Url,
             result.Description,
             result.Data);
     }
@@ -16,11 +18,11 @@ static class ResultInfoHelper
 {
     public static ResultInfo OnlyDescription(string text)
     {
-        return new ResultInfo(
-            "helper",
-            0,
-            "http://fake-url.com/",
-            text,
-            null);
+        return new Faker<ResultInfo>()
+            .RuleFor(o => o.Originator, _ => "helper")
+            .RuleFor(o => o.Index, _ => (ushort)0)
+            .RuleFor(o => o.Url, f => f.Internet.UrlWithPath(fileExt: "php"))
+            .RuleFor(o => o.Description, _ => text)
+                .Generate();
     }
 }
