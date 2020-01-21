@@ -12,13 +12,13 @@ namespace PickAll
         public string Query { get; private set; }
     }
 
-    public sealed class ResultCreatedEventArgs : EventArgs
+    public sealed class ResultHandledEventArgs : EventArgs
     {
-        public ResultCreatedEventArgs(ResultInfo result)
+        public ResultHandledEventArgs(ResultInfo result)
         {
             Result = result;
         }
 
         public ResultInfo Result { get; private set; }
-    } 
+    }
 }

@@ -391,7 +391,7 @@ public class SearchContextTests
     public async void Should_fire_ResultCreated_event()
     {
         var evidence = 0;
-        void sut_ResultCreated(object sender, ResultCreatedEventArgs e) { evidence++; }
+        void sut_ResultCreated(object sender, ResultHandledEventArgs e) { evidence++; }
 
         var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });

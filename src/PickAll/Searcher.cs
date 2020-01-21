@@ -22,7 +22,7 @@ namespace PickAll
         /// <returns>A collection of <see cref="ResultInfo"/> with search results.</returns>
         public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
 
-        public event EventHandler<ResultCreatedEventArgs> ResultCreated;
+        public event EventHandler<ResultHandledEventArgs> ResultCreated;
 
         /// <summary>
         /// The searcher identifier set to class name.
@@ -36,7 +36,7 @@ namespace PickAll
         {
             var result = new ResultInfo(Name, index, url, description, data);
             EventHelper.RaiseEvent(this, ResultCreated,
-                () => new ResultCreatedEventArgs(result), Context.Settings.EnableRaisingEvents);
+                () => new ResultHandledEventArgs(result), Context.Settings.EnableRaisingEvents);
             return result;
         }
     }
