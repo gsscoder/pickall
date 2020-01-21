@@ -69,6 +69,7 @@ namespace PickAll
         }
 
         public event EventHandler<SearchBeginEventArgs> SearchBegin;
+        public event EventHandler SearchEnd;
         public IBrowsingContext ActiveContext { get { return _activeContext.Value; } }
         public string Query { get; private set; }
         internal ServiceHost Host { get; private set; }
@@ -132,6 +133,13 @@ namespace PickAll
                 var current = processor.Process(results);
                 results = new List<ResultInfo>();
                 results.AddRange(current);
+            }
+
+            if (Settings.EnableRaisingEvents) {
+                if (SearchEnd != null) {
+                    var handler = SearchEnd;
+                    handler(this, EventArgs.Empty);
+                }
             }
 
             return results;
