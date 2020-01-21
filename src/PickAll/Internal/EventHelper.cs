@@ -12,11 +12,11 @@ static class EventHelper
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void RaiseEvent<T>(object sender, EventHandler<T> handler, T args, bool enabled)
+    public static void RaiseEvent<T>(object sender, EventHandler<T> handler, Func<T> args, bool enabled)
         where T : EventArgs
     {
         if (enabled && handler != null) {
-            handler(sender, args);
+            handler(sender, args());
         }
     }
 }

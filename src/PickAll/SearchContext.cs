@@ -96,7 +96,7 @@ namespace PickAll
             Query = query;
 
             EventHelper.RaiseEvent(this, SearchBegin,
-                new SearchBeginEventArgs { Query = Query }, Settings.EnableRaisingEvents);
+                () => new SearchBeginEventArgs { Query = Query }, Settings.EnableRaisingEvents);
 
             // Bind context and partition maximum results
             Host = ConfigureServices(this);
