@@ -12,7 +12,7 @@ public class UniquenessTests
     {
         var results = new List<ResultInfo>();
         results.AddRange(ResultInfoBuilder.GenerateUnique("random", 10));
-        results.Add(results.Choice().UsingIndex(0));
+        results.Add(results.Choice().CloneWithIndex(0));
         var sut = new Uniqueness(null);
         var processed = sut.Process(results);
 

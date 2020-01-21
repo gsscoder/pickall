@@ -3,7 +3,7 @@ using Bogus;
 
 static class ResultInfoExtensions
 {
-    public static ResultInfo UsingIndex(this ResultInfo result, ushort index)
+    public static ResultInfo CloneWithIndex(this ResultInfo result, ushort index)
     {
         return new ResultInfo(
             result.Originator,
