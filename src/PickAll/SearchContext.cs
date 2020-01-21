@@ -70,6 +70,7 @@ namespace PickAll
 
         public event EventHandler<SearchBeginEventArgs> SearchBegin;
         public event EventHandler SearchEnd;
+        public event EventHandler ServiceLoad;
         public IBrowsingContext ActiveContext { get { return _activeContext.Value; } }
         public string Query { get; private set; }
         internal ServiceHost Host { get; private set; }
@@ -152,6 +153,7 @@ namespace PickAll
                 ? context.Settings.MaximumResults / (uint?)searchers.Count()
                 : null;
             var host = context.Host
+                .Configure<Service>(service => service.Load = context.ServiceLoad)
                 .Configure<Service>(service => service.Context = context)
                 .Configure<Searcher>(searcher => searcher.Policy = new RuntimePolicy(maximumResults));
             if (first != null) {

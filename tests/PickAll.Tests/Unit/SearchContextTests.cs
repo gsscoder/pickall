@@ -346,39 +346,44 @@ public class SearchContextTests
     public async void Should_fire_SearchStart_event()
     {
         var evidence = string.Empty;
+        void sut_SearchBegin(object sender, SearchBeginEventArgs e) { evidence = e.Query; }
 
         var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
-
         sut.SearchBegin += sut_SearchBegin;
 
         await sut.SearchAsync("query");
 
         evidence.Should().Be("query");
-
-        void sut_SearchBegin(object sender, SearchBeginEventArgs e)
-        {
-            evidence = e.Query;
-        }
     }
 
     [Fact]
     public async void Should_fire_SearchEnd_event()
     {
         var evidence = false;
+        void sut_SearchEnd(object sender, EventArgs e) { evidence = true; }
 
         var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
-
         sut.SearchEnd += sut_SearchEnd;
 
         await sut.SearchAsync("query");
 
         evidence.Should().BeTrue();
+    }
 
-        void sut_SearchEnd(object sender, EventArgs e)
-        {
-            evidence = true;
-        }
+    [Fact]
+    public async void Should_fire_ServiceLoad_event()
+    {
+        var evidence = false;
+        void sut_ServiceLoad(object sender, EventArgs e) { evidence = true; }
+
+        var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
+            .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
+        sut.ServiceLoad += sut_ServiceLoad;
+
+        await sut.SearchAsync("query");
+
+        evidence.Should().BeTrue();
     }
 }
