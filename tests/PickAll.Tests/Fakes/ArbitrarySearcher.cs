@@ -34,7 +34,10 @@ class ArbitrarySearcher : Searcher
             if (Policy.MaximumResults.HasValue) {
                 results = results.Take((int)Policy.MaximumResults.Value);
             }
-            return results;
+            for (ushort i = 0; i < results.Count(); i++) {
+                var result = results.ElementAt(i);
+                yield return CreateResult(i, result.Url, result.Description);
+            }
         }
     }
 }

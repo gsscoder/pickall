@@ -386,4 +386,19 @@ public class SearchContextTests
 
         evidence.Should().BeTrue();
     }
+
+    [Fact]
+    public async void Should_fire_ResultCreated_event()
+    {
+        var evidence = 0;
+        void sut_ResultCreated(object sender, ResultCreatedEventArgs e) { evidence++; }
+
+        var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
+            .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
+        sut.ResultCreated += sut_ResultCreated;
+
+        await sut.SearchAsync("query");
+
+        evidence.Should().Be(10);
+    }
 }
