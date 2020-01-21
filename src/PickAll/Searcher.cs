@@ -4,16 +4,6 @@ using System.Threading.Tasks;
 
 namespace PickAll
 {
-    public sealed class ResultCreatedEventArgs : EventArgs
-    {
-        public ResultCreatedEventArgs(ResultInfo result)
-        {
-            Result = result;
-        }
-
-        public ResultInfo Result { get; private set; }
-    } 
-
     /// <summary>
     /// Represents a searching service managed by <see cref="SearchContext"/>.
     /// </summary>

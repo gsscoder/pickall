@@ -8,16 +8,6 @@ using AngleSharp.Io.Network;
 
 namespace PickAll
 {
-    public sealed class SearchBeginEventArgs : EventArgs
-    {
-        public SearchBeginEventArgs(string query)
-        {
-            Query = query;
-        }
-
-        public string Query { get; private set; }
-    }
-
     /// <summary>
     /// Manages <see cref="Searcher"/> and <see cref="PostProcessor"/> instances to gather and
     /// elaborate results.
