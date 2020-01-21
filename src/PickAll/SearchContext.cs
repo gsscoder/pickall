@@ -68,10 +68,7 @@ namespace PickAll
             get { return _activeContext.Value; }
         }
 
-        public string Query
-        {
-            get; private set;
-        }
+        public string Query { get; private set; }
 
         internal ServiceHost Host { get; private set; }
 
