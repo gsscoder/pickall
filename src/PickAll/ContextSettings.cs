@@ -17,6 +17,11 @@ namespace PickAll
         /// </summary>
         public TimeSpan? Timeout;
 
+        /// <summary>
+        /// Enables events in search context and services.
+        /// </summary>
+        public bool EnableRaisingEvents;
+
         internal RuntimePolicy ToPolicy()
         {
             return new RuntimePolicy(MaximumResults);
