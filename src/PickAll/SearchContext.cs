@@ -131,12 +131,6 @@ namespace PickAll
                 results.AddRange(current);
             }
 
-            // if (Settings.EnableRaisingEvents) {
-            //     if (SearchEnd != null) {
-            //         var handler = SearchEnd;
-            //         handler(this, EventArgs.Empty);
-            //     }
-            // }
             EventHelper.RaiseEvent(this, SearchEnd, EventArgs.Empty, Settings.EnableRaisingEvents);
 
             return results;
