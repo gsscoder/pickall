@@ -20,5 +20,5 @@ namespace PickAll
         }
 
         public ResultInfo Result { get; private set; }
-    }
+    } 
 }

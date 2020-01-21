@@ -22,8 +22,9 @@ public class Marker : PostProcessor
     public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
     {
         foreach (var result in results) {
-            yield return new ResultInfo(result.Originator, result.Index, result.Url,
+            var marked =  new ResultInfo(result.Originator, result.Index, result.Url,
                 $"{_settings.Stamp}|{result.Description}", null);
+            yield return marked;
         }
     }
 }

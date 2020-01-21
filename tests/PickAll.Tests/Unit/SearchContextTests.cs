@@ -401,4 +401,20 @@ public class SearchContextTests
 
         evidence.Should().Be(10);
     }
+
+    [Fact]
+    public async void Should_fire_ResultProcessed_event()
+    {
+        var evidence = 0;
+        void sut_ResultProcessed(object sender, ResultHandledEventArgs e) { evidence++; }
+
+        var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
+            .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 })
+            .With<Marker>(new MarkerSettings { Stamp = string.Empty });
+        sut.ResultProcessed += sut_ResultProcessed;
+
+        await sut.SearchAsync("query");
+
+        evidence.Should().Be(10);
+    }
 }

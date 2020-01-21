@@ -15,13 +15,6 @@ namespace PickAll
             Name = GetType().Name;
         }
 
-        /// <summary>
-        /// Performs the actual search.
-        /// </summary>
-        /// <param name="query">A query string.</param>
-        /// <returns>A collection of <see cref="ResultInfo"/> with search results.</returns>
-        public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
-
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
 
         /// <summary>
@@ -30,6 +23,13 @@ namespace PickAll
         public string Name { get; private set; }
 
         public RuntimePolicy Policy { get; internal set; }
+
+        /// <summary>
+        /// Performs the actual search.
+        /// </summary>
+        /// <param name="query">A query string.</param>
+        /// <returns>A collection of <see cref="ResultInfo"/> with search results.</returns>
+        public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
 
         protected ResultInfo CreateResult(
             ushort index, string url, string description, object data = null)

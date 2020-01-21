@@ -67,6 +67,7 @@ namespace PickAll
         public event EventHandler SearchEnd;
         public event EventHandler ServiceLoad;
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
+        public event EventHandler<ResultHandledEventArgs> ResultProcessed;
         public IBrowsingContext ActiveContext { get { return _activeContext.Value; } }
         public string Query { get; private set; }
         internal ServiceHost Host { get; private set; }
@@ -105,7 +106,6 @@ namespace PickAll
                         select service).Cast<Searcher>()
                 select searcher.SearchAsync(query));
             var results = resultGroup.SelectMany(group => group).ToList();
-
             if (Settings.MaximumResults != null) {
     #if !DEBUG
                 // Default behaviour
@@ -120,12 +120,17 @@ namespace PickAll
 
             // Invoke post processors in sync
             var processors = (from service in Host.Services
-                                where service.GetType().IsPostProcessor()
-                                select service).Cast<PostProcessor>();
+                              where service.GetType().IsPostProcessor()
+                              select service).Cast<PostProcessor>();
             foreach (var processor in processors) {
+                var publish = Settings.EnableRaisingEvents && processor.PublishEvents;
                 var current = processor.Process(results);
                 results = new List<ResultInfo>();
-                results.AddRange(current);
+                foreach (var result in current) {
+                    EventHelper.RaiseEvent(this, ResultProcessed,
+                        () => new ResultHandledEventArgs(result), publish);
+                    results.Add(result);
+                }
             }
 
             EventHelper.RaiseEvent(this, SearchEnd, EventArgs.Empty, Settings.EnableRaisingEvents);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace PickAll
@@ -11,6 +12,8 @@ namespace PickAll
         {
             Settings = settings;
         }
+
+        public virtual bool PublishEvents { get { return false; } }
 
         public abstract IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results);
     }
