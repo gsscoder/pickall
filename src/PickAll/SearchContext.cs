@@ -94,12 +94,8 @@ namespace PickAll
 
             Query = query;
 
-            if (Settings.EnableRaisingEvents) {
-                if (SearchBegin != null) {
-                    var handler = SearchBegin;
-                    handler(this, new SearchBeginEventArgs { Query = Query });
-                }
-            }
+            EventHelper.RaiseEvent(this, SearchBegin,
+                new SearchBeginEventArgs { Query = Query }, Settings.EnableRaisingEvents);
 
             // Bind context and partition maximum results
             Host = ConfigureServices(this);
@@ -135,12 +131,13 @@ namespace PickAll
                 results.AddRange(current);
             }
 
-            if (Settings.EnableRaisingEvents) {
-                if (SearchEnd != null) {
-                    var handler = SearchEnd;
-                    handler(this, EventArgs.Empty);
-                }
-            }
+            // if (Settings.EnableRaisingEvents) {
+            //     if (SearchEnd != null) {
+            //         var handler = SearchEnd;
+            //         handler(this, EventArgs.Empty);
+            //     }
+            // }
+            EventHelper.RaiseEvent(this, SearchEnd, EventArgs.Empty, Settings.EnableRaisingEvents);
 
             return results;
         }
