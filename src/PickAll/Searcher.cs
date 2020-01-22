@@ -36,7 +36,7 @@ namespace PickAll
         {
             var result = new ResultInfo(Name, index, url, description, data);
             EventHelper.RaiseEvent(this, ResultCreated,
-                () => new ResultHandledEventArgs(result), Context.Settings.EnableRaisingEvents);
+                () => new ResultHandledEventArgs(result, ServiceType.Searcher), Context.Settings.EnableRaisingEvents);
             return result;
         }
     }

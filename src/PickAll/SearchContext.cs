@@ -128,7 +128,7 @@ namespace PickAll
                 results = new List<ResultInfo>();
                 foreach (var result in current) {
                     EventHelper.RaiseEvent(this, ResultProcessed,
-                        () => new ResultHandledEventArgs(result), publish);
+                        () => new ResultHandledEventArgs(result, ServiceType.PostProcessor), publish);
                     results.Add(result);
                 }
             }
