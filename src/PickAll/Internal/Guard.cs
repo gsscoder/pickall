@@ -16,4 +16,11 @@ static class Guard
         if (value.Trim() == string.Empty) throw new ArgumentException(
             $"{argumentName} cannot be empty or contains only white spaces", argumentName);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void AgainstNegative(string argumentName, int value)
+    {
+        if (value < 0) throw new ArgumentException(argumentName,
+            $"{argumentName} cannot be lesser than zero");
+    }
 }
