@@ -32,7 +32,7 @@ namespace PickAll
         public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
 
         protected ResultInfo CreateResult(
-            ushort index, string url, string description, object data = null)
+            int index, string url, string description, object data = null)
         {
             var result = new ResultInfo(Name, index, url, description, data);
             EventHelper.RaiseEvent(this, ResultCreated,
