@@ -154,10 +154,8 @@ namespace PickAll
                 ? context.Settings.MaximumResults / searchers.Count()
                 : null;
             var host = context.Host
-                .Configure<Service>(service => service.Load += context.ServiceLoad)
-                .Configure<Service>(service => service.Context = context)
-                .Configure<Searcher>(searcher => searcher.ResultCreated += context.ResultCreated)
-                .Configure<Searcher>(searcher => searcher.Policy = new RuntimePolicy(maximumResults));
+                .Configure<Service>(service => ConfigureService(service))
+                .Configure<Searcher>(searcher => ConfigureSearcher(searcher));
             if (first != null) {
                 // first service maybe burdened of handling extra results 
                 host = host.Configure<Searcher>(searcher =>
@@ -167,6 +165,19 @@ namespace PickAll
                     searcher => searcher.GetHashCode().Equals(first.GetHashCode()));
             }
             return host;
+
+            Service ConfigureService(Service service)
+            {
+                service.Load += context.ServiceLoad;
+                service.Context = context;
+                return service;
+            }
+            Searcher ConfigureSearcher(Searcher searcher)
+            {
+                searcher.ResultCreated += context.ResultCreated;
+                searcher.Policy = new RuntimePolicy(maximumResults);
+                return searcher;
+            }
         }
 
         static IBrowsingContext BuildContext(ContextSettings settings)
