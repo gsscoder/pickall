@@ -107,15 +107,15 @@ namespace PickAll
                 select searcher.SearchAsync(query));
             var results = resultGroup.SelectMany(group => group).ToList();
             if (Settings.MaximumResults != null) {
-    #if !DEBUG
+                #if !DEBUG
                 // Default behaviour
                 results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
-    #else
+                #else
                 // Useful for debugging
                 if (EnforceMaximumResults) {
                     results = new List<ResultInfo>(results.Take((int)Settings.MaximumResults.Value));
                 }
-    #endif
+                #endif
             }
 
             // Invoke post processors in sync
