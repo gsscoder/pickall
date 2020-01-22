@@ -20,7 +20,7 @@ static class ResultInfoHelper
     {
         return new Faker<ResultInfo>()
             .RuleFor(o => o.Originator, _ => "helper")
-            .RuleFor(o => o.Index, _ => (ushort)0)
+            .RuleFor(o => o.Index, _ => 0)
             .RuleFor(o => o.Url, f => f.Internet.UrlWithPath(fileExt: "php"))
             .RuleFor(o => o.Description, _ => text)
                 .Generate();

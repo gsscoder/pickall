@@ -12,6 +12,9 @@ namespace PickAll
     /// </summary>
     public struct WordifySettings
     {
+        int? _maximumLength;
+        int _noiseLength;
+
         /// <summary>
         /// If set to true, page title will be included in result.
         /// </summary>
@@ -24,12 +27,28 @@ namespace PickAll
         /// <remarks>
         /// An high limit with numerous pages to scrape can be resource intensive.
         /// </remarks>
-        public uint? MaximumLength { get; set; }
+        public int? MaximumLength
+        {
+            get { return _maximumLength; }
+            set
+            {
+                if (value.HasValue) Guard.AgainstNegative("MaximumLength", value.Value);
+                _maximumLength = value;
+            }
+        }
 
         /// <summary>
         /// Length of words to be considered noise.
         /// </summary>
-        public ushort NoiseLength { get; set; }
+        public int NoiseLength
+        {
+            get { return _noiseLength; }
+            set
+            {
+                Guard.AgainstNegative("NoiseLength", value);
+                _noiseLength = value;
+            }
+        }
     }
 
     /// <summary>

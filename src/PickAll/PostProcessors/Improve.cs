@@ -11,15 +11,34 @@ namespace PickAll
     /// </summary>
     public struct ImproveSettings
     {
+        int _wordCount;
+        int _noiseLength;
+
         /// <summary>
         /// Number of word with highest frequency to use in subsequent search.
         /// </summary>
-        public ushort WordCount { get; set; }
+        public int WordCount
+        {
+            get { return _wordCount; }
+            set
+            { 
+                Guard.AgainstNegative("WordCount", value);
+                _wordCount = value;
+            }
+        }
 
         /// <summary>
         /// Length of words to be considered noise.
         /// </summary>
-        public ushort NoiseLength { get; set; }
+        public int NoiseLength
+        {
+            get { return _noiseLength; }
+            set
+            { 
+                Guard.AgainstNegative("NoiseLength", value);
+                _noiseLength = value;
+            }
+        }
     }
 
     /// <summary>

@@ -2,12 +2,14 @@ namespace PickAll
 {
     public struct RuntimePolicy
     {
-        internal RuntimePolicy(uint? maximumResults)
+        internal RuntimePolicy(int? maximumResults)
         {
+            if (maximumResults.HasValue) Guard.AgainstNegative(nameof(maximumResults), maximumResults.Value);
+
             MaximumResults = maximumResults;
         }
 
-        public uint? MaximumResults
+        public int? MaximumResults
         {
             get; private set;
         }

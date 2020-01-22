@@ -10,6 +10,9 @@ namespace PickAll
     /// </summary>
     public struct FuzzyMatchSettings
     {
+        int _minimumDistance;
+        int _maximumDistance;
+
         /// <summary>
         /// String to compare against descriptions.
         /// </summary>
@@ -18,12 +21,28 @@ namespace PickAll
         /// <summary>
         /// Minimum distance of permutations. 
         /// </summary>
-        public uint MinimumDistance { get; set; }
+        public int MinimumDistance
+        {
+            get { return _minimumDistance; }
+            set
+            { 
+                Guard.AgainstNegative("MinimumDistance", value);
+                _minimumDistance = value;
+            }
+        }
 
         /// <summary>
         /// Maximum distance of permutations.
         /// </summary>
-        public uint MaximumDistance { get; set; }
+        public int MaximumDistance
+        {
+            get { return _maximumDistance; }
+            set
+            { 
+                Guard.AgainstNegative("MaximumDistance", value);
+                _maximumDistance = value;
+            }
+        }
     }
 
     /// <summary>

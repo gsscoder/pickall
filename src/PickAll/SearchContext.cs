@@ -41,7 +41,7 @@ namespace PickAll
         {
         }
 
-        public SearchContext(uint maximumResults)
+        public SearchContext(int maximumResults)
             : this(ServiceHost.DefaultHost(_types), new ContextSettings { MaximumResults = maximumResults })
         {
         }
@@ -150,8 +150,8 @@ namespace PickAll
         {
             var searchers = context.Host.Services.CastOnlySubclassOf<Searcher>();
             var first = searchers.FirstOrDefault();
-            uint? maximumResults = context.Settings.MaximumResults.HasValue
-                ? context.Settings.MaximumResults / (uint?)searchers.Count()
+            var maximumResults = context.Settings.MaximumResults.HasValue
+                ? context.Settings.MaximumResults / searchers.Count()
                 : null;
             var host = context.Host
                 .Configure<Service>(service => service.Load += context.ServiceLoad)
@@ -163,7 +163,7 @@ namespace PickAll
                 host = host.Configure<Searcher>(searcher =>
                     searcher.Policy = new RuntimePolicy(
                         searcher.Policy.MaximumResults +
-                        context.Settings.MaximumResults % (uint?)searchers.Count()),
+                        context.Settings.MaximumResults % searchers.Count()),
                     searcher => searcher.GetHashCode().Equals(first.GetHashCode()));
             }
             return host;

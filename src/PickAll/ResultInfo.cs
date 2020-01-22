@@ -18,10 +18,11 @@ namespace PickAll
         /// <param name="url">The result URL.</param>
         /// <param name="description">The result description.</param>
         /// <param name="data">TAdditional data supplied by the service.</param>
-        public ResultInfo(string originator, ushort index, string url, string description, object data)
+        public ResultInfo(string originator, int index, string url, string description, object data)
         {
                 Guard.AgainstNull(nameof(originator), originator);
                 Guard.AgainstEmptyWhiteSpace(nameof(originator), originator);
+                Guard.AgainstNegative(nameof(index), index);
                 Guard.AgainstNull(nameof(url), url);
                 Guard.AgainstEmptyWhiteSpace(nameof(url), url);
                 Guard.AgainstNull(nameof(description), description);
@@ -49,7 +50,7 @@ namespace PickAll
         /// <summary>
         /// The result index.
         /// </summary>
-        public ushort Index
+        public int Index
         {
                 get;
         #if !DEBUG

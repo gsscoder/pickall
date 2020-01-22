@@ -10,6 +10,8 @@ namespace PickAll
     /// </summary>
     public struct TextifySettings
     {
+        int? _maximumLength;
+
         /// <summary>
         /// If set to true, page title will be included in result.
         /// </summary>
@@ -27,7 +29,15 @@ namespace PickAll
         /// <remarks>
         /// An high limit with numerous pages to scrape can be resource intensive.
         /// </remarks>
-        public uint? MaximumLength { get; set; }
+        public int? MaximumLength
+        {
+            get { return _maximumLength; }
+            set
+            {
+                if (value.HasValue) Guard.AgainstNegative("MaximumLength", value.Value);
+                _maximumLength = value;
+            }
+        }
     }
 
     /// <summary>

@@ -7,10 +7,20 @@ namespace PickAll
     /// </summary>
     public struct ContextSettings
     {
+        int? _maximumResults;
+    
         /// <summary>
         /// Maximum results a search is allowed to return.
         /// </summary>
-        public uint? MaximumResults;
+        public int? MaximumResults
+        {
+            get { return _maximumResults; }
+            set
+            {
+                if (value.HasValue) Guard.AgainstNegative("MaximumResults", value.Value);
+                _maximumResults = value;
+            }
+        }
 
         /// <summary>
         /// Timeout for each HTTP request performed.
