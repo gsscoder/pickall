@@ -19,6 +19,8 @@ public class Marker : PostProcessor
         }
     }
 
+    public override bool PublishEvents { get { return true; } }
+
     public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
     {
         foreach (var result in results) {
