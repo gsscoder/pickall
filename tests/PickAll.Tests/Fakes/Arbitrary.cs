@@ -48,7 +48,7 @@ static class ResultInfoBuilder
             var searched = from @this in generated
                             where @this.Url == candidate.Url || @this.Description == candidate.Description
                             select @this;
-            if (searched.Count() == 0) {
+            if (!searched.Any()) {
                 generated.Add(candidate);
             }
             else {

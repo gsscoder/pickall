@@ -16,7 +16,7 @@ sealed class Program
     static async Task<int> DoSearch(Options options)
     {
         SearchContext context;
-        if (options.Engines.Count() == 0) {
+        if (!options.Engines.Any()) {
             context = SearchContext.Default;
         } else {
             context = new SearchContext();

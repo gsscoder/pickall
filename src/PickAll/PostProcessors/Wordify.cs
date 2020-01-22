@@ -50,7 +50,7 @@ namespace PickAll
 
         public override string ToString()
         {
-            if (Words.Count() == 0) {
+            if (!Words.Any()) {
                 return string.Empty;
             }
             var builder = new StringBuilder();
