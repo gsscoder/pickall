@@ -78,6 +78,8 @@ namespace PickAll
             _settings = (WordifySettings)Settings;
         }
 
+        public override bool PublishEvents { get { return true; } }
+
         public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
             var limit = _settings.MaximumLength ?? 100000;

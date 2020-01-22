@@ -68,6 +68,8 @@ namespace PickAll
                     select computed.Item1).Take(_settings.WordCount);
         }
 
+        public override bool PublishEvents { get { return true; } }
+
         public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
             var builder = new StringBuilder();
