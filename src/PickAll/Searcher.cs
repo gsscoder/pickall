@@ -15,7 +15,7 @@ namespace PickAll
             Name = GetType().Name;
         }
 
-        public event EventHandler<ResultHandledEventArgs> ResultCreated;
+        internal event EventHandler<ResultHandledEventArgs> ResultCreated;
 
         /// <summary>
         /// The searcher identifier set to class name.
