@@ -4,15 +4,6 @@ using System.Linq;
 
 static class IEnumerableExtensions
 {
-    public static IEnumerable<T> CastOnlySubclassOf<T>(this IEnumerable<object> collection)
-    {
-        foreach (var element in collection) {
-            if (element.GetType().IsSubclassOf(typeof(T))) {
-                yield return (T)element;
-            }
-        }
-    }
-
     // From CSharpx (github.com/gsscoder/csharpx)
     public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source)
     {

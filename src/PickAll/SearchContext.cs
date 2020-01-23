@@ -148,7 +148,7 @@ namespace PickAll
 
         static ServiceHost ConfigureServices(SearchContext context)
         {
-            var searchers = context.Host.Services.CastOnlySubclassOf<Searcher>();
+            var searchers = context.Host.Services.OfType<Searcher>();
             var first = searchers.FirstOrDefault();
             var maximumResults = context.Settings.MaximumResults.HasValue
                 ? context.Settings.MaximumResults / searchers.Count()
