@@ -18,7 +18,7 @@ namespace PickAll
 
         public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
-            using (var document = await Context.ActiveContext.OpenAsync("https://yahoo.com/")) {
+            using (var document = await Context.Browsing.OpenAsync("https://yahoo.com/")) {
                 var form = document.QuerySelector<IHtmlFormElement>("#uh-search-form");
                 ((IHtmlInputElement)form["uh-search-box"]).Value = query;
                 using (var result = await form.SubmitAsync(form)) {

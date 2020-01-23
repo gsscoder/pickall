@@ -103,7 +103,7 @@ namespace PickAll
         {
             var limit = _settings.MaximumLength ?? 100000;
             foreach (var result in results) {
-                using (var document = Context.ActiveContext.OpenAsync(result.Url)
+                using (var document = Context.Browsing.OpenAsync(result.Url)
                     .GetAwaiter().GetResult())
                 {
                     if (document.ToHtml().Length <= limit) {

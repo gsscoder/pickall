@@ -68,7 +68,7 @@ namespace PickAll
         public event EventHandler ServiceLoad;
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
         public event EventHandler<ResultHandledEventArgs> ResultProcessed;
-        public IBrowsingContext ActiveContext { get { return _activeContext.Value; } }
+        public IBrowsingContext Browsing { get { return _activeContext.Value; } }
         public string Query { get; private set; }
         internal ServiceHost Host { get; private set; }
     #if !DEBUG
