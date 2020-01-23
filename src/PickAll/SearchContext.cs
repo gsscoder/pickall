@@ -185,7 +185,7 @@ namespace PickAll
             if (settings.Timeout.HasValue) {
                 var client = new HttpClient();
                 client.Timeout =  settings.Timeout.Value;
-                var requester = new HttpClientRequester();
+                var requester = new HttpClientRequester(client);
                 return BrowsingContext.New(
                     Configuration.Default
                         .WithRequester(requester)
