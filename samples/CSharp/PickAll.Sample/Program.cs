@@ -6,50 +6,19 @@ using CommandLine;
 
 sealed class Program
 {
+    const int exitOK = 0;
+    const int exitFail = 1;
+
     static int Main(string[] args)
     {
         return Parser.Default.ParseArguments<Options>(args)
             .MapResult(options => DoSearch(options).GetAwaiter().GetResult(),
-            _ => 1);
+            _ => exitFail);
     }
 
     static async Task<int> DoSearch(Options options)
     {
-        SearchContext context;
-        if (!options.Engines.Any()) {
-            context = SearchContext.Default;
-        } else {
-            context = new SearchContext();
-            foreach (var engine in options.Engines) {
-                context = context.With(engine);
-            }
-            context = context
-                .With<Uniqueness>()
-                .With<Order>();
-        }
-        if (options.Timeout != null) {
-            context = context.WithConfiguration(
-                new ContextSettings { Timeout = TimeSpan.FromSeconds(options.Timeout.Value) });
-        }
-        if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
-            context = context.With<FuzzyMatch>(
-                new FuzzyMatchSettings {
-                    Text = options.FuzzyMatch,
-                    MaximumDistance = 10 });
-        }
-        if (options.Improve) {
-            context = context.With<Improve>(
-                new ImproveSettings {
-                    WordCount = 2,
-                    NoiseLength = 3});
-        }
-        if (options.Wordify) {
-            context = context.With<Wordify>(
-                new WordifySettings {
-                    IncludeTitle = true,
-                    NoiseLength = 3});
-        }
-
+        var context = options.ToContext();
         var results = await context.SearchAsync(options.Query);
         foreach (var result in results) {
             Console.WriteLine(
@@ -58,7 +27,6 @@ sealed class Program
                 Console.WriteLine($"  Data:\n    {result.Data}");
             }
         }
-
-        return 0;
+        return exitOK;
     }
 }
