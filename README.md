@@ -32,8 +32,8 @@ $ cd pickall/src/PickAll
 $ dotnet build -c release
 
 # execute sample
-$ cd pickall/samples/PickAll.Sample
-$ dotnet build -c Release
+$ cd pickall/samples/CSharp/PickAll.Sample
+$ dotnet build -c release
 $ cd ../../artifacts/PickAll.Sample/Release/netcoreapp3.0/PickAll.Sample
 ./PickAll.Sample "Steve Jobs" -e bing:duckduckgo
 [0] Bing: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
@@ -48,10 +48,10 @@ $ cd ../../artifacts/PickAll.Sample/Release/netcoreapp3.0/PickAll.Sample
 
 ```sh
 # change to tests directory
-$ cd pickall/tests/PickAll.Tests
+$ cd pickall/tests/PickAll.Specs
 
 # build with debug configuration
-$ dotnet build -c Debug
+$ dotnet build -c debug
 ...
 
 # execute tests
