@@ -12,11 +12,11 @@ sealed class Program
     static int Main(string[] args)
     {
         return Parser.Default.ParseArguments<Options>(args)
-            .MapResult(options => DoSearch(options).RunSynchronously<int>(),
+            .MapResult(options => ExecuteSearch(options).RunSynchronously<int>(),
             _ => exitFail);
     }
 
-    static async Task<int> DoSearch(Options options)
+    static async Task<int> ExecuteSearch(Options options)
     {
         var context = options.ToContext();
         var results = await context.SearchAsync(options.Query);
