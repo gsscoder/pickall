@@ -36,6 +36,7 @@ $ cd pickall/samples/CSharp/PickAll.Sample
 $ dotnet build -c release
 $ cd ../../artifacts/PickAll.Sample/Release/netcoreapp3.0/PickAll.Sample
 ./PickAll.Sample "Steve Jobs" -e bing:duckduckgo
+Searching 'Steve Jobs' ...
 [0] Bing: "Steve Jobs - Wikipedia": "https://it.wikipedia.org/wiki/Steve_Jobs"
 [0] DuckDuckGo: "Steve Jobs - Wikipedia": "https://en.wikipedia.org/wiki/Steve_Jobs"
 [1] DuckDuckGo: "Steve Jobs - Apple, Family & Death - Biography": "https://www.biography.com/business-figure/steve-jobs"

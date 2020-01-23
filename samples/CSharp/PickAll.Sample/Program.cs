@@ -18,7 +18,7 @@ sealed class Program
     {
         var context = options.ToContext();
 
-        context.SearchBegin += (sender, e) => Console.WriteLine($"Searching '{e.Query}'...");
+        context.SearchBegin += (sender, e) => Console.WriteLine($"Searching '{e.Query}' ...");
         context.ResultCreated += (sender, e) => {
             var result = e.Result;
             Console.WriteLine(
