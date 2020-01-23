@@ -7,7 +7,7 @@ using CSharpx;
 #if DEBUG
 public
 #endif
-static class IDocumentExtensions
+static class DocumentExtensions
 {
     public static IEnumerable<string> TextSelectorAll(
         this IDocument document, bool includeTitle, bool sanitizeText)

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-static class IEnumerableExtensions
+static class EnumerableExtensions
 {
     // From CSharpx (github.com/gsscoder/csharpx)
     public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source)

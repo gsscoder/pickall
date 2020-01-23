@@ -2,7 +2,7 @@ using System.Linq;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 
-static class IHtmlElementExtensions
+static class HtmlElementExtensions
 {
     public static string FirstChildText(this IHtmlElement element,
         params string[] selectorsGroup)
