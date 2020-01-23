@@ -8,7 +8,8 @@ static class OptionsExtensions
     {
         SearchContext context;
         if (!options.Engines.Any()) {
-            context = SearchContext.Default;
+            context = SearchContext.Default
+                .WithConfiguration(new ContextSettings { EnableRaisingEvents = true });
         }
         else {
             context = new SearchContext();
@@ -21,7 +22,9 @@ static class OptionsExtensions
         }
         if (options.Timeout.HasValue) {
             context = context.WithConfiguration(
-                new ContextSettings { Timeout = TimeSpan.FromSeconds(options.Timeout.Value) });
+                new ContextSettings {
+                        EnableRaisingEvents = true,
+                        Timeout = TimeSpan.FromSeconds(options.Timeout.Value) });
         }
         if (!string.IsNullOrEmpty(options.FuzzyMatch)) {
             context = context.With<FuzzyMatch>(

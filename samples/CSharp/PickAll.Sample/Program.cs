@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using PickAll;
 using CommandLine;
 
 sealed class Program
@@ -19,14 +17,18 @@ sealed class Program
     static async Task<int> ExecuteSearch(Options options)
     {
         var context = options.ToContext();
-        var results = await context.SearchAsync(options.Query);
-        foreach (var result in results) {
+
+        context.SearchBegin += (sender, e) => Console.WriteLine($"Searching '{e.Query}'...");
+        context.ResultCreated += (sender, e) => {
+            var result = e.Result;
             Console.WriteLine(
                 $"[{result.Index}] {result.Originator}: \"{result.Description}\": \"{result.Url}\"");
             if (result.Data != null) {
                 Console.WriteLine($"  Data:\n    {result.Data}");
             }
-        }
+        };
+
+        var results = await context.SearchAsync(options.Query);
         return exitOK;
     }
 }
