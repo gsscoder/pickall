@@ -346,11 +346,9 @@ public class SearchContextSpecs
     public async void Should_fire_SearchStart_event()
     {
         var evidence = string.Empty;
-        void sut_SearchBegin(object sender, SearchBeginEventArgs e) { evidence = e.Query; }
-
         var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
-        sut.SearchBegin += sut_SearchBegin;
+        sut.SearchBegin += (sender, e) => evidence = e.Query;
 
         await sut.SearchAsync("query");
 
@@ -361,11 +359,9 @@ public class SearchContextSpecs
     public async void Should_fire_SearchEnd_event()
     {
         var evidence = false;
-        void sut_SearchEnd(object sender, EventArgs e) { evidence = true; }
-
         var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
-        sut.SearchEnd += sut_SearchEnd;
+        sut.SearchEnd += (sender, e) => evidence = true;
 
         await sut.SearchAsync("query");
 
@@ -376,11 +372,9 @@ public class SearchContextSpecs
     public async void Should_fire_ServiceLoad_event()
     {
         var evidence = false;
-        void sut_ServiceLoad(object sender, EventArgs e) { evidence = true; }
-
         var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
-        sut.ServiceLoad += sut_ServiceLoad;
+        sut.ServiceLoad += (sender, e) => evidence = true;
 
         await sut.SearchAsync("query");
 
@@ -391,11 +385,9 @@ public class SearchContextSpecs
     public async void Should_fire_ResultCreated_event()
     {
         var evidence = 0;
-        void sut_ResultCreated(object sender, ResultHandledEventArgs e) { evidence++; }
-
         var sut = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 10 });
-        sut.ResultCreated += sut_ResultCreated;
+        sut.ResultCreated += (sender, e) => evidence++;
 
         await sut.SearchAsync("query");
 
