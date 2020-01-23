@@ -96,7 +96,7 @@ namespace PickAll
                 () => new SearchBeginEventArgs(Query), Settings.EnableRaisingEvents);
 
             // Bind context and partition maximum results
-            Host = ConfigureServices(this);
+            Host = Configure(this);
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -146,7 +146,7 @@ namespace PickAll
             get { return _default.Value; }
         }
 
-        static ServiceHost ConfigureServices(SearchContext context)
+        static ServiceHost Configure(SearchContext context)
         {
             var searchers = context.Host.Services.OfType<Searcher>();
             var first = searchers.FirstOrDefault();
