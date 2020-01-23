@@ -65,7 +65,7 @@ $ dotnet test
 ```csharp
 using PickAll;
 
-var context = new SearchContext(maximumResults: 30)
+var context = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
     .With<Google>() // search on google.com
     .With<Yahoo>() // search on yahoo.com
     .With<Uniqueness>() // remove duplicates
@@ -76,13 +76,14 @@ var context = new SearchContext(maximumResults: 30)
     .With<Improve>(new ImproveSettings {WordCount = 2, NoiseLength = 3})
     // scrape result pages and extract distinct words
     .With<Wordify>(new WordifySettings {IncludeTitle = true, NoiseLength = 3});
+// attach events
+context.ResultCreated += (sender, e) => Console.WriteLine($"Result created from {e.Result.Originator}");
 // execute services (order of addition)
 var results = await context.SearchAsync("quantum physics");
 // do anything you need with LINQ
 var scientific = results.Where(result => result.Url.Contains("wikipedia"));
-
 foreach (var result in scientific) {
-    Console.WriteLine($"{result.Url} ${result.Description}");
+    Console.WriteLine($"{result.Url} {result.Description}");
 }
 ```
 
