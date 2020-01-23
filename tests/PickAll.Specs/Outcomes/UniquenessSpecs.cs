@@ -5,7 +5,7 @@ using FluentAssertions;
 using CSharpx;
 using PickAll;
 
-public class UniquenessTests
+public class UniquenessSpecs
 {
     [Fact]
     public void Should_exclude_duplicate_urls()

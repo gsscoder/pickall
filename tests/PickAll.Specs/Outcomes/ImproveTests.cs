@@ -4,7 +4,7 @@ using FluentAssertions;
 using CSharpx;
 using PickAll;
 
-public class ImproveTests
+public class ImproveSpecs
 {
     [Fact]
     public async void Should_exclude_non_alphanumeric_words()

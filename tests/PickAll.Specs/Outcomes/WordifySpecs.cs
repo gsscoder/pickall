@@ -3,7 +3,7 @@ using FluentAssertions;
 using CSharpx;
 using PickAll;
 
-public class WordifyTests
+public class WordifySpecs
 {
     [Fact]
     public void Should_extract_words_from_a_page()

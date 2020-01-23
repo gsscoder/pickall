@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Sample", "samples/C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A4E8E206-43EA-4279-A75B-BB6D05ECA32B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Tests", "tests/PickAll.Tests/PickAll.Tests.csproj", "{A4F9D3D0-7524-47FA-8635-A4C47DBEA267}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Specs", "tests/PickAll.Specs/PickAll.Specs.csproj", "{A4F9D3D0-7524-47FA-8635-A4C47DBEA267}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

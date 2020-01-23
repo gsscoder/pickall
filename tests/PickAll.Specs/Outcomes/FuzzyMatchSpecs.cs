@@ -3,7 +3,7 @@ using FluentAssertions;
 using CSharpx;
 using PickAll;
 
-public class FuzzyMatchTests
+public class FuzzyMatchSpecs
 {
     [Fact]
     public void Matching_text_with_minimum_distance_of_zero_excludes_other_results()

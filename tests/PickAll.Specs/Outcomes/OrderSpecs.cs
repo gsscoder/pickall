@@ -3,7 +3,7 @@ using Xunit;
 using FluentAssertions;
 using PickAll;
 
-public class OrderTests
+public class OrderSpecs
 {
     [Fact]
     public void Should_ordered_by_index()

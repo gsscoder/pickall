@@ -4,7 +4,7 @@ using Xunit;
 using FluentAssertions;
 using PickAll;
 
-public class SearchContextTests
+public class SearchContextSpecs
 {
     [Fact]
     public void Can_initialize_SearchContext_using_types()
