@@ -3,7 +3,7 @@ using Xunit;
 using FluentAssertions;
 using CSharpx;
 
-public class IDocumentExtensionsSpecs
+public class DocumentExtensionsSpecs
 {
     [Fact]
     public void Should_extract_sanitized_text_from_a_page()
