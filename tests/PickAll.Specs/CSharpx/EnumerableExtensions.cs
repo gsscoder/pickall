@@ -16,7 +16,7 @@ namespace CSharpx
 #if !CSX_ENUM_INTERNAL
     public
 #endif
-    static class IEnumerableExtensions
+    static class EnumerableExtensions
     {
 #if !CSX_REM_MAYBE_FUNC
         /// <summary>
