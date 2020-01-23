@@ -163,10 +163,8 @@ class DefaultServiceHost : ServiceHost
         if (factory == null) throw new ArgumentNullException(nameof(factory));
         if (!Validate(Allowed, type)) throw new NotSupportedException(ExceptionMessage(Allowed)); 
         var service = factory();
-        if (!Validate(Allowed, service.GetType()))
-            throw new NotSupportedException(ExceptionMessage(Allowed));
-        if (!service.GetType().Equals(type) && !service.GetType().IsSubclassOf(type))
-            throw new ArgumentException("Type mismatch", nameof(type));
+        if (!Validate(Allowed, service.GetType())) throw new NotSupportedException(ExceptionMessage(Allowed));
+        if (!service.GetType().Equals(type) && !service.GetType().IsSubclassOf(type)) throw new ArgumentException("Type mismatch", nameof(type));
 
         return new DefaultServiceHost(Add(factory()).Services, Allowed);
     }
@@ -182,9 +180,7 @@ class DefaultServiceHost : ServiceHost
     public override ServiceHost Remove(Type type)
     {
         if (type == null) throw new ArgumentNullException(nameof(type));
-
-        if (!Validate(Allowed, type))
-            throw new NotSupportedException(ExceptionMessage(Allowed));
+        if (!Validate(Allowed, type)) throw new NotSupportedException(ExceptionMessage(Allowed));
 
         return new DefaultServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
@@ -209,7 +205,6 @@ class DefaultServiceHost : ServiceHost
     {
         return Remove(typeof(T));
     }
-
 
     public override ServiceHost RemoveAll<T>()
     {
