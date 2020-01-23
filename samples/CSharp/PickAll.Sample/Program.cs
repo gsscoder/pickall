@@ -12,7 +12,7 @@ sealed class Program
     static int Main(string[] args)
     {
         return Parser.Default.ParseArguments<Options>(args)
-            .MapResult(options => DoSearch(options).GetAwaiter().GetResult(),
+            .MapResult(options => DoSearch(options).RunSynchronously<int>(),
             _ => exitFail);
     }
 
