@@ -61,8 +61,9 @@ namespace CSharpx
         /// <summary>
         /// Replicates a string for a given number of times using a seperator.
         /// </summary>
-        public static string Replicate(this string value, uint count, string separator = " ")
+        public static string Replicate(this string value, int count, string separator = " ")
         {
+            if (count < 0) throw new ArgumentException(nameof(count));
             if (separator == null) throw new ArgumentNullException(nameof(separator));
 
             var builder = new StringBuilder();
@@ -108,9 +109,12 @@ namespace CSharpx
         /// <summary>
         /// Mangles a string with a given number of non alphanumeric character in random positions.
         /// </summary>
-        public static string Mangle(this string value, uint times = 1, uint maxLength = 1)
+        public static string Mangle(this string value, int times = 1, int maxLength = 1)
         {
+            if (times < 0) throw new ArgumentException(nameof(times));
+            if (maxLength < 0) throw new ArgumentException(nameof(maxLength));
             if (times > value.Length) throw new ArgumentException(nameof(times));
+
             if (times == 0 || maxLength == 0) return value;
 
             var indexes = new List<int>((int)times);
