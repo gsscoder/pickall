@@ -118,7 +118,7 @@ namespace PickAll
                 var current = processor.Process(results);
                 results = new List<ResultInfo>();
                 foreach (var result in current) {
-                    EventHelper.RaiseEvent(this, ResultProcessed,
+                    EventHelper.RaiseEvent(processor, ResultProcessed,
                         () => new ResultHandledEventArgs(result, ServiceType.PostProcessor), publish);
                     results.Add(result);
                 }
