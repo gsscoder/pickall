@@ -198,12 +198,22 @@ namespace CSharpx
 
         static Regex _stripMl = new Regex(@"<[^>]*>", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        /// <summary>
-        /// Removes markup from a string.
-        /// </summary>
+        /// <summary>Removes markup from a string.</summary>
         public static string StripMl(this string value)
         {
             return _stripMl.Replace(value, string.Empty);
+        }
+
+        /// <summary>Strip all words of a specific length.</summary>
+        public static string StripByLength(this string value, int len)
+        {
+            if (len < 0) throw new ArgumentException(nameof(len));
+            if (len == 0) return value;
+
+            var stripByLen = new Regex(string.Concat(@"\b\w{1,", len, @"}\b"),
+                RegexOptions.Compiled | RegexOptions.Multiline);
+
+            return stripByLen.Replace(value, string.Empty);
         }
     }
 }
