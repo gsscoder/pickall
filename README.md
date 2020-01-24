@@ -75,8 +75,8 @@ var context = new SearchContext(new ContextSettings { EnableRaisingEvents = true
     .With<FuzzyMatch>(new FuzzyMatchSettings { Text = "mechanics", MaximumDistance = 15 });
     // repeat a search using more frequent words of previous results
     .With<Improve>(new ImproveSettings {WordCount = 2, NoiseLength = 3})
-    // scrape result pages and extract distinct words
-    .With<Wordify>(new WordifySettings {IncludeTitle = true, NoiseLength = 3});
+    // scrape result pages and extract all text
+    .With<Textify>(new TextifySettings {IncludeTitle = true, NoiseLength = 3});
 // attach events
 context.ResultCreated += (sender, e) => Console.WriteLine($"Result created from {e.Result.Originator}");
 // execute services (order of addition)
