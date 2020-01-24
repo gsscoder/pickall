@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="../../../src/PickAll/PickAll.csproj" />
+    <ProjectReference Include="..\PickAll\PickAll.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,10 +12,10 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>../../../artifacts/PickAll.Sample/Debug</OutputPath>
+    <OutputPath>../../artifacts/PickAll.Sample/Debug</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>../../../artifacts/PickAll.Sample/Release</OutputPath>
+    <OutputPath>../../artifacts/PickAll.Sample/Release</OutputPath>
   </PropertyGroup>
-  <Import Project="..\..\..\.paket\Paket.Restore.targets" />
+  <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
