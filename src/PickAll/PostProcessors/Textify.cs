@@ -103,8 +103,12 @@ namespace PickAll
                     return string.Concat(
                         string.Join(" ",
                             from text in texts
-                            select text.StripMl().NormalizeWhiteSpace().Sanitize()),
+                            select RemoveNoise(text.StripMl().NormalizeWhiteSpace().Sanitize())),
                             " ");
+                    string RemoveNoise(string text) {
+                        if (_settings.NoiseLength == 0) return text;
+                        return text.StripByLength(_settings.NoiseLength);
+                    }
                 }
             }
         }
