@@ -12,7 +12,7 @@ static class OptionsExtensions
                 .WithConfiguration(new ContextSettings { EnableRaisingEvents = true });
         }
         else {
-            context = new SearchContext();
+            context = new SearchContext(new ContextSettings { EnableRaisingEvents = true });
             foreach (var engine in options.Engines) {
                 context = context.With(engine);
             }
@@ -39,9 +39,8 @@ static class OptionsExtensions
                     NoiseLength = 3});
         }
         if (options.Wordify) {
-            context = context.With<Wordify>(
-                new WordifySettings {
-                    IncludeTitle = true,
+            context = context.With<Textify>(
+                new TextifySettings {
                     NoiseLength = 3});
         }
         return context;

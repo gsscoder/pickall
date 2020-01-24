@@ -7,7 +7,7 @@ sealed class Options
             Required = true)]
     public string Query { get; set; }
 
-    [Option('t', "timeout", HelpText = "Maximum timeout for HTTP requests in seconds")]
+    [Option("timeout", HelpText = "Maximum timeout for HTTP requests in seconds")]
     public uint? Timeout { get; set; }
 
     [Option('f', "fuzzy", HelpText = "Fuzzy matching of Levenshtein distance 0-10")]
@@ -16,7 +16,7 @@ sealed class Options
     [Option('i', "improve", HelpText = "Enable improve search post processor")]
     public bool Improve { get; set; }
 
-    [Option('w', "wordify", HelpText = "Enable improve wordify post processor")]
+    [Option('t', "textify", HelpText = "Enable textify post processor")]
     public bool Wordify { get; set; }       
 
     [Option('e', "engines", HelpText = "Search engines to use separated by ':'",

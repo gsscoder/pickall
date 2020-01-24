@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Bogus;
@@ -80,5 +81,33 @@ static class WaffleBuilder
                     paragraphs: paragraphs,
                     includeHeading: true,
                     includeHeadAndBody: true))).GetAwaiter().GetResult();
-    } 
+    }
+
+    public static string GenerateParagraph(int samples = 1, bool small = false)
+    {
+        var builder = new StringBuilder();
+        for (var i = 0; i < samples; i ++) {
+            builder.AppendLine($"{Generate()}");
+        }
+        return builder.ToString();
+        string Generate() {
+            var paragraph = small
+                            ? GenerateTitle(1).Single()
+                            : WaffleEngine.Text(paragraphs: 1, includeHeading: true);
+            return $"<p>{paragraph}</p>";
+        }
+    }
+
+    public static string GeneratePageAsString(string body, string title = "")
+    {
+        return $@"<html>
+  <head>
+    <title>{title}</title>
+  </head>
+    <body>
+    {body}
+    </body>
+</html>
+";
+    }
 }

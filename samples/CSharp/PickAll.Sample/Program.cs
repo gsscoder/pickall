@@ -23,8 +23,10 @@ sealed class Program
             var result = e.Result;
             Console.WriteLine(
                 $"[{result.Index}] {result.Originator}: \"{result.Description}\": \"{result.Url}\"");
-            if (result.Data != null) {
-                Console.WriteLine($"  Data:\n    {result.Data}");
+        };
+        context.ResultProcessed += (sender, e) => {
+            if (e.Result.Description != null) {
+                Console.WriteLine($"{sender.GetType().Name} for {e.Result.Url} scraped:\n    {e.Result.Data}");
             }
         };
 

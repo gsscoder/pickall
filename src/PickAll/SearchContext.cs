@@ -8,15 +8,14 @@ using AngleSharp.Io.Network;
 
 namespace PickAll
 {
-    /// <summary>
-    /// Manages <see cref="Searcher"/> and <see cref="PostProcessor"/> instances to gather and
-    /// elaborate results.
-    /// </summary>
+    /// <summary>Manages <c>Searcher</c> and <c>PostProcessor</c> instances to gather
+    /// and elaborate results.</summary>
     public sealed class SearchContext
     {   
-        private static Type[] _types = { typeof(Searcher), typeof(PostProcessor) };
-        private Lazy<IBrowsingContext> _activeContext;
-        private static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
+        static Type[] _types = { typeof(Searcher), typeof(PostProcessor) };
+        Lazy<IBrowsingContext> _browsing;
+        Lazy<IFetchingContext> _fetching;
+        static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
             () => new SearchContext(
                 typeof(Google),
                 typeof(DuckDuckGo),
@@ -27,34 +26,28 @@ namespace PickAll
         {
             Host = host;
             Settings = settings;
-            _activeContext = new Lazy<IBrowsingContext>(() => BuildContext(settings));
-    #if DEBUG
+            _browsing = new Lazy<IBrowsingContext>(
+                () => BuildBrowsingContext(settings.Timeout, () => BuildHttpClient(settings.Timeout)));
+            _fetching = new Lazy<IFetchingContext>(
+                () => new FetchingContext(BuildHttpClient(settings.Timeout, new HttpClient())));
+        #if DEBUG
             EnforceMaximumResults = true;
-    #endif
+        #endif
         }
 
-        public SearchContext(ContextSettings settings): this(ServiceHost.DefaultHost(_types), settings)
-        {
-        }
+        public SearchContext(ContextSettings settings)
+            : this(ServiceHost.DefaultHost(_types), settings) { }
 
-        public SearchContext() : this(ServiceHost.DefaultHost(_types), new ContextSettings())
-        {
-        }
+        public SearchContext()
+            : this(ServiceHost.DefaultHost(_types), new ContextSettings()) { }
 
         public SearchContext(int maximumResults)
-            : this(ServiceHost.DefaultHost(_types), new ContextSettings { MaximumResults = maximumResults })
-        {
-        }
+            : this(ServiceHost.DefaultHost(_types), new ContextSettings { MaximumResults = maximumResults }) { }
 
         public SearchContext(TimeSpan timeout)
-            : this(ServiceHost.DefaultHost(_types), new ContextSettings { Timeout = timeout })
-        {
-        }
+            : this(ServiceHost.DefaultHost(_types), new ContextSettings { Timeout = timeout }) { }
 
-        /// <summary>
-        /// Builds a new search context with a given types.
-        /// </summary>
-        /// <param name="services">A list of service types.</param>
+        /// <summary>Builds a new search context with a given types.</summary>
         public SearchContext(params Type[] services) : this()
         {
             Host = ServiceHost.DefaultHost(_types);
@@ -68,7 +61,8 @@ namespace PickAll
         public event EventHandler ServiceLoad;
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
         public event EventHandler<ResultHandledEventArgs> ResultProcessed;
-        public IBrowsingContext Browsing { get { return _activeContext.Value; } }
+        public IBrowsingContext Browsing { get { return _browsing.Value; } }
+        public IFetchingContext Fetching { get { return _fetching.Value; } }
         public string Query { get; private set; }
         internal ServiceHost Host { get; private set; }
     #if !DEBUG
@@ -79,12 +73,9 @@ namespace PickAll
         public bool EnforceMaximumResults { get; set; } // Debug only
     #endif
 
-        /// <summary>
-        /// Executes a search asynchronously, invoking all <see cref="Searcher"/>
-        /// and <see cref="PostProcessor"/> services.
-        /// </summary>
-        /// <param name="query">A query string for sercher services.</param>
-        /// <returns>A colection of <see cref="ResultInfo"/>.</returns>
+        /// <summary>Executes a search using the given <c>query</c>, invoking all <c>Searcher</c>
+        /// services asynchronously and then <c>PostProcessor</c> services in chain. Returns a sequence
+        /// of <c>ResultInfo</c>.</summary>
         public async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
             Guard.AgainstNull(nameof(query), query);
@@ -138,9 +129,7 @@ namespace PickAll
             return results;
         }
 
-        /// <summary>
-        /// Builds a <see cref="SearchContext"/> instance with default services.
-        /// </summary>
+        /// <summary>Builds a <c>SearchContext</c> instance with default services.</summary>
         public static SearchContext Default
         {
             get { return _default.Value; }
@@ -180,12 +169,21 @@ namespace PickAll
             }
         }
 
-        static IBrowsingContext BuildContext(ContextSettings settings)
+        static HttpClient BuildHttpClient(TimeSpan? timeout, HttpClient defaultClient = null)
         {
-            if (settings.Timeout.HasValue) {
+            if (timeout.HasValue) {
                 var client = new HttpClient();
-                client.Timeout =  settings.Timeout.Value;
-                var requester = new HttpClientRequester(client);
+                client.Timeout = timeout.Value;
+                return client;
+            }
+            return defaultClient;
+        }
+
+        static IBrowsingContext BuildBrowsingContext(
+            TimeSpan? timeout, Func<HttpClient> client)
+        {
+            if (timeout.HasValue) {
+                var requester = new HttpClientRequester(client());
                 return BrowsingContext.New(
                     Configuration.Default
                         .WithRequester(requester)
