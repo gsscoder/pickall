@@ -1,15 +1,9 @@
-//#define CATALOQ_INTERNAL // Uncomment or define at build time to set accessibility to internal.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-/// <summary>Represents a service host.</summary>
-#if !CATALOQ_INTERNAL
-public
-#endif
-abstract class ServiceHost
+sealed class ServiceHost
 {
     internal ServiceHost(IEnumerable<object> services, Type[] allowed)
     {
@@ -20,135 +14,19 @@ abstract class ServiceHost
         Allowed = allowed;
     }
 
-    /// <summary>Initializes a new <c>ServiceHost</c> instance, optionally defining allowed base
-    /// types.</summary>
-    public ServiceHost(params Type[] allowed) : this(Enumerable.Empty<object>(), allowed)
-    {
-    }
+    public ServiceHost(params Type[] allowed)
+        : this(Enumerable.Empty<object>(), allowed) { }
 
-    /// <summary>Builds a new default service host instance with allowed types.</summary>
-    public static ServiceHost DefaultHost(params Type[] allowed)
-    {
-        return new DefaultServiceHost(allowed);
-    }
+    public IEnumerable<object> Services { get; internal set; }
 
-    /// <summary>Builds a new thread-safe service host instance with allowed types.</summary>
-    public static ServiceHost BlockingHost(params Type[] allowed)
-    {
-        return new BlockingServiceHost(allowed);
-    }
+    public Type[] Allowed { get; internal set; }
 
-    /// <summary>The sequence of managed services instances.</summary>
-    public virtual IEnumerable<object> Services { get; internal set; }
-
-    /// <summary>Types and/or base types allowed as services.</summary>
-    public virtual Type[] Allowed { get; internal set; }
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance with the given service added.</summary>
-    public abstract ServiceHost Add<T>(T newService);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance with the given service added and initialized
-    /// by a <c>factory</c> function. Creation is delegated to allow type checking. The given type can
-    /// be a a base type of the instance created by the factory function.</summary>
-    public abstract ServiceHost Add(Type type, Func<object> factory);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance with the given service added and initialized
-    /// by a <c>factory</c> function. Creation is delegated to allow type checking.</summary>
-    public abstract ServiceHost Add<T>(Func<T> factory);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance with given the service removed.</summary>
-    public abstract ServiceHost Remove(Type type);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance with the given service removed.</summary>
-    public abstract ServiceHost Remove<T>();
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance with all services the inherit from a
-    /// given type removed.</summary>
-    public abstract ServiceHost RemoveAll<T>();
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance mapping a given function on each
-    /// service.</summary>
-    public abstract ServiceHost Map(Func<object, object> func);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance mapping a given function on each
-    /// service of a given type or that inherits from it.</summary>
-    public abstract ServiceHost Map<T>(Func<T, T> func);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance mapping a given function on each
-    /// service that observes the predicate.</summary>
-    public abstract ServiceHost Map(Func<object, object> func, Func<object, bool> predicate);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance mapping a given function on each
-    /// service of a given type or that inherits from it and observes the predicate.</summary>
-    public abstract ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance executing a given function on each
-    /// service of a given type or that inherits from it.</summary>
-    public abstract ServiceHost Configure<T>(Action<T> action);
-
-    /// <summary>Returns a new <c>ServiceHost</c> instance executing a given function on each
-    /// service of a given type or that inherits from it and observes the predicate.</summary>
-    public abstract ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate);
-
-    /// <summary>Clones a <c>ServiceHost</c> instance.</summary>
-    public abstract ServiceHost Clone();
-
-    // Validates a service against allowed types.
-    protected static bool Validate(Type[] allowed, Type type)
-    {
-        if (allowed.Length > 0) {
-            foreach (var element in allowed) {
-                if (type.Equals(element) ||
-                    type.IsSubclassOf(element)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
-    }
-
-    // Formats a meaningful exception message for validation fail.
-    protected static string ExceptionMessage(Type[] allowed, bool exactly = false)
-    {
-        var builder = new StringBuilder(29 + allowed.Length * 10);
-        builder.Append("Type must be ");
-        if (!exactly) {
-            builder.Append("or inherit from ");
-        }
-        for (var i = 0; i < allowed.Length; i++) {
-            builder.Append(allowed[i].Name);
-            if (i == allowed.Length - 2) {
-                builder.Append(" or ");  
-            }
-            else if (i != allowed.Length - 1) {
-                builder.Append(", ");
-            }
-        }
-        return builder.ToString();
-    }
-}
-
-/// <summary>Provides default service host implementation.</summary>
-#if !CATALOQ_INTERNAL
-public
-#endif
-class DefaultServiceHost : ServiceHost
-{
-    internal DefaultServiceHost(IEnumerable<object> services, Type[] allowed) : base(services, allowed)
-    {
-    }
-
-    public DefaultServiceHost(params Type[] allowed) : base(Enumerable.Empty<object>(), allowed) 
-    {
-    }
-
-    public override ServiceHost Add<T>(T newService)
+    public ServiceHost Add<T>(T newService)
     {
         if (newService == null) throw new ArgumentNullException(nameof(newService));
         if (!Validate(Allowed, newService.GetType())) throw new NotSupportedException(ExceptionMessage(Allowed));
 
-        return new DefaultServiceHost(impl(), Allowed);
+        return new ServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
             foreach (var service in Services) {
                 yield return service;
@@ -157,7 +35,7 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
-    public override ServiceHost Add(Type type, Func<object> factory)
+    public ServiceHost Add(Type type, Func<object> factory)
     {
         if (type == null) throw new ArgumentNullException(nameof(type));
         if (factory == null) throw new ArgumentNullException(nameof(factory));
@@ -166,23 +44,23 @@ class DefaultServiceHost : ServiceHost
         if (!Validate(Allowed, service.GetType())) throw new NotSupportedException(ExceptionMessage(Allowed));
         if (!service.GetType().Equals(type) && !service.GetType().IsSubclassOf(type)) throw new ArgumentException("Type mismatch", nameof(type));
 
-        return new DefaultServiceHost(Add(factory()).Services, Allowed);
+        return new ServiceHost(Add(factory()).Services, Allowed);
     }
 
-    public override ServiceHost Add<T>(Func<T> factory)
+    public ServiceHost Add<T>(Func<T> factory)
     {
         if (factory == null) throw new ArgumentNullException(nameof(factory));
         if (!Validate(Allowed, typeof(T))) throw new NotSupportedException(ExceptionMessage(Allowed));
 
-        return new DefaultServiceHost(Add(factory()).Services, Allowed);
+        return new ServiceHost(Add(factory()).Services, Allowed);
     }
 
-    public override ServiceHost Remove(Type type)
+    public ServiceHost Remove(Type type)
     {
         if (type == null) throw new ArgumentNullException(nameof(type));
         if (!Validate(Allowed, type)) throw new NotSupportedException(ExceptionMessage(Allowed));
 
-        return new DefaultServiceHost(impl(), Allowed);
+        return new ServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
             bool removed = false;
             foreach (var element in Services) {
@@ -201,16 +79,16 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
-    public override ServiceHost Remove<T>()
+    public ServiceHost Remove<T>()
     {
         return Remove(typeof(T));
     }
 
-    public override ServiceHost RemoveAll<T>()
+    public ServiceHost RemoveAll<T>()
     {
         if (!Validate(Allowed, typeof(T))) throw new NotSupportedException(ExceptionMessage(Allowed));
 
-        return new DefaultServiceHost(impl(), Allowed);
+        return new ServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
             foreach (var element in Services) {
                 if (!element.GetType().IsSubclassOf(typeof(T))) {
@@ -220,11 +98,11 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
-    public override ServiceHost Map(Func<object, object> func)
+    public ServiceHost Map(Func<object, object> func)
     {
         if (func == null) throw new ArgumentNullException(nameof(func));
 
-        return new DefaultServiceHost(impl(), Allowed);
+        return new ServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
             foreach (var element in Services) {
                 yield return func(element);
@@ -232,11 +110,11 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
-    public override ServiceHost Map<T>(Func<T, T> func)
+    public ServiceHost Map<T>(Func<T, T> func)
     {
         if (func == null) throw new ArgumentNullException(nameof(func));
 
-        return new DefaultServiceHost(impl(), Allowed);
+        return new ServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
             foreach (var element in Services) {
                 if (element.GetType().Equals(typeof(T)) ||
@@ -250,12 +128,12 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
-    public override ServiceHost Map(Func<object, object> func, Func<object, bool> predicate)
+    public ServiceHost Map(Func<object, object> func, Func<object, bool> predicate)
     {
         if (func == null) throw new ArgumentNullException(nameof(func));
         if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-        return new DefaultServiceHost(impl(), Allowed);
+        return new ServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
             foreach (var element in Services) {
                 if (predicate(element)) {
@@ -267,12 +145,12 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
-    public override ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate)
+    public ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate)
     {
         if (func == null) throw new ArgumentNullException(nameof(func));
         if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-        return new DefaultServiceHost(impl(), Allowed);
+        return new ServiceHost(impl(), Allowed);
         IEnumerable<object> impl() {
             foreach (var element in Services) {
                 if ((element.GetType().Equals(typeof(T)) ||
@@ -286,14 +164,14 @@ class DefaultServiceHost : ServiceHost
         }
     }
 
-    public override ServiceHost Configure<T>(Action<T> action)
+    public ServiceHost Configure<T>(Action<T> action)
     {
         return Map<T>(service => {
             action(service);
             return service; });
     }
 
-    public override ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate)
+    public ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate)
     {
         return Map<T>(service => {
             action(service);
@@ -301,100 +179,41 @@ class DefaultServiceHost : ServiceHost
             predicate);
     }
 
-    public override ServiceHost Clone()
+    public ServiceHost Clone()
     {
-        return new DefaultServiceHost(Services, Allowed);
-    }
-}
-
-/// <summary>Provides thread-safe service host implementation.</summary>
-#if !CATALOQ_INTERNAL
-public
-#endif
-class BlockingServiceHost : DefaultServiceHost
-{
-    internal BlockingServiceHost(IEnumerable<object> services, Type[] allowed) : base(services, allowed)
-    {
+        return new ServiceHost(Services, Allowed);
     }
 
-    public BlockingServiceHost(params Type[] allowed) : base(allowed)
+    protected static bool Validate(Type[] allowed, Type type)
     {
+        if (allowed.Length > 0) {
+            foreach (var element in allowed) {
+                if (type.Equals(element) ||
+                    type.IsSubclassOf(element)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
-    public override IEnumerable<object> Services
+    protected static string ExceptionMessage(Type[] allowed, bool exactly = false)
     {
-        get { lock(this) { return base.Services;  } }
-        internal set { lock(this) { base.Services = value; } }
-    }
-
-    public override Type[] Allowed
-    {
-        get { lock(this) { return base.Allowed;  } }
-        internal set { lock(this) { base.Allowed = value; } }
-    }
-
-    public override ServiceHost Add<T>(T newService)
-    {
-        lock (this) { return base.Add(newService); }
-    }
-
-    public override ServiceHost Add(Type type, Func<object> factory)
-    {
-        lock (this) { return base.Add(type, factory); }
-    }
-
-    public override ServiceHost Add<T>(Func<T> factory)
-    {
-        lock (this) { return base.Add(factory); }
-    }
-
-    public override ServiceHost Remove(Type type)
-    {
-        lock (this) { return base.Remove(type); }
-    }
-
-    public override ServiceHost Remove<T>()
-    {
-        lock (this) { return base.Remove<T>(); }
-    }
-
-    public override ServiceHost RemoveAll<T>()
-    {
-        lock (this) { return base.RemoveAll<T>(); }
-    }
-
-    public override ServiceHost Map(Func<object, object> func)
-    {
-        lock (this) { return base.Map(func); }
-    }
-
-    public override ServiceHost Map<T>(Func<T, T> func)
-    {
-        lock (this) { return base.Map(func); }
-    }
-
-    public override ServiceHost Map(Func<object, object> func, Func<object, bool> predicate)
-    {
-        lock (this) { return base.Map(func, predicate); }
-    }
-
-    public override ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate)
-    {
-        lock (this) { return base.Map(func, predicate); }
-    }
-
-    public override ServiceHost Configure<T>(Action<T> action)
-    {
-        lock (this) { return base.Configure(action); }
-    }
-
-    public override ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate)
-    {
-        lock (this) { return base.Configure(action, predicate); }
-    }
-
-    public override ServiceHost Clone()
-    {
-        lock (this) { return base.Clone(); }
+        var builder = new StringBuilder(29 + allowed.Length * 10);
+        builder.Append("Type must be ");
+        if (!exactly) {
+            builder.Append("or inherit from ");
+        }
+        for (var i = 0; i < allowed.Length; i++) {
+            builder.Append(allowed[i].Name);
+            if (i == allowed.Length - 2) {
+                builder.Append(" or ");  
+            }
+            else if (i != allowed.Length - 1) {
+                builder.Append(", ");
+            }
+        }
+        return builder.ToString();
     }
 }

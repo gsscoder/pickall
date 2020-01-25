@@ -36,21 +36,21 @@ namespace PickAll
         }
 
         public SearchContext(ContextSettings settings)
-            : this(ServiceHost.DefaultHost(_types), settings) { }
+            : this(new ServiceHost(_types), settings) { }
 
         public SearchContext()
-            : this(ServiceHost.DefaultHost(_types), new ContextSettings()) { }
+            : this(new ServiceHost(_types), new ContextSettings()) { }
 
         public SearchContext(int maximumResults)
-            : this(ServiceHost.DefaultHost(_types), new ContextSettings { MaximumResults = maximumResults }) { }
+            : this(new ServiceHost(_types), new ContextSettings { MaximumResults = maximumResults }) { }
 
         public SearchContext(TimeSpan timeout)
-            : this(ServiceHost.DefaultHost(_types), new ContextSettings { Timeout = timeout }) { }
+            : this(new ServiceHost(_types), new ContextSettings { Timeout = timeout }) { }
 
         /// <summary>Builds a new search context with a given types.</summary>
         public SearchContext(params Type[] services) : this()
         {
-            Host = ServiceHost.DefaultHost(_types);
+            Host = new ServiceHost(_types);
             foreach (var type in services) {
                 Host = Host.Add(type, () => Activator.CreateInstance(type, new object[] { null }));
             }
