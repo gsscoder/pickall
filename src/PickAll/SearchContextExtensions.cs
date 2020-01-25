@@ -86,15 +86,8 @@ namespace PickAll
         public static SearchContext Clone(this SearchContext context)
         {
             return new SearchContext(
-                context.Host.Map(service => UnbindContext(service)),
+                context.Host.Configure<Service>(service => service.Context = null),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
-        }
-
-        static object UnbindContext(object service)
-        {
-            var unbound = (Service)service;
-            unbound.Context = null;
-            return service;
         }
     }
 }
