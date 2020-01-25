@@ -32,7 +32,7 @@ $ cd pickall/src/PickAll
 $ dotnet build -c release
 
 # execute sample
-$ cd pickall/samples/CSharp/PickAll.Sample
+$ cd pickall/src/PickAll.Sample
 $ dotnet build -c release
 $ cd ../../artifacts/PickAll.Sample/Release/netcoreapp3.0/PickAll.Sample
 ./PickAll.Sample "Steve Jobs" -e bing:duckduckgo
@@ -49,7 +49,7 @@ Searching 'Steve Jobs' ...
 
 ```sh
 # change to tests directory
-$ cd pickall/tests/PickAll.Specs
+$ cd pickall/src/PickAll.Specs
 
 # build with debug configuration
 $ dotnet build -c debug
@@ -74,9 +74,9 @@ var context = new SearchContext(new ContextSettings { EnableRaisingEvents = true
     // match Levenshtein distance with maximum of 15
     .With<FuzzyMatch>(new FuzzyMatchSettings { Text = "mechanics", MaximumDistance = 15 });
     // repeat a search using more frequent words of previous results
-    .With<Improve>(new ImproveSettings {WordCount = 2, NoiseLength = 3})
+    .With<Improve>(new ImproveSettings { WordCount = 2, NoiseLength = 3 })
     // scrape result pages and extract all text
-    .With<Textify>(new TextifySettings {IncludeTitle = true, NoiseLength = 3});
+    .With<Textify>(new TextifySettings { IncludeTitle = true, NoiseLength = 3 });
 // attach events
 context.ResultCreated += (sender, e) => Console.WriteLine($"Result created from {e.Result.Originator}");
 // execute services (order of addition)
