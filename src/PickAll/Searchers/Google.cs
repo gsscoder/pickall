@@ -14,7 +14,7 @@ namespace PickAll
     /// </summary>
     public class Google : Searcher
     {
-        private static readonly Regex _expression = new Regex(@"^/url\?q=([^&]*)&.*",
+        static readonly Regex _expression = new Regex(@"^/url\?q=([^&]*)&.*",
             RegexOptions.Compiled);
 
         public Google(object settings) : base(settings)  

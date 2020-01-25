@@ -4,7 +4,7 @@ namespace PickAll
 {
     public abstract class Service
     {
-        private SearchContext _context;
+        SearchContext _context;
         internal event EventHandler Load;
 
         public SearchContext Context 

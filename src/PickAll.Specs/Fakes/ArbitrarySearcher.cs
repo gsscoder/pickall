@@ -13,7 +13,7 @@ struct ArbitrarySearcherSettings
 
 class ArbitrarySearcher : Searcher
 {
-    private readonly ArbitrarySearcherSettings _settings;
+    readonly ArbitrarySearcherSettings _settings;
 
     public ArbitrarySearcher(object settings) : base(settings)  
     {

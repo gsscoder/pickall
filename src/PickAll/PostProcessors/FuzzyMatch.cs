@@ -50,7 +50,7 @@ namespace PickAll
     /// </summary>
     public class FuzzyMatch : PostProcessor
     {
-        private readonly FuzzyMatchSettings _settings;
+        readonly FuzzyMatchSettings _settings;
 
         public FuzzyMatch(object settings) : base(settings)
         {
