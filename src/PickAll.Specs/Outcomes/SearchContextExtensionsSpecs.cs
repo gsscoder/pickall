@@ -186,4 +186,20 @@ public class SearchContextExtensionsSpecs
 
         sut.Services.Should().BeEmpty();
     }
+
+    [Fact]
+    public void Should_merge_configuration_settings()
+    {
+        var expected = new ContextSettings
+            { EnableRaisingEvents = true,
+              MaximumResults = 10 };
+
+        var sut = SearchContext.Default
+                    .WithConfiguration(
+                        new ContextSettings { EnableRaisingEvents = true }, merge: false)
+                    .WithConfiguration(
+                        new ContextSettings { MaximumResults = 10 }, merge: true);
+
+        sut.Settings.Should().Be(expected);
+    }
 }

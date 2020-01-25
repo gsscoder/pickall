@@ -84,7 +84,7 @@ namespace PickAll
                 var merged = context.Settings;
                 if (settings.MaximumResults != default(int?)) merged.MaximumResults = settings.MaximumResults;
                 if (settings.Timeout != default(TimeSpan)) merged.Timeout = settings.Timeout;
-                merged.EnableRaisingEvents = settings.EnableRaisingEvents;
+                if (settings.EnableRaisingEvents != default(bool)) merged.EnableRaisingEvents = settings.EnableRaisingEvents;
                 return new SearchContext(context.Host.Clone(), merged);
             }
             return new SearchContext(context.Host.Clone(), settings);
