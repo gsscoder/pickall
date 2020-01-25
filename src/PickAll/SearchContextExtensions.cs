@@ -90,6 +90,13 @@ namespace PickAll
             return new SearchContext(context.Host.Clone(), settings);
         }
 
+        /// <summary>Configures a search context able to raise events.</summary>
+        public static SearchContext WithEvents(this SearchContext context)
+        {
+            return context.WithConfiguration(
+                new ContextSettings { EnableRaisingEvents = true }, merge: true);
+        }
+
         /// <summary>Builds a new search context with same services of the current.</summary>
         public static SearchContext Clone(this SearchContext context)
         {
