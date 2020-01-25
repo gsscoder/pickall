@@ -41,6 +41,7 @@ static class OptionsExtensions
         if (options.Wordify) {
             context = context.With<Textify>(
                 new TextifySettings {
+                    SanitizeText = true,
                     NoiseLength = 3});
         }
         return context;
