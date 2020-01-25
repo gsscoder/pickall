@@ -4,20 +4,11 @@ using System.Reflection;
 
 namespace PickAll
 {
-    /// <summary>
-    /// A set of useful extensions for <see cref="SearchContext"/>.
-    /// </summary>
+    /// <summary>A set of useful extensions for <c>SearchContext</c>.</summary>
     public static class SearchContextExtensions
     {
-        /// <summary>
-        /// Registers an instance of <see cref="Searcher"/> or <see cref="PostProcessor"/>
-        /// without settings, using its type.
-        /// </summary>
-        /// <param name="context">The search context to alter.</param>
-        /// <param name="settings">The optional settings instance for the service.</param>
-        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"/>
-        /// or <see cref="PostProcessor"/>.</typeparam>
-        /// <returns>A <see cref="SearchContext"/> with the given service added.</returns>
+        /// <summary>Registers an instance of <c>Searcher</c> or <c>PostProcessor</c> without settings,
+        /// using its type.</summary>
         public static SearchContext With<T>(this SearchContext context, object settings = null)
         {
             var service = Activator.CreateInstance(typeof(T), settings);
@@ -26,18 +17,10 @@ namespace PickAll
                 context.Settings.Clone());
         }
 
-        /// <summary>
-        /// Registers an instance of <see cref="Searcher"/> or <see cref="PostProcessor"/>
-        /// without settings, using its type name.
-        /// </summary>
-        /// <param name="context">The search context to alter.</param>
-        /// <param name="serviceName">Name of the service to register (case insensitive).</param>
-        /// <param name="settings">The optional settings instance for the service.</param>
-        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"/>
-        /// or <see cref="PostProcessor"/>.</typeparam>
-        /// <returns>A <see cref="SearchContext"/> with the given service added.</returns>       
+        /// <summary>Registers an instance of <c>Searcher</c> or <c>PostProcessor</c> without settings,
+        /// using its type name.</summary>
         public static SearchContext With(this SearchContext context, string serviceName,
-                                            object settings = null)
+                                         object settings = null)
         {
             if (serviceName == null) {
                 throw new ArgumentNullException(nameof(serviceName), $"{nameof(serviceName)} cannot be null");
@@ -59,14 +42,8 @@ namespace PickAll
                 context.Settings.Clone());
         }
 
-        /// <summary>
-        /// Unregisters first instance of <see cref="Searcher"/> or <see cref="PostProcessor"/>,
-        /// using its type.
-        /// </summary>
-        /// <param name="context">The search context to alter.</param>
-        /// <typeparam name="T">A type that inherits from <see cref="SearchContext"/>
-        /// or <see cref="PostProcessor"/>.</typeparam>
-        /// <returns>A <see cref="SearchContext"/> instance with the given service removed.</returns>
+        /// <summary>Unregisters first instance of <c>Searcher</c> or <c>PostProcessor</c>, using its
+        /// type.</summary>
         public static SearchContext Without<T>(this SearchContext context)
         {
             return new SearchContext(
@@ -74,14 +51,8 @@ namespace PickAll
                 context.Settings.Clone());
         }
 
-        /// <summary>
-        /// Unregisters first instance of <see cref="Searcher"/> or <see cref="PostProcessor"/>,
-        /// using its type name.
-        /// </summary>
-        /// <param name="context">The search context to alter.</param>
-        /// <param name="serviceName">Name of the service to register (case insensitive).</param>
-        /// or <see cref="PostProcessor"/>.</typeparam>
-        /// <returns>A <see cref="SearchContext"/> instance with the given service removed.</returns>
+        /// <summary>Unregisters first instance of <c>Searcher</c> or <c>PostProcessor</c>, using its
+        /// type name.</summary>
         public static SearchContext Without(this SearchContext context, string serviceName)
         {
             if (serviceName == null) {
@@ -103,14 +74,8 @@ namespace PickAll
                 context.Settings.Clone());
         }
 
-        /// <summary>
-        /// Unregisters all instances of types that inherits from <see cref="Searcher"/>
-        /// or <see cref="PostProcessor"/>.
-        /// </summary>
-        /// <param name="context">The search context to alter.</param>
-        /// <typeparam name="T"><see cref="Searcher"/> or <see cref="PostProcessor"/> type.</typeparam>
-        /// <returns>A <see cref="SearchContext"/> instance with all searcher
-        /// or all postprocessor removed.</returns>
+        /// <summary>Unregisters all instances of types that inherits from <c>Searcher</c>
+        /// or <c>PostProcessor</c>.</summary>
         public static SearchContext WithoutAll<T>(this SearchContext context)
         {
             return new SearchContext(
@@ -118,23 +83,14 @@ namespace PickAll
                 context.Settings.Clone());
         }
 
-        /// <summary>
-        /// Configure a search context with a <see cref="ContextSettings"/> instance.
-        /// </summary>
-        /// <param name="context">The search context to alter.</param>
-        /// <param name="settings">The settings to configure in the search context.</param>
-        /// <returns>A <see cref="SearchContext"/> instance with new configuration settings.</returns>
+        /// <summary>Configures a search context with a <c>ContextSettings</c> instance.</summary>
         public static SearchContext WithConfiguration(this SearchContext context,
             ContextSettings settings)
         {
             return new SearchContext(context.Host.Clone(), settings);
         }
 
-        /// <summary>
-        /// Builds a new search context with same services of the current. 
-        /// </summary>
-        /// <param name="context">The search context to clone.</param>
-        /// <returns>A cloned <see cref="SearchContext"/> instance.</returns>
+        /// <summary>Builds a new search context with same services of the current.</summary>
         public static SearchContext Clone(this SearchContext context)
         {
             return new SearchContext(
