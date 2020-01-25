@@ -100,7 +100,8 @@ namespace PickAll
                         .WithoutAll<PostProcessor>()
                         .With<Uniqueness>()
                         .With<Order>()
-                        .SearchAsync(builder.ToString()).GetAwaiter().GetResult();
+                        .SearchAsync(builder.ToString())
+                            .RunSynchronously<IEnumerable<ResultInfo>>();
         }
     }
 }
