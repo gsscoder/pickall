@@ -19,10 +19,10 @@ namespace PickAll
         }
 
         /// <summary>Timeout for each HTTP request performed.</summary>
-        public TimeSpan? Timeout;
+        public TimeSpan? Timeout { get; set; }
 
         /// <summary>Enables events in search context and services.</summary>
-        public bool EnableRaisingEvents;
+        public bool EnableRaisingEvents { get; set; }
 
         internal RuntimePolicy ToPolicy()
         {
