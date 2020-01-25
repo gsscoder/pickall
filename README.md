@@ -18,7 +18,7 @@ Documentation is available in the project [Wiki](https://github.com/gsscoder/pic
 ## Install via NuGet
 
 ```sh
-$ dotnet add package PickAll --version 0.26.6-beta
+$ dotnet add package PickAll --version 0.26.9-beta
 ```
 
 ## Build and sample
@@ -66,7 +66,8 @@ $ dotnet test
 ```csharp
 using PickAll;
 
-var context = new SearchContext(new ContextSettings { EnableRaisingEvents = true })
+var context = new SearchContext()
+    .WithEvents()
     .With<Google>() // search on google.com
     .With<Yahoo>() // search on yahoo.com
     .With<Uniqueness>() // remove duplicates
