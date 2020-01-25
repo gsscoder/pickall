@@ -75,10 +75,18 @@ namespace PickAll
                 context.Settings.Clone());
         }
 
-        /// <summary>Configures a search context with a <c>ContextSettings</c> instance.</summary>
+        /// <summary>Configures a search context with a <c>ContextSettings</c> instance. If <c>merge</c>
+        /// is <c>true</c> the settings instance is merged to the actul one.</summary>
         public static SearchContext WithConfiguration(this SearchContext context,
-            ContextSettings settings)
+                                                      ContextSettings settings, bool merge = false)
         {
+            if (merge) {
+                var merged = context.Settings;
+                if (settings.MaximumResults != default(int?)) merged.MaximumResults = settings.MaximumResults;
+                if (settings.Timeout != default(TimeSpan)) merged.Timeout = settings.Timeout;
+                merged.EnableRaisingEvents = settings.EnableRaisingEvents;
+                return new SearchContext(context.Host.Clone(), merged);
+            }
             return new SearchContext(context.Host.Clone(), settings);
         }
 
