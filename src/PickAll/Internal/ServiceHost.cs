@@ -184,7 +184,7 @@ sealed class ServiceHost
         return new ServiceHost(Services, Allowed);
     }
 
-    protected static bool Validate(Type[] allowed, Type type)
+    static bool Validate(Type[] allowed, Type type)
     {
         if (allowed.Length > 0) {
             foreach (var element in allowed) {
@@ -198,7 +198,7 @@ sealed class ServiceHost
         return true;
     }
 
-    protected static string ExceptionMessage(Type[] allowed, bool exactly = false)
+    static string ExceptionMessage(Type[] allowed, bool exactly = false)
     {
         var builder = new StringBuilder(29 + allowed.Length * 10);
         builder.Append("Type must be ");
