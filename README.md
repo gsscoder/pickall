@@ -71,7 +71,7 @@ var context = new SearchContext()
     .With<Google>() // search on google.com
     .With<Yahoo>() // search on yahoo.com
     .With<Uniqueness>() // remove duplicates
-    .With<Order>() // order results by index
+    .With<Order>() // prioritize results
     // match Levenshtein distance with maximum of 15
     .With<FuzzyMatch>(new FuzzyMatchSettings { Text = "mechanics", MaximumDistance = 15 });
     // repeat a search using more frequent words of previous results
