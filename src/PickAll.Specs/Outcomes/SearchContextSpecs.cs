@@ -34,7 +34,7 @@ public partial class SearchContextSpecs
             typeof(int));
 
         action.Should().ThrowExactly<NotSupportedException>()
-            .WithMessage("Type must be or inherit from Searcher or PostProcessor");
+            .WithMessage("All services must inherit from T");
     }
 
     [Fact]

@@ -10,10 +10,11 @@ namespace PickAll
         /// <summary>Registers an instance of <c>Searcher</c> or <c>PostProcessor</c> without settings,
         /// using its type.</summary>
         public static SearchContext With<T>(this SearchContext context, object settings = null)
+            where T : Service
         {
-            var service = Activator.CreateInstance(typeof(T), settings);
+            var service = (T)Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
-                context.Host.Clone().Add(service),
+                context.Services.Add(service),
                 context.Settings.Clone());
         }
 
@@ -33,17 +34,19 @@ namespace PickAll
             }
 
             var service = Activator.CreateInstance(type, settings);
+            Guard.AgainstSubclassExcept<Service>(nameof(serviceName), service);
             return new SearchContext(
-                context.Host.Clone().Add(service),
+                context.Services.Add(service),
                 context.Settings.Clone());
         }
 
         /// <summary>Unregisters first instance of <c>Searcher</c> or <c>PostProcessor</c>, using its
         /// type.</summary>
         public static SearchContext Without<T>(this SearchContext context)
+            where T : Service
         {
             return new SearchContext(
-                context.Host.Clone().Remove<T>(),
+                context.Services.Remove<T>(),
                 context.Settings.Clone());
         }
 
@@ -54,7 +57,7 @@ namespace PickAll
             Guard.AgainstNull(nameof(serviceName), serviceName);
             Guard.AgainstEmptyWhiteSpace(nameof(serviceName), serviceName);
 
-            var service = (from @this in context.Host.Services
+            var service = (from @this in context.Services
                            where @this.GetType().Name.Equals(
                                  serviceName, StringComparison.OrdinalIgnoreCase)
                            select @this).FirstOrDefault();
@@ -62,16 +65,17 @@ namespace PickAll
                 throw new InvalidOperationException($"{serviceName} not registred as service");
             }
             return new SearchContext(
-                context.Host.Clone().Remove(service.GetType()),
+                context.Services.Remove(service.GetType()),
                 context.Settings.Clone());
         }
 
         /// <summary>Unregisters all instances of types that inherits from <c>Searcher</c>
         /// or <c>PostProcessor</c>.</summary>
         public static SearchContext WithoutAll<T>(this SearchContext context)
+            where T : Service
         {
             return new SearchContext(
-                context.Host.Clone().RemoveAll<T>(),
+                context.Services.RemoveAll<T>(),
                 context.Settings.Clone());
         }
 
@@ -85,9 +89,9 @@ namespace PickAll
                 if (settings.MaximumResults != default(int?)) merged.MaximumResults = settings.MaximumResults;
                 if (settings.Timeout != default(TimeSpan)) merged.Timeout = settings.Timeout;
                 if (settings.EnableRaisingEvents != default(bool)) merged.EnableRaisingEvents = settings.EnableRaisingEvents;
-                return new SearchContext(context.Host.Clone(), merged);
+                return new SearchContext(context.Services, merged);
             }
-            return new SearchContext(context.Host.Clone(), settings);
+            return new SearchContext(context.Services, settings);
         }
 
         /// <summary>Configures a search context able to raise events.</summary>
@@ -101,7 +105,11 @@ namespace PickAll
         public static SearchContext Clone(this SearchContext context)
         {
             return new SearchContext(
-                context.Host.Configure<Service>(service => service.Context = null),
+                context.Services.Map<Service>(service =>
+                    {
+                        service.Context = null;
+                        return service;
+                    }),
                 new ContextSettings { MaximumResults = context.Settings.MaximumResults });
         }
     }

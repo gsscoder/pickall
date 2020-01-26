@@ -22,9 +22,9 @@ namespace PickAll
                 typeof(Uniqueness),
                 typeof(Order)));
 
-        internal SearchContext(ServiceHost host, ContextSettings settings)
+        internal SearchContext(IEnumerable<object> services, ContextSettings settings)
         {
-            Host = host;
+            Services = services;
             Settings = settings;
             _browsing = new Lazy<IBrowsingContext>(
                 () => BuildBrowsingContext(settings.Timeout, () => BuildHttpClient(settings.Timeout)));
@@ -36,23 +36,26 @@ namespace PickAll
         }
 
         public SearchContext(ContextSettings settings)
-            : this(new ServiceHost(_types), settings) { }
+            : this(Enumerable.Empty<object>(), settings) { }
 
         public SearchContext()
-            : this(new ServiceHost(_types), new ContextSettings()) { }
+            : this(Enumerable.Empty<object>(), new ContextSettings()) { }
 
         public SearchContext(int maximumResults)
-            : this(new ServiceHost(_types), new ContextSettings { MaximumResults = maximumResults }) { }
+            : this(Enumerable.Empty<object>(), new ContextSettings { MaximumResults = maximumResults }) { }
 
         public SearchContext(TimeSpan timeout)
-            : this(new ServiceHost(_types), new ContextSettings { Timeout = timeout }) { }
+            : this(Enumerable.Empty<object>(), new ContextSettings { Timeout = timeout }) { }
 
         /// <summary>Builds a new search context with a given types.</summary>
         public SearchContext(params Type[] services) : this()
         {
-            Host = new ServiceHost(_types);
+            Guard.AgainstSubclassExcept<Service>(nameof(services), services);
+
+            Services = Enumerable.Empty<object>();
             foreach (var type in services) {
-                Host = Host.Add(type, () => Activator.CreateInstance(type, new object[] { null }));
+                var instance = Activator.CreateInstance(type, new object[] { null });
+                Services = Services.Add(instance);
             }
         }
 
@@ -64,18 +67,18 @@ namespace PickAll
         public IBrowsingContext Browsing { get { return _browsing.Value; } }
         public IFetchingContext Fetching { get { return _fetching.Value; } }
         public string Query { get; private set; }
-        internal ServiceHost Host { get; private set; }
     #if !DEBUG
+        internal IEnumerable<object> Services { get; private set; }
         internal ContextSettings Settings { get; private set; }
     #else
+        public IEnumerable<object> Services { get; private set; }
         public ContextSettings Settings { get; private set; }
-        public IEnumerable<object> Services { get { return Host.Services; } } // Debug only
         public bool EnforceMaximumResults { get; set; } // Debug only
     #endif
 
         /// <summary>Executes a search using the given <c>query</c>, invoking all <c>Searcher</c>
-        /// services asynchronously and then <c>PostProcessor</c> services in chain. Returns a sequence
-        /// of <c>ResultInfo</c>.</summary>
+        /// services asynchronously and then <c>PostProcessor</c> services in chain. Returns a
+        /// sequence of <c>ResultInfo</c>.</summary>
         public async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
             Guard.AgainstNull(nameof(query), query);
@@ -87,12 +90,12 @@ namespace PickAll
                 () => new SearchBeginEventArgs(Query), Settings.EnableRaisingEvents);
 
             // Bind context and partition maximum results
-            Host = Configure(this);
+            Services = Configure(this);
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
                 from searcher in 
-                    (from service in Host.Services
+                    (from service in Services
                         where service.GetType().IsSearcher()
                         select service).Cast<Searcher>()
                 select searcher.SearchAsync(query));
@@ -110,7 +113,7 @@ namespace PickAll
             }
 
             // Invoke post processors in sync
-            var processors = (from service in Host.Services
+            var processors = (from service in Services
                               where service.GetType().IsPostProcessor()
                               select service).Cast<PostProcessor>();
             foreach (var processor in processors) {
@@ -135,38 +138,38 @@ namespace PickAll
             get { return _default.Value; }
         }
 
-        static ServiceHost Configure(SearchContext context)
+        static IEnumerable<object> Configure(SearchContext context)
         {
-            var searchers = context.Host.Services.OfType<Searcher>();
+            var searchers = context.Services.OfType<Searcher>();
             var first = searchers.FirstOrDefault();
             var maximumResults = context.Settings.MaximumResults.HasValue
                 ? context.Settings.MaximumResults / searchers.Count()
                 : null;
-            var host = context.Host
-                .Configure<Service>(service => ConfigureService(service))
-                .Configure<Searcher>(searcher => ConfigureSearcher(searcher));
+            var services = context.Services
+                .Map<Service>(service =>
+                    {
+                        service.Load += context.ServiceLoad;
+                        service.Context = context;
+                        return service;
+                    })
+                .Map<Searcher>(searcher =>
+                    {
+                        searcher.ResultCreated += context.ResultCreated;
+                        searcher.Policy = new RuntimePolicy(maximumResults);
+                        return searcher;
+                    });
             if (first != null) {
                 // first service maybe burdened of handling extra results 
-                host = host.Configure<Searcher>(searcher =>
-                    searcher.Policy = new RuntimePolicy(
-                        searcher.Policy.MaximumResults +
-                        context.Settings.MaximumResults % searchers.Count()),
+                services = services.Map<Searcher>(searcher =>
+                    {
+                        searcher.Policy = new RuntimePolicy(
+                            searcher.Policy.MaximumResults +
+                            context.Settings.MaximumResults % searchers.Count());
+                        return searcher;
+                    },
                     searcher => searcher.GetHashCode().Equals(first.GetHashCode()));
             }
-            return host;
-
-            Service ConfigureService(Service service)
-            {
-                service.Load += context.ServiceLoad;
-                service.Context = context;
-                return service;
-            }
-            Searcher ConfigureSearcher(Searcher searcher)
-            {
-                searcher.ResultCreated += context.ResultCreated;
-                searcher.Policy = new RuntimePolicy(maximumResults);
-                return searcher;
-            }
+            return services;
         }
 
         static HttpClient BuildHttpClient(TimeSpan? timeout, HttpClient defaultClient = null)

@@ -18,7 +18,7 @@ Documentation is available in the project [Wiki](https://github.com/gsscoder/pic
 ## Install via NuGet
 
 ```sh
-$ dotnet add package PickAll --version 0.26.9-beta
+$ dotnet add package PickAll --version 0.27.3-beta
 ```
 
 ## Build and sample
