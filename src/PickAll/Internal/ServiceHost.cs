@@ -98,16 +98,19 @@ sealed class ServiceHost
         }
     }
 
-    public ServiceHost Map(Func<object, object> func)
+    public ServiceHost Configure<T>(Action<T> action)
     {
-        if (func == null) throw new ArgumentNullException(nameof(func));
+        return Map<T>(service => {
+            action(service);
+            return service; });
+    }
 
-        return new ServiceHost(impl(), Allowed);
-        IEnumerable<object> impl() {
-            foreach (var element in Services) {
-                yield return func(element);
-            }
-        }
+    public ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate)
+    {
+        return Map<T>(service => {
+            action(service);
+            return service; },
+            predicate);
     }
 
     public ServiceHost Map<T>(Func<T, T> func)
@@ -122,23 +125,6 @@ sealed class ServiceHost
                         yield return func((T)element);
                     }
                 else {
-                    yield return element;
-                }
-            }
-        }
-    }
-
-    public ServiceHost Map(Func<object, object> func, Func<object, bool> predicate)
-    {
-        if (func == null) throw new ArgumentNullException(nameof(func));
-        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-        return new ServiceHost(impl(), Allowed);
-        IEnumerable<object> impl() {
-            foreach (var element in Services) {
-                if (predicate(element)) {
-                    yield return func(element);
-                } else {
                     yield return element;
                 }
             }
@@ -162,21 +148,6 @@ sealed class ServiceHost
                 }
             }
         }
-    }
-
-    public ServiceHost Configure<T>(Action<T> action)
-    {
-        return Map<T>(service => {
-            action(service);
-            return service; });
-    }
-
-    public ServiceHost Configure<T>(Action<T> action, Func<T, bool> predicate)
-    {
-        return Map<T>(service => {
-            action(service);
-            return service; },
-            predicate);
     }
 
     public ServiceHost Clone()
