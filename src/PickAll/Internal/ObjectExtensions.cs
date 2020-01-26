@@ -44,10 +44,8 @@ static class ObjectExtensions
         }
     }
 
-    public static IEnumerable<object> Remove<T>(this IEnumerable<object> collection)
-    {
-        return collection.Remove(typeof(T));
-    }
+    public static IEnumerable<object> Remove<T>(
+        this IEnumerable<object> collection) => collection.Remove(typeof(T));
 
     public static IEnumerable<object> RemoveAll<T>(this IEnumerable<object> collection)
     {
