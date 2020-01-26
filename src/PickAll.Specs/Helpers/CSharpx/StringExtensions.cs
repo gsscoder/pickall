@@ -14,11 +14,15 @@ namespace CSharpx
 #endif
     static class StringExtensions
     {
-#if CSX_REM_CRYPTORAND
+    #if CSX_REM_CRYPTORAND
         private static readonly Random _random = new Random();
-#else
+    #else
         private static readonly CryptoRandom _random = new CryptoRandom();
-#endif
+    #endif
+        static string[] _mangleChars =
+            {"!", "\"", "£", "$", "%", "&", "/", "(", ")", "=", "?", "^", "[", "]", "*", "@", "°",
+             "#", "§", ",", ";", ".", ":", "-", "_"};
+        static Regex _stripMl = new Regex(@"<[^>]*>", RegexOptions.Compiled | RegexOptions.Multiline);
 
         /// <summary>Determines if a string is composed only by letter characters.</summary>
         public static bool IsAlpha(this string value)
@@ -91,21 +95,16 @@ namespace CSharpx
             return ChoiceOfIndex(value, validator);
         }
 
-        static string[] _mangleChars =
-            {"!", "\"", "£", "$", "%", "&", "/", "(", ")", "=", "?", "^", "[", "]", "*", "@", "°",
-             "#", "§", ",", ";", ".", ":", "-", "_"};
-
         /// <summary>Mangles a string with a given number of non alphanumeric character in
         /// random positions.</summary>
         public static string Mangle(this string value, int times = 1, int maxLength = 1)
         {
             if (times < 0) throw new ArgumentException(nameof(times));
             if (maxLength < 0) throw new ArgumentException(nameof(maxLength));
-            if (times > value.Length) throw new ArgumentException(nameof(times));
-
+            if (times >= value.Length) throw new ArgumentException(nameof(times));
             if (times == 0 || maxLength == 0) return value;
 
-            var indexes = new List<int>((int)times);
+            var indexes = new List<int>(times);
             int uniqueNext()
                 {
                     var index = _random.Next(value.Length - 1);
@@ -119,7 +118,7 @@ namespace CSharpx
             }
             var mutations = indexes.OrderBy(index => index);
 
-            var mangled = new StringBuilder(value.Length + (int)times * (int)maxLength);
+            var mangled = new StringBuilder(value.Length + times * maxLength);
             for (var i = 0; i < value.Length; i++) {
                 mangled.Append(value[i]);
                 if (mutations.Contains(i)) {
@@ -135,25 +134,21 @@ namespace CSharpx
         /// <summary>Takes a value and a string and `intersperses' that value between its words.</summary>
         public static string Intersperse(this string value, params object[] values)
         {
-            if (values.Length == 0) {
-                return value;
+            if (values.Length == 0) return value;
+
+            var builder = new StringBuilder(value.Length + values.Length * 8);
+            var words = value.Split();
+            var count = words.Length;
+            var last = count - 1;
+            for (var i = 0; i < count; i++) {
+                builder.Append(words[i]);
+                builder.Append(' ');
+                if (i >= values.Length) continue;
+                var element = values[i];
+                builder.Append(element);
+                builder.Append(' ');
             }
-            return string.Join(" ", impl());
-            IEnumerable<string> impl() {
-                var words = value.Split();
-                var count = words.Length;
-                var last = count - 1;
-                for (var i = 0; i < count; i++) {
-                    yield return words.ElementAt(i);
-                    if (i >= values.Length) continue;
-                    var element = values[i];
-                    if (element.GetType() == typeof(string)) {
-                        yield return (string)element;
-                    } else {
-                        yield return element.ToString();
-                    }
-                }
-            }
+            return builder.ToString().TrimEnd();
         }
 
         /// <summary>Sanitizes a string removing non alphanumeric characters and optionally normalizing
@@ -196,23 +191,18 @@ namespace CSharpx
             return builder.ToString();
         }
 
-        static Regex _stripMl = new Regex(@"<[^>]*>", RegexOptions.Compiled | RegexOptions.Multiline);
-
         /// <summary>Removes markup from a string.</summary>
-        public static string StripMl(this string value)
-        {
-            return _stripMl.Replace(value, string.Empty);
-        }
+        public static string StripMl(this string value) => _stripMl.Replace(value, string.Empty);
 
-        /// <summary>Strip all words of a specific length.</summary>
-        public static string StripByLength(this string value, int len)
+        /// <summary>Removes words of a given length.</summary>
+        public static string StripByLength(this string value, int length)
         {
-            if (len < 0) throw new ArgumentException(nameof(len));
-            if (len == 0) return value;
+            if (length < 0) throw new ArgumentException(nameof(length));
+            if (length == 0) return value;
 
-            var stripByLen = new Regex(string.Concat(@"\b\w{1,", len, @"}\b"),
+            var stripByLen = new Regex(
+                string.Concat(@"\b\w{1,", length, @"}\b"),
                 RegexOptions.Compiled | RegexOptions.Multiline);
-
             return stripByLen.Replace(value, string.Empty);
         }
     }

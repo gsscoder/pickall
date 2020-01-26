@@ -53,10 +53,7 @@ static class StringExtensions
         return builder.ToString();
     }
 
-    public static string StripMl(this string value)
-    {
-        return _stripMl.Replace(value, string.Empty);
-    }
+    public static string StripMl(this string value) => _stripMl.Replace(value, string.Empty);
 
     public static string StripByLength(this string value, int length)
     {
