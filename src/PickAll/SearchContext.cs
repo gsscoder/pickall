@@ -94,10 +94,7 @@ namespace PickAll
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
-                from searcher in 
-                    (from service in Services
-                        where service.GetType().IsSearcher()
-                        select service).Cast<Searcher>()
+                from searcher in Services.OfType<Searcher>()
                 select searcher.SearchAsync(query));
             var results = resultGroup.SelectMany(group => group).ToList();
             if (Settings.MaximumResults != null) {
@@ -113,10 +110,7 @@ namespace PickAll
             }
 
             // Invoke post processors in sync
-            var processors = (from service in Services
-                              where service.GetType().IsPostProcessor()
-                              select service).Cast<PostProcessor>();
-            foreach (var processor in processors) {
+            foreach (var processor in Services.OfType<PostProcessor>()) {
                 var publish = Settings.EnableRaisingEvents && processor.PublishEvents;
                 var current = processor.Process(results);
                 results = new List<ResultInfo>();
