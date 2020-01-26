@@ -113,7 +113,12 @@ sealed class ServiceHost
             predicate);
     }
 
-    public ServiceHost Map<T>(Func<T, T> func)
+    public ServiceHost Clone()
+    {
+        return new ServiceHost(Services, Allowed);
+    }
+
+    ServiceHost Map<T>(Func<T, T> func)
     {
         if (func == null) throw new ArgumentNullException(nameof(func));
 
@@ -131,7 +136,7 @@ sealed class ServiceHost
         }
     }
 
-    public ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate)
+    ServiceHost Map<T>(Func<T, T> func, Func<T, bool> predicate)
     {
         if (func == null) throw new ArgumentNullException(nameof(func));
         if (predicate == null) throw new ArgumentNullException(nameof(predicate));
@@ -148,11 +153,6 @@ sealed class ServiceHost
                 }
             }
         }
-    }
-
-    public ServiceHost Clone()
-    {
-        return new ServiceHost(Services, Allowed);
     }
 
     static bool Validate(Type[] allowed, Type type)
