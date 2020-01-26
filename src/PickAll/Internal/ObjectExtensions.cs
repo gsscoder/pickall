@@ -15,8 +15,7 @@ static class ObjectExtensions
         Func<T, bool> predicate)
     {
         foreach (var element in collection) {
-            if ((element.GetType().Equals(typeof(T)) ||
-                element.GetType().IsSubclassOf(typeof(T))) &&
+            if (element.GetType().EqualsOrSubtype<T>() &&
                 predicate((T)element)) {
                 yield return func((T)element);
             } else {
