@@ -12,8 +12,8 @@ namespace PickAll
     /// and elaborate results.</summary>
     public sealed class SearchContext
     {   
-        Lazy<IBrowsingContext> _browsing;
-        Lazy<IFetchingContext> _fetching;
+        readonly Lazy<IBrowsingContext> _browsing;
+        readonly Lazy<IFetchingContext> _fetching;
         static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
             () => new SearchContext(
                 typeof(Google),
