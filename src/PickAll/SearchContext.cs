@@ -12,7 +12,6 @@ namespace PickAll
     /// and elaborate results.</summary>
     public sealed class SearchContext
     {   
-        static Type[] _types = { typeof(Searcher), typeof(PostProcessor) };
         Lazy<IBrowsingContext> _browsing;
         Lazy<IFetchingContext> _fetching;
         static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
