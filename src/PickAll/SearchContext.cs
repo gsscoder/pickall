@@ -64,7 +64,9 @@ namespace PickAll
         public event EventHandler ServiceLoad;
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
         public event EventHandler<ResultHandledEventArgs> ResultProcessed;
+#pragma warning disable CS3003
         public IBrowsingContext Browsing { get { return _browsing.Value; } }
+#pragma warning restore CS3003
         public IFetchingContext Fetching { get { return _fetching.Value; } }
         public string Query { get; private set; }
     #if !DEBUG
