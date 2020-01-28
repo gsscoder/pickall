@@ -12,9 +12,8 @@ namespace PickAll
     /// and elaborate results.</summary>
     public sealed class SearchContext
     {   
-        static Type[] _types = { typeof(Searcher), typeof(PostProcessor) };
-        Lazy<IBrowsingContext> _browsing;
-        Lazy<IFetchingContext> _fetching;
+        readonly Lazy<IBrowsingContext> _browsing;
+        readonly Lazy<IFetchingContext> _fetching;
         static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
             () => new SearchContext(
                 typeof(Google),
@@ -64,10 +63,9 @@ namespace PickAll
         public event EventHandler ServiceLoad;
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
         public event EventHandler<ResultHandledEventArgs> ResultProcessed;
-#if DEBUG
-        [CLSCompliant(false)]
-#endif
+#pragma warning disable CS3003
         public IBrowsingContext Browsing { get { return _browsing.Value; } }
+#pragma warning restore CS3003
         public IFetchingContext Fetching { get { return _fetching.Value; } }
         public string Query { get; private set; }
     #if !DEBUG
