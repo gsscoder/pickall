@@ -24,11 +24,6 @@ namespace PickAll
         /// <summary>Enables events in search context and services.</summary>
         public bool EnableRaisingEvents { get; set; }
 
-        internal RuntimePolicy ToPolicy()
-        {
-            return new RuntimePolicy(MaximumResults);
-        }
-
         internal ContextSettings Clone()
         {
             return new ContextSettings

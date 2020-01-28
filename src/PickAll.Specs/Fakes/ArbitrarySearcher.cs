@@ -31,8 +31,8 @@ class ArbitrarySearcher : Searcher
             var results = _settings.AtLeast.HasValue
                 ? ResultInfoBuilder.GenerateRandom(originator, _settings.AtLeast ?? 1, _settings.Samples)
                 : ResultInfoBuilder.Generate(originator, _settings.Samples);
-            if (Policy.MaximumResults.HasValue) {
-                results = results.Take((int)Policy.MaximumResults.Value);
+            if (Runtime.MaximumResults.HasValue) {
+                results = results.Take((int)Runtime.MaximumResults.Value);
             }
             for (ushort i = 0; i < results.Count(); i++) {
                 var result = results.ElementAt(i);

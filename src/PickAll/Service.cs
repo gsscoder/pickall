@@ -20,6 +20,8 @@ namespace PickAll
             }
         }
 
+        public RuntimeInfo Runtime { get; internal set; }
+
         protected object Settings { get; set; }
     }
 }

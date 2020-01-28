@@ -75,7 +75,7 @@ namespace PickAll
                             orderby w.Item2 descending
                             select w;
             IEnumerable<Tuple<string, int>> refined;
-                var query = Context.Query ?? string.Empty;
+                var query = Runtime.Query ?? string.Empty;
                 var queryWords = query.ToLower().Split();
                 refined = from computed in folded
                             where !queryWords.Contains(computed.Item1.ToLower())
@@ -93,7 +93,7 @@ namespace PickAll
             var builder = new StringBuilder();
             builder.Append(string.Join(" ", FoldDescriptions(results).ToArray()));
             builder.Append(' ');
-            builder.Append(Context.Query);
+            builder.Append(Runtime.Query);
 
             return Context
                         .WithoutAll<PostProcessor>()

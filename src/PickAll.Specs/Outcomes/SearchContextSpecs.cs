@@ -108,7 +108,6 @@ public partial class SearchContextSpecs
 
         await sut.SearchAsync("query");
 
-        sut.Query.Should().Be("query");
         sut.Services.Should().NotBeEmpty()
             .And.HaveCount(2)
             .And.SatisfyRespectively(
@@ -156,8 +155,8 @@ public partial class SearchContextSpecs
 
         sut.Services.Take(3).Cast<Searcher>().Should()
             .SatisfyRespectively(
-                item => item.Policy.MaximumResults.Should().Be(4),
-                item => item.Policy.MaximumResults.Should().Be(3),
-                item => item.Policy.MaximumResults.Should().Be(3));
+                item => item.Runtime.MaximumResults.Should().Be(4),
+                item => item.Runtime.MaximumResults.Should().Be(3),
+                item => item.Runtime.MaximumResults.Should().Be(3));
     }
 }

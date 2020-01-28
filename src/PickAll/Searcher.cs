@@ -22,8 +22,6 @@ namespace PickAll
         /// </summary>
         public string Name { get; private set; }
 
-        public RuntimePolicy Policy { get; internal set; }
-
         /// <summary>
         /// Performs the actual search.
         /// </summary>

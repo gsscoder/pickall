@@ -128,7 +128,7 @@ public class SearchContextExtensionsSpecs
     }
 
     [Fact]
-    public async void A_cloned_SearchContext_retains_services_and_maximum_results_not_query()
+    public async void A_cloned_SearchContext_retains_services_and_maximum_results()
     {
         var context = new SearchContext(maximumResults: 5)
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 1 })
@@ -138,7 +138,6 @@ public class SearchContextExtensionsSpecs
 
         var sut = context.Clone();
 
-        sut.Query.Should().BeNull();
         sut.Settings.MaximumResults.Should().NotBeNull()
             .And.HaveValue()
             .And.Be(5);
@@ -158,7 +157,6 @@ public class SearchContextExtensionsSpecs
 
         var sut = context.Clone();
 
-        sut.Query.Should().BeNull();
         sut.Services.Cast<Service>().Should().NotBeEmpty()
             .And.HaveCount(context.Services.Count())
             .And.OnlyContain(service => service.Context == null);

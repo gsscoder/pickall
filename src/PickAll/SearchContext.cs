@@ -67,7 +67,6 @@ namespace PickAll
         public IBrowsingContext Browsing { get { return _browsing.Value; } }
 #pragma warning restore CS3003
         public IFetchingContext Fetching { get { return _fetching.Value; } }
-        public string Query { get; private set; }
     #if !DEBUG
         internal IEnumerable<object> Services { get; private set; }
         internal ContextSettings Settings { get; private set; }
@@ -85,13 +84,11 @@ namespace PickAll
             Guard.AgainstNull(nameof(query), query);
             Guard.AgainstEmptyWhiteSpace(nameof(query), query);
 
-            Query = query;
-
             EventHelper.RaiseEvent(this, SearchBegin,
-                () => new SearchBeginEventArgs(Query), Settings.EnableRaisingEvents);
+                () => new SearchBeginEventArgs(query), Settings.EnableRaisingEvents);
 
             // Bind context and partition maximum results
-            Services = Configure(this);
+            Services = Configure(query, this);
 
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
@@ -133,7 +130,7 @@ namespace PickAll
             get { return _default.Value; }
         }
 
-        static IEnumerable<object> Configure(SearchContext context)
+        static IEnumerable<object> Configure(string query, SearchContext context)
         {
             var searchers = context.Services.OfType<Searcher>();
             var first = searchers.FirstOrDefault();
@@ -145,20 +142,21 @@ namespace PickAll
                     {
                         service.Load += context.ServiceLoad;
                         service.Context = context;
+                        service.Runtime = new RuntimeInfo(query, maximumResults);
                         return service;
                     })
                 .Map<Searcher>(searcher =>
                     {
                         searcher.ResultCreated += context.ResultCreated;
-                        searcher.Policy = new RuntimePolicy(maximumResults);
                         return searcher;
                     });
             if (first != null) {
                 // first service maybe burdened of handling extra results 
                 services = services.Map<Searcher>(searcher =>
                     {
-                        searcher.Policy = new RuntimePolicy(
-                            searcher.Policy.MaximumResults +
+                        searcher.Runtime = new RuntimeInfo(
+                            query,
+                            searcher.Runtime.MaximumResults +
                             context.Settings.MaximumResults % searchers.Count());
                         return searcher;
                     },

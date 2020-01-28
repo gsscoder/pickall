@@ -15,9 +15,9 @@ public class ImproveSpecs
         var titles = WaffleBuilder.GenerateTitle(3);
 
         var sut = new Improve(new ImproveSettings
-        {
-            WordCount = (ushort)titles.FlattenOnce().Count()
-        });
+            {
+                WordCount = (ushort)titles.FlattenOnce().Count()
+            });
         sut.Context = context;
 
         var first = titles.First()
@@ -39,13 +39,14 @@ public class ImproveSpecs
     [Fact]
     public async void Should_fold_descriptions_excluding_query()
     {
-        var context = new SearchContext();
+        var context = new SearchContext()
+            .With<Improve>(new ImproveSettings
+                {
+                    WordCount = 2
+                });
         await context.SearchAsync("massive repetition");
 
-        var sut = new Improve(new ImproveSettings
-        {
-            WordCount = 2
-        });
+        var sut = (Improve)context.Services.First();
         sut.Context = context;
 
         var titles = WaffleBuilder.GenerateTitle(3, title => title
@@ -68,14 +69,15 @@ public class ImproveSpecs
     [Fact]
     public async void Should_fold_descriptions_excluding_query_and_noise()
     {
-        var context = new SearchContext();
+        var context = new SearchContext()
+            .With<Improve>(new ImproveSettings
+            {
+                WordCount = 2,
+                NoiseLength = 3
+            });
         await context.SearchAsync("massive repetition");
 
-        var sut = new Improve(new ImproveSettings
-        {
-            WordCount = 2,
-            NoiseLength = 3
-        });
+        var sut = (Improve)context.Services.First();
         sut.Context = context;
 
         var titles = WaffleBuilder.GenerateTitle(3, title => title
