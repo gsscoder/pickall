@@ -8,34 +8,34 @@ static class Guard
     public static void AgainstNull(string argumentName, object value)
     {
         if (value == null) throw new ArgumentNullException(argumentName,
-            $"{argumentName} cannot be null");
+            $"{argumentName} cannot be null.");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AgainstEmptyWhiteSpace(string argumentName, string value)
     {
         if (value.Trim() == string.Empty) throw new ArgumentException(
-            $"{argumentName} cannot be empty or contains only white spaces", argumentName);
+            $"{argumentName} cannot be empty or contains only white spaces.", argumentName);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AgainstNegative(string argumentName, int value)
     {
         if (value < 0) throw new ArgumentException(argumentName,
-            $"{argumentName} cannot be lesser than zero");
+            $"{argumentName} cannot be lesser than zero.");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AgainstSubclassExcept<T>(string argumentName, object value)
     {
         if (!value.GetType().IsSubclassOf(typeof(T))) throw new NotSupportedException(
-            $"{argumentName} must inherit from {nameof(T)}");
+            $"{argumentName} must inherit from {nameof(T)}.");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void AgainstSubclassExcept<T>(string argumentName, params Type[] types)
     {
         if (types.Any(t => !t.IsSubclassOf(typeof(T)))) throw new NotSupportedException(
-            $"All {argumentName} must inherit from {nameof(T)}");
+            $"All {argumentName} must inherit from {nameof(T)}.");
     }
 }
