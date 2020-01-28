@@ -6,9 +6,7 @@ namespace PickAll
         public class ResultInfo
         {
         #if DEBUG
-        public ResultInfo()
-        {
-        }
+        public ResultInfo() { }
         #endif
         /// <summary>
         /// Initializes a new instance of <see cref="ResultInfo"/>.
