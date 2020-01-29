@@ -18,12 +18,16 @@ namespace PickAll
             Guard.AgainstNull(nameof(address), address);
             Guard.AgainstEmptyWhiteSpace(nameof(address), address);
 
-            var response = await _client.GetAsync(address);
-            if (!response.IsSuccessStatusCode)
-            {
+            try {
+                var response = await _client.GetAsync(address);
+                if (!response.IsSuccessStatusCode) {
+                    return FetchedDocument.Empty;
+                }
+                return new FetchedDocument(await response.Content.ReadAsByteArrayAsync());
+            }
+            catch (HttpRequestException) {
                 return FetchedDocument.Empty;
             }
-            return new FetchedDocument(await response.Content.ReadAsByteArrayAsync());
         }
     }
 }
