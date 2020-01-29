@@ -76,7 +76,7 @@ namespace PickAll
             foreach (var result in results) {
                 var document = Context.Fetching.FetchAsync(result.Url).RunSynchronously<IFetchedDocument>();
                 if (document.Equals(FetchedDocument.Empty)) continue;
-                if (document.Length <= limit) continue;
+                if (document.Length > limit) continue;
 
                 if (_settings.IncludeTitle) {
                     builder.Append(document.ElementSelector("title"));
