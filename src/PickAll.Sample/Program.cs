@@ -19,18 +19,16 @@ sealed class Program
         var context = options.ToContext();
 
         context.SearchBegin += (sender, e) => Console.WriteLine($"Searching '{e.Query}' ...");
-        context.ResultCreated += (sender, e) => {
-            var result = e.Result;
-            Console.WriteLine(
-                $"[{result.Index}] {result.Originator}: \"{result.Description}\": \"{result.Url}\"");
-        };
-        context.ResultProcessed += (sender, e) => {
-            if (e.Result.Description != null) {
-                Console.WriteLine($"{sender.GetType().Name} for {e.Result.Url} scraped:\n    {e.Result.Data}");
-            }
-        };
 
         var results = await context.SearchAsync(options.Query);
+        foreach (var result in results) {
+            Console.WriteLine(
+                $"[{result.Index}] {result.Originator}: \"{result.Description}\": \"{result.Url}\"");
+            if (result.Data != null) {
+                Console.WriteLine(
+                    $"\tData:\n\t\t{result.Data}");
+            }
+        }
         return exitOK;
     }
 }
