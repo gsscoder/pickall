@@ -15,7 +15,7 @@ public partial class SearchContextSpecs
             typeof(Uniqueness),
             typeof(Order));
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(4)
             .And.SatisfyRespectively(
                 item => item.Should().BeOfType<Google>(),
@@ -55,7 +55,7 @@ public partial class SearchContextSpecs
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 12 });
         var results = await sut.SearchAsync("query");
 
-        results.Should().NotBeEmpty()
+        results.Should().NotBeNullOrEmpty()
             .And.HaveCount(20);
     }
 
@@ -82,7 +82,7 @@ public partial class SearchContextSpecs
             .Without<ArbitrarySearcher>();
         var results = await sut.SearchAsync("search");
 
-        results.Should().NotBeEmpty()
+        results.Should().NotBeNullOrEmpty()
             .And.HaveCount(10);
     }
 
@@ -95,7 +95,7 @@ public partial class SearchContextSpecs
             .Without<Marker>();
         var results = await sut.SearchAsync("query");
 
-        results.Should().NotBeEmpty()
+        results.Should().NotBeNullOrEmpty()
             .And.OnlyContain(x => !x.Description.StartsWith("stamp"));
     }
 
@@ -108,7 +108,7 @@ public partial class SearchContextSpecs
 
         await sut.SearchAsync("query");
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(2)
             .And.SatisfyRespectively(
                 item => ((Searcher)item).Context.Should().NotBeNull(),
@@ -123,7 +123,7 @@ public partial class SearchContextSpecs
 
         var results = await sut.SearchAsync("query");
 
-        results.Should().NotBeEmpty()
+        results.Should().NotBeNullOrEmpty()
             .And.HaveCount(10);
     }
 
@@ -136,7 +136,7 @@ public partial class SearchContextSpecs
 
         var results = await sut.SearchAsync("query");
 
-        results.Should().NotBeEmpty()
+        results.Should().NotBeNullOrEmpty()
             .And.HaveCount(10);
     }
 

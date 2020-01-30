@@ -30,7 +30,7 @@ public class FetchedDocumentExtensionsSpecs
 
         var contents = sut.ElementSelectorAll("p");
 
-        contents.Should().NotBeEmpty()
+        contents.Should().NotBeNullOrEmpty()
             .And.HaveCount(3);
 
     }

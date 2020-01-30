@@ -14,7 +14,7 @@ public class OrderSpecs
         var sut = new Order(null);
         var processed = sut.Process(results);
 
-        processed.Should().NotBeEmpty()
+        processed.Should().NotBeNullOrEmpty()
             .And.SatisfyRespectively(
                 item => item.Index.Should().Be(0),
                 item => item.Index.Should().Be(0),

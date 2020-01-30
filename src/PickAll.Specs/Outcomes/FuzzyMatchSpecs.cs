@@ -14,7 +14,7 @@ public class FuzzyMatchSpecs
         var sut = new FuzzyMatch(new FuzzyMatchSettings { Text = expected.Description });
         var processed = sut.Process(results);
 
-        processed.Should().NotBeEmpty()
+        processed.Should().NotBeNullOrEmpty()
             .And.ContainSingle()
             .And.ContainEquivalentOf(expected);
     }

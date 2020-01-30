@@ -16,7 +16,7 @@ public class UniquenessSpecs
         var sut = new Uniqueness(null);
         var processed = sut.Process(results);
 
-        processed.Should().NotBeEmpty()
+        processed.Should().NotBeNullOrEmpty()
             .And.HaveCount(results.Count() - 1);
     }
 }

@@ -13,7 +13,7 @@ public class SearchContextExtensionsSpecs
             .With("DuckDuckGo")
             .With("Uniqueness");
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(2)
             .And.SatisfyRespectively(
                 item => item.Should().BeOfType<DuckDuckGo>(),
@@ -27,7 +27,7 @@ public class SearchContextExtensionsSpecs
             .With("DUCKDUCKgo")
             .With("uniQueness");
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(2)
             .And.SatisfyRespectively(
                 item => item.Should().BeOfType<DuckDuckGo>(),
@@ -52,7 +52,7 @@ public class SearchContextExtensionsSpecs
         var sut = new SearchContext()
             .With("FuzzyMatch", new FuzzyMatchSettings { Text = "nothing", MaximumDistance = 10 });
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.ContainSingle()
             .And.ContainItemsAssignableTo<FuzzyMatch>();
     }
@@ -66,7 +66,7 @@ public class SearchContextExtensionsSpecs
             .With<Uniqueness>()
             .With("Order");
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(4)
             .And.SatisfyRespectively(
                 item => item.Should().BeOfType<Google>(),
@@ -119,7 +119,7 @@ public class SearchContextExtensionsSpecs
             .With<Order>()
             .Without<Order>();
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(3)
             .And.SatisfyRespectively(
                 item => item.Should().BeOfType<ArbitrarySearcher>(),
@@ -141,7 +141,7 @@ public class SearchContextExtensionsSpecs
         sut.Settings.MaximumResults.Should().NotBeNull()
             .And.HaveValue()
             .And.Be(5);
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(context.Services.Count())
             .And.BeEquivalentTo(context.Services);
     }
@@ -157,7 +157,7 @@ public class SearchContextExtensionsSpecs
 
         var sut = context.Clone();
 
-        sut.Services.Cast<Service>().Should().NotBeEmpty()
+        sut.Services.Cast<Service>().Should().NotBeNullOrEmpty()
             .And.HaveCount(context.Services.Count())
             .And.OnlyContain(service => service.Context == null);
     }
@@ -173,7 +173,7 @@ public class SearchContextExtensionsSpecs
 
         var sut = context.WithoutAll<Searcher>();
 
-        sut.Services.Should().NotBeEmpty()
+        sut.Services.Should().NotBeNullOrEmpty()
             .And.HaveCount(2)
             .And.SatisfyRespectively(
                 item => item.Should().BeOfType<Order>(),

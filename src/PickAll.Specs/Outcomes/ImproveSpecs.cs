@@ -32,7 +32,7 @@ public class ImproveSpecs
             ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
         };
 
-        sut.FoldDescriptions(results).Should().NotBeEmpty()
+        sut.FoldDescriptions(results).Should().NotBeNullOrEmpty()
             .And.OnlyContain(word => word.IsAlphanumeric());
     }
 
@@ -61,7 +61,7 @@ public class ImproveSpecs
             ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
         };
 
-        sut.FoldDescriptions(results).Should().NotBeEmpty()
+        sut.FoldDescriptions(results).Should().NotBeNullOrEmpty()
             .And.HaveCount(2)
             .And.BeEquivalentTo("something", "hello");
     }
@@ -94,7 +94,7 @@ public class ImproveSpecs
             ResultInfoHelper.OnlyDescription(titles.ElementAt(2))
         };
 
-        sut.FoldDescriptions(results).Should().NotBeEmpty()
+        sut.FoldDescriptions(results).Should().NotBeNullOrEmpty()
             .And.HaveCount(2)
             .And.BeEquivalentTo("catch", "word");
     }
