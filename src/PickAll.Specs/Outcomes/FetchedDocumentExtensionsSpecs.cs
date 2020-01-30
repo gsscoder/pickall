@@ -32,6 +32,5 @@ public class FetchedDocumentExtensionsSpecs
 
         contents.Should().NotBeNullOrEmpty()
             .And.HaveCount(3);
-
     }
 }
