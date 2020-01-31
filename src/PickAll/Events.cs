@@ -10,10 +10,7 @@ namespace PickAll
 
     public sealed class SearchBeginEventArgs : EventArgs
     {
-        public SearchBeginEventArgs(string query)
-        {
-            Query = query;
-        }
+        public SearchBeginEventArgs(string query) => Query = query;
 
         public string Query { get; private set; }
     }
