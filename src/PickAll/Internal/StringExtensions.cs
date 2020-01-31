@@ -6,8 +6,11 @@ static class StringExtensions
 {
     static Regex _stripMl = new Regex(@"<[^>]*>", RegexOptions.Compiled | RegexOptions.Multiline);
 
+    /// <summary>Determines if a string is composed only by alphanumeric characters.</summary>
     public static bool IsAlphanumeric(this string value)
     {
+        if (value == null) throw new ArgumentNullException(nameof(value));
+
         foreach (var @char in value.ToCharArray()) {
             if (!char.IsLetterOrDigit(@char) || char.IsWhiteSpace(@char)) {
                 return false;
@@ -16,8 +19,11 @@ static class StringExtensions
         return true;
     }
 
+    /// <summary>Sanitizes a string removing non alphanumeric characters and optionally normalizing
+    /// white spaces.</summary>
     public static string Sanitize(this string value, bool normalizeWhiteSpace = true)
     {
+        if (value == null) throw new ArgumentNullException(nameof(value));
         var builder = new StringBuilder(value.Length);
         foreach (var @char in value) {
             if (char.IsLetterOrDigit(@char)) {
@@ -33,9 +39,11 @@ static class StringExtensions
         }
         return builder.ToString();
     }
-    
+
+    /// <summary>Normalizes any white space character to a single white space.</summary>
     public static string NormalizeWhiteSpace(this string value)
     {
+        if (value == null) throw new ArgumentNullException(nameof(value));
         var trimmed = value.Trim();
         var builder = new StringBuilder(trimmed.Length);
         var lastIndex = trimmed.Length - 2;
@@ -53,10 +61,18 @@ static class StringExtensions
         return builder.ToString();
     }
 
-    public static string StripMl(this string value) => _stripMl.Replace(value, string.Empty);
+    /// <summary>Removes markup from a string.</summary>
+    public static string StripMl(this string value)
+    {
+        if (value == null) throw new ArgumentNullException(nameof(value));
 
+        return _stripMl.Replace(value, string.Empty);
+    }
+
+    /// <summary>Removes words of a given length.</summary>
     public static string StripByLength(this string value, int length)
     {
+        if (value == null) throw new ArgumentNullException(nameof(value));
         if (length < 0) throw new ArgumentException(nameof(length));
         if (length == 0) return value;
 

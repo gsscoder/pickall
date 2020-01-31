@@ -1,4 +1,4 @@
-//#define CSX_STRING_EXT_INTERNAL // Uncomment or define at build time to set StringExtensions accessibility to internal.
+//#define CSX_STRING_EXT_INTERNAL // Uncomment or define at build time to set accessibility to internal.
 //#define CSX_REM_CRYPTORAND // Uncomment or define at build time to remove dependency to CryptoRandom.cs.
 
 using System;
@@ -27,6 +27,8 @@ namespace CSharpx
         /// <summary>Determines if a string is composed only by letter characters.</summary>
         public static bool IsAlpha(this string value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             foreach (var @char in value.ToCharArray()) {
                 if (!char.IsLetter(@char) || char.IsWhiteSpace(@char)) {
                     return false;
@@ -38,6 +40,8 @@ namespace CSharpx
         /// <summary>Determines if a string is composed only by alphanumeric characters.</summary>
         public static bool IsAlphanumeric(this string value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             foreach (var @char in value.ToCharArray()) {
                 if (!char.IsLetterOrDigit(@char) || char.IsWhiteSpace(@char)) {
                     return false;
@@ -49,6 +53,8 @@ namespace CSharpx
         /// <summary>Determines if a string is contains any kind of white spaces.</summary>
         public static bool IsWhiteSpace(this string value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             foreach (var @char in value.ToCharArray()) {
                 if (char.IsWhiteSpace(@char)) {
                     return true;
@@ -60,6 +66,7 @@ namespace CSharpx
         /// <summary>Replicates a string for a given number of times using a seperator.</summary>
         public static string Replicate(this string value, int count, string separator = " ")
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             if (count < 0) throw new ArgumentException(nameof(count));
             if (separator == null) throw new ArgumentNullException(nameof(separator));
 
@@ -74,6 +81,7 @@ namespace CSharpx
         /// <summary>Applies a given function to nth-word of string.</summary>
         public static string ApplyAt(this string value, int index, Func<string, string> modifier)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             if (index < 0) throw new ArgumentException(nameof(index));
 
             var words = value.Split().ToArray();
@@ -84,6 +92,8 @@ namespace CSharpx
         /// <summary>Selects a random index of a word that optionally satisfies a function.</summary>
         public static int ChoiceOfIndex(this string value, Func<string, bool> validator = null)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             Func<string, bool> _nullValidator = _ => true;
             var _validator = validator ?? _nullValidator;
 
@@ -99,6 +109,7 @@ namespace CSharpx
         /// random positions.</summary>
         public static string Mangle(this string value, int times = 1, int maxLength = 1)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             if (times < 0) throw new ArgumentException(nameof(times));
             if (maxLength < 0) throw new ArgumentException(nameof(maxLength));
             if (times >= value.Length) throw new ArgumentException(nameof(times));
@@ -134,6 +145,7 @@ namespace CSharpx
         /// <summary>Takes a value and a string and `intersperses' that value between its words.</summary>
         public static string Intersperse(this string value, params object[] values)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             if (values.Length == 0) return value;
 
             var builder = new StringBuilder(value.Length + values.Length * 8);
@@ -155,6 +167,7 @@ namespace CSharpx
         /// white spaces.</summary>
         public static string Sanitize(this string value, bool normalizeWhiteSpace = true)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             var builder = new StringBuilder(value.Length);
             foreach (var @char in value) {
                 if (char.IsLetterOrDigit(@char)) {
@@ -174,6 +187,7 @@ namespace CSharpx
         /// <summary>Normalizes any white space character to a single white space.</summary>
         public static string NormalizeWhiteSpace(this string value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             var trimmed = value.Trim();
             var builder = new StringBuilder(trimmed.Length);
             var lastIndex = trimmed.Length - 2;
@@ -192,11 +206,17 @@ namespace CSharpx
         }
 
         /// <summary>Removes markup from a string.</summary>
-        public static string StripMl(this string value) => _stripMl.Replace(value, string.Empty);
+        public static string StripMl(this string value)
+        {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
+            return _stripMl.Replace(value, string.Empty);
+        }
 
         /// <summary>Removes words of a given length.</summary>
         public static string StripByLength(this string value, int length)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             if (length < 0) throw new ArgumentException(nameof(length));
             if (length == 0) return value;
 
@@ -204,6 +224,23 @@ namespace CSharpx
                 string.Concat(@"\b\w{1,", length, @"}\b"),
                 RegexOptions.Compiled | RegexOptions.Multiline);
             return stripByLen.Replace(value, string.Empty);
+        }
+
+        /// <summary>Reduces a sequence of strings to a sequence of parts, splitted by space,
+        /// of each original string.</summary>
+        public static IEnumerable<string> FlattenOnce(this IEnumerable<string> source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            return _(); IEnumerable<string> _()
+            {
+                foreach (var element in source) {
+                    var parts = element.Split();
+                    foreach (var part in parts) {
+                        yield return part;
+                    }
+                }
+            }
         }
     }
 }
