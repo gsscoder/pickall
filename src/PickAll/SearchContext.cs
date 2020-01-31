@@ -64,9 +64,9 @@ namespace PickAll
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
         public event EventHandler<ResultHandledEventArgs> ResultProcessed;
 #pragma warning disable CS3003
-        public IBrowsingContext Browsing { get { return _browsing.Value; } }
+        public IBrowsingContext Browsing => _browsing.Value;
 #pragma warning restore CS3003
-        public IFetchingContext Fetching { get { return _fetching.Value; } }
+        public IFetchingContext Fetching => _fetching.Value;
     #if !DEBUG
         internal IEnumerable<object> Services { get; private set; }
         internal ContextSettings Settings { get; private set; }
@@ -86,10 +86,8 @@ namespace PickAll
 
             EventHelper.RaiseEvent(this, SearchBegin,
                 () => new SearchBeginEventArgs(query), Settings.EnableRaisingEvents);
-
             // Bind context and partition maximum results
             Services = Configure(query, this);
-
             // Invoke searchers in parallel
             var resultGroup = await Task.WhenAll(
                 from searcher in Services.OfType<Searcher>()
@@ -106,7 +104,6 @@ namespace PickAll
                 }
                 #endif
             }
-
             // Invoke post processors in sync
             foreach (var processor in Services.OfType<PostProcessor>()) {
                 var publish = Settings.EnableRaisingEvents && processor.PublishEvents;
@@ -118,17 +115,12 @@ namespace PickAll
                     results.Add(result);
                 }
             }
-
             EventHelper.RaiseEvent(this, SearchEnd, EventArgs.Empty, Settings.EnableRaisingEvents);
-
             return results;
         }
 
         /// <summary>Builds a <c>SearchContext</c> instance with default services.</summary>
-        public static SearchContext Default
-        {
-            get { return _default.Value; }
-        }
+        public static SearchContext Default = _default.Value;
 
         static IEnumerable<object> Configure(string query, SearchContext context)
         {
