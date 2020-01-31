@@ -28,8 +28,7 @@ namespace PickAll
 
         public override int GetHashCode()
         {
-            unchecked
-            {
+            unchecked {
                 var hash = 17;
                 hash = hash * 23 + Content.GetHashCode();
                 hash = hash * 23 + Length.GetHashCode();
@@ -42,8 +41,8 @@ namespace PickAll
 
         public string Text() => Encoding.UTF8.GetString(Content);
 
-        public int Length { get { return Content.Length; } }
+        public int Length => Content.Length;
 
-        public long LongLength { get { return Content.LongLength; } }
+        public long LongLength => Content.LongLength;
     }
 }
