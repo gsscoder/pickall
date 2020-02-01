@@ -12,6 +12,8 @@ namespace PickAll
         public static SearchContext With<T>(this SearchContext context, object settings = null)
             where T : Service
         {
+            Guard.AgainstNull(nameof(context), context);
+
             var service = (T)Activator.CreateInstance(typeof(T), settings);
             return new SearchContext(
                 context.Services.Add(service),
@@ -23,6 +25,7 @@ namespace PickAll
         public static SearchContext With(this SearchContext context, string serviceName,
                                          object settings = null)
         {
+            Guard.AgainstNull(nameof(context), context);
             Guard.AgainstNull(nameof(serviceName), serviceName);
             Guard.AgainstEmptyWhiteSpace(nameof(serviceName), serviceName);
 
@@ -45,6 +48,8 @@ namespace PickAll
         public static SearchContext Without<T>(this SearchContext context)
             where T : Service
         {
+            Guard.AgainstNull(nameof(context), context);
+
             return new SearchContext(
                 context.Services.Remove<T>(),
                 context.Settings.Clone());
@@ -54,6 +59,7 @@ namespace PickAll
         /// type name.</summary>
         public static SearchContext Without(this SearchContext context, string serviceName)
         {
+            Guard.AgainstNull(nameof(context), context);
             Guard.AgainstNull(nameof(serviceName), serviceName);
             Guard.AgainstEmptyWhiteSpace(nameof(serviceName), serviceName);
 
@@ -74,6 +80,8 @@ namespace PickAll
         public static SearchContext WithoutAll<T>(this SearchContext context)
             where T : Service
         {
+            Guard.AgainstNull(nameof(context), context);
+
             return new SearchContext(
                 context.Services.RemoveAll<T>(),
                 context.Settings.Clone());
@@ -84,6 +92,8 @@ namespace PickAll
         public static SearchContext WithConfiguration(this SearchContext context,
                                                       ContextSettings settings, bool merge = false)
         {
+            Guard.AgainstNull(nameof(context), context);
+
             if (merge) {
                 var merged = context.Settings;
                 if (settings.MaximumResults != default(int?)) merged.MaximumResults = settings.MaximumResults;
@@ -97,6 +107,8 @@ namespace PickAll
         /// <summary>Configures a search context able to raise events.</summary>
         public static SearchContext WithEvents(this SearchContext context)
         {
+            Guard.AgainstNull(nameof(context), context);
+
             return context.WithConfiguration(
                 new ContextSettings { EnableRaisingEvents = true }, merge: true);
         }
@@ -104,6 +116,8 @@ namespace PickAll
         /// <summary>Builds a new search context with same services of the current.</summary>
         public static SearchContext Clone(this SearchContext context)
         {
+            Guard.AgainstNull(nameof(context), context);
+
             return new SearchContext(
                 context.Services.Map<Service>(service =>
                     {
