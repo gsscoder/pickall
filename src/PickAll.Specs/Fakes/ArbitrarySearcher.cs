@@ -23,10 +23,10 @@ class ArbitrarySearcher : Searcher
         _settings = (ArbitrarySearcherSettings)Settings;
     }
 
-    public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
+    public override Task<IEnumerable<ResultInfo>> SearchAsync(string query)
     {
-        return await Task.Run(() => _());
-        IEnumerable<ResultInfo> _() {
+        return Task.FromResult(_()); IEnumerable<ResultInfo> _()
+        {
             var originator = Guid.NewGuid().ToString();
             var results = _settings.AtLeast.HasValue
                 ? ResultInfoBuilder.GenerateRandom(originator, _settings.AtLeast ?? 1, _settings.Samples)
