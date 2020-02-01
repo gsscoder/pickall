@@ -1,3 +1,5 @@
+// From: https://github.com/gsscoder/sharprhythm/blob/master/src/SharpRhythm/Algorithms/LevenshteinFuzzyMatch.cs
+
 using System;
 
 interface IFuzzyMatch

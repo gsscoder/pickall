@@ -1,3 +1,5 @@
+// From: https://github.com/gsscoder/CSharpx/blob/master/src/CSharpx/EnumerableExtensions.cs
+
 using System;
 using System.Collections.Generic;
 

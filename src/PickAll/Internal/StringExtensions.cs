@@ -1,3 +1,5 @@
+// From: https://github.com/gsscoder/CSharpx/blob/master/src/CSharpx/StringExtensions.cs
+
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
