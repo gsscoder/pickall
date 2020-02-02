@@ -1,6 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/github/gsscoder/pickall?branch=master&svg=true)](https://ci.appveyor.com/project/gsscoder/pickall/branch/master)
 [![NuGet](https://img.shields.io/nuget/dt/pickall.svg)](http://nuget.org/packages/pickall)
 [![NuGet](https://img.shields.io/nuget/vpre/pickall.svg)](https://www.nuget.org/packages/pickall)
+[![Join the Gitter chat!](https://badges.gitter.im/gsscoder/pickall.svg)](https://gitter.im/pickallwebsearcher/community#)
 
 # <img src="/assets/icon.png" height="30px" alt="PickAll Logo"> PickAll
 
