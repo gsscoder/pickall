@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/github/gsscoder/pickall?branch=master&svg=true)](https://ci.appveyor.com/project/gsscoder/pickall/branch/master)
+
 # <img src="/assets/icon.png" height="30px" alt="PickAll Logo"> PickAll
 
 .NET agile and extensible web searching API. Built with [AngleSharp](https://anglesharp.github.io/).
