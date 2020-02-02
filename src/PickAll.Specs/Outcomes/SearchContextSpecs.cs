@@ -74,7 +74,7 @@ public partial class SearchContextSpecs
     }
 
     [Fact]
-    public async void Removed_searcher_doesnt_produce_results()
+    public async void Removed_searcher_does_not_produce_results()
     {
         var sut = new SearchContext()
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 8 })
@@ -87,7 +87,7 @@ public partial class SearchContextSpecs
     }
 
     [Fact]
-    public async void Removed_post_processor_doesnt_take_effect()
+    public async void Removed_post_processor_does_not_take_effect()
     {
         var sut = new SearchContext()
             .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 5 })
