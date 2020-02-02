@@ -3,7 +3,6 @@
 .vscode/
 .vs
 tools/
-.paket/
 paket-files/
 paket.lock
 samples/FSharp/*.dll
