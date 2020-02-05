@@ -1,15 +1,17 @@
 using PickAll;
-using Bogus;
+using Bogus.DataSets;
 
 static class ResultInfoHelper
 {
+    static readonly Internet _internet = new Internet();
+
     public static ResultInfo OnlyDescription(string text)
     {
-        return new Faker<ResultInfo>()
-            .RuleFor(o => o.Originator, _ => "helper")
-            .RuleFor(o => o.Index, _ => 0)
-            .RuleFor(o => o.Url, f => f.Internet.UrlWithPath(fileExt: "php"))
-            .RuleFor(o => o.Description, _ => text)
-                .Generate();
+        return new ResultInfo(
+            originator: "helper",
+            index: 0,
+            url: _internet.UrlWithPath(fileExt: "php"),
+            description: text,
+            data: null);
     }
 }
