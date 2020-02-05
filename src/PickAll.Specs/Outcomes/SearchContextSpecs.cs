@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Xunit;
 using FluentAssertions;
+using CSharpx;
 using PickAll;
 
 public partial class SearchContextSpecs
@@ -131,7 +132,8 @@ public partial class SearchContextSpecs
     public async void A_searcher_should_limit_results_directly()
     {
         var sut = new SearchContext(maximumResults: 10)
-            .With<ArbitrarySearcher>(new ArbitrarySearcherSettings { Samples = 20, AtLeast = 15 });
+            .With<ArbitrarySearcher>(
+                new ArbitrarySearcherSettings { Samples = 20, AtLeast = Maybe.Just<ushort>(15) });
         sut.EnforceMaximumResults = false;
 
         var results = await sut.SearchAsync("query");

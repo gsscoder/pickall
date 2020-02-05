@@ -2,13 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CSharpx;
 using PickAll;
 
-struct ArbitrarySearcherSettings
+class ArbitrarySearcherSettings
 {
+    public ArbitrarySearcherSettings()
+    {
+        AtLeast = Maybe.Nothing<ushort>();
+    }
+
     public ushort Samples { get; set; }
 
-    public ushort? AtLeast { get; set; }
+    public Maybe<ushort> AtLeast { get; set; }
 }
 
 class ArbitrarySearcher : Searcher
@@ -28,8 +34,9 @@ class ArbitrarySearcher : Searcher
         return Task.FromResult(_()); IEnumerable<ResultInfo> _()
         {
             var originator = Guid.NewGuid().ToString();
-            var results = _settings.AtLeast.HasValue
-                ? ResultInfoBuilder.GenerateRandom(originator, _settings.AtLeast ?? 1, _settings.Samples)
+            var results = _settings.AtLeast.IsJust()
+                ? ResultInfoBuilder.GenerateRandom(originator,
+                    _settings.AtLeast.FromJust<ushort>(@default: 1), _settings.Samples)
                 : ResultInfoBuilder.Generate(originator, _settings.Samples);
             if (Runtime.MaximumResults.HasValue) {
                 results = results.Take((int)Runtime.MaximumResults.Value);
