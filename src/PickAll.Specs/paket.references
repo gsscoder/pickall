@@ -6,3 +6,4 @@ WaffleGenerator.Bogus
 xunit
 xunit.runner.visualstudio
 coverlet.collector
+CSharpx

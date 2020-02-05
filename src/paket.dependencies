@@ -11,3 +11,4 @@ nuget WaffleGenerator 4.0.2
 nuget WaffleGenerator.Bogus 4.0.2
 nuget xunit 2.4.0
 nuget xunit.runner.visualstudio 2.4.0
+nuget CSharpx 2.5.0-beta
