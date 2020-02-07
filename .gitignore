@@ -5,7 +5,6 @@
 tools/
 paket-files/
 paket.lock
-samples/FSharp/*.dll
 [Oo]bj/
 [Bb]in/
 .nuget/
