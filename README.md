@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/gsscoder/pickall/_apis/build/status/gsscoder.pickall?branchName=master)](https://dev.azure.com/gsscoder/pickall/_build/latest?definitionId=2&branchName=master)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/gsscoder/pickall?branch=master&svg=true)](https://ci.appveyor.com/project/gsscoder/pickall/branch/master)
 [![NuGet](https://img.shields.io/nuget/dt/pickall.svg)](https://nuget.org/packages/pickall)
 [![NuGet](https://img.shields.io/nuget/vpre/pickall.svg)](https://www.nuget.org/packages/pickall)
