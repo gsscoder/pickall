@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PickAll\PickAll.csproj" />
+    <ProjectReference Include="../../src/PickAll/PickAll.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <DefineConstants>$(DefineConstants);CSX_ARRAY_EXT_INTERNAL;CSX_ENUM_INTERNAL;CSX_REM_MAYBE_FUNC;CSX_STRING_EXT_INTERNAL;CSX_CRYPTORAND_INTERNAL</DefineConstants>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+  <Import Project="../../.paket/Paket.Restore.targets" />
 </Project>
