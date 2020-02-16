@@ -4,7 +4,6 @@
 .vs
 tools/
 paket-files/
-paket.lock
 [Oo]bj/
 [Bb]in/
 .nuget/
