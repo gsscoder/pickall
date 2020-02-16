@@ -7,11 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{F24162
 		paket.dependencies = paket.dependencies
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll", "PickAll\PickAll.csproj", "{B936C659-C656-40A8-A7D5-35EBCF27BA74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll", "src/PickAll/PickAll.csproj", "{B936C659-C656-40A8-A7D5-35EBCF27BA74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Specs", "PickAll.Specs\PickAll.Specs.csproj", "{6CD5FED7-D697-413F-A763-EF95FEB77F8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Specs", "tests/PickAll.Specs/PickAll.Specs.csproj", "{6CD5FED7-D697-413F-A763-EF95FEB77F8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Sample", "PickAll.Sample\PickAll.Sample.csproj", "{2DA9658E-F760-4122-8589-4B7CBD8AAD20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickAll.Sample", "samples/PickAll.Sample/PickAll.Sample.csproj", "{2DA9658E-F760-4122-8589-4B7CBD8AAD20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
