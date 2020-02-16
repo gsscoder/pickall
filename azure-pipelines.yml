@@ -18,7 +18,7 @@ steps:
     inputs:
       command: 'custom'
       custom: 'tool'
-      arguments: 'install paket'
+      arguments: 'install --tool-path . paket'
 
   - task: PaketRestore@0
     inputs:
