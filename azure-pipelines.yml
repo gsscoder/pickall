@@ -14,6 +14,10 @@ steps:
       version: '2.2.x'
       packageType: runtime
 
+  - task: PaketRestore@0
+    inputs:
+      PaketPath: '.paket'
+
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore'
