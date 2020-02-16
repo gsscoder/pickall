@@ -14,6 +14,12 @@ steps:
       version: '2.2.x'
       packageType: runtime
 
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'custom'
+      custom: 'tool'
+      arguments: 'install paket'
+
   - task: PaketRestore@0
     inputs:
       PaketPath: '.paket'
