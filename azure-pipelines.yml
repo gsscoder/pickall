@@ -4,28 +4,30 @@ trigger:
 pool:
   vmImage: 'vs2017-win2016'
 
-steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '3.0.x'
+jobs:
+  - job: Build
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '3.0.x'
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'custom'
-      custom: 'tool'
-      arguments: 'install -g paket'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'custom'
+        custom: 'tool'
+        arguments: 'install -g paket'
 
-  - task: PaketRestore@0
-    inputs:
-      PaketPath: '.paket'
+    - task: PaketRestore@0
+      inputs:
+        PaketPath: '.paket'
 
-  - task: CmdLine@2
-    inputs:
-      script: 'dotnet restore'
+    - task: CmdLine@2
+      inputs:
+        script: 'dotnet restore'
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'build'
-      projects: 'src/**/*.csproj'
-      arguments: '-c release'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: 'src/**/*.csproj'
+        arguments: '-c release'
