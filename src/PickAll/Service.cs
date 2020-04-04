@@ -2,6 +2,7 @@ using System;
 
 namespace PickAll
 {
+    /// <summary>Represents a service managed by <c>SearchContext</c>.</summary>
     public abstract class Service
     {
         SearchContext _context;

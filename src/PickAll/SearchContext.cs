@@ -58,14 +58,21 @@ namespace PickAll
             }
         }
 
+        /// <summary>Occurs when search begins.</summary>
         public event EventHandler<SearchBeginEventArgs> SearchBegin;
+        /// <summary>Occurs when search terminates.</summary>
         public event EventHandler SearchEnd;
+        /// <summary>Occurs when a service is loaded.</summary>
         public event EventHandler ServiceLoad;
+        /// <summary>Occurs a <c>ResultInfo</c> is created.</summary>
         public event EventHandler<ResultHandledEventArgs> ResultCreated;
+        /// <summary>Occurs a <c>ResultInfo</c> is processed.</summary>
         public event EventHandler<ResultHandledEventArgs> ResultProcessed;
 #pragma warning disable CS3003
+        /// <summary>Current <c>IBrowsingContext</c> instance.</summary>
         public IBrowsingContext Browsing => _browsing.Value;
 #pragma warning restore CS3003
+        /// <summary>Current <c>IFetchingContext</c> instance.</summary>
         public IFetchingContext Fetching => _fetching.Value;
     #if !DEBUG
         internal IEnumerable<object> Services { get; private set; }
@@ -143,7 +150,7 @@ namespace PickAll
                         return searcher;
                     });
             if (first != null) {
-                // first service maybe burdened of handling extra results 
+                // First service maybe burdened of handling extra results 
                 services = services.Map<Searcher>(searcher =>
                     {
                         searcher.Runtime = new RuntimeInfo(

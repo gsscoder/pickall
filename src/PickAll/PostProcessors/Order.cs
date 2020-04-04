@@ -3,9 +3,7 @@ using System.Linq;
 
 namespace PickAll
 {
-    /// <summary>
-    /// Orders results placing indexes of same number close by each other.
-    /// </summary>
+    /// <summary>Orders results placing indexes of same number close by each other.</summary>
     public class Order : PostProcessor
     {
         public Order(object settings) : base(settings)

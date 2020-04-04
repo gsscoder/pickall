@@ -7,9 +7,7 @@ using AngleSharp.Dom;
 
 namespace PickAll
 {
-    /// <summary>
-    /// <see cref="Searcher"> that searches on DuckDuckGo search engine.
-    /// </summary>
+    /// <summary><c>Searcher</c> that searches on DuckDuckGo search engine.</summary>
     public class DuckDuckGo : Searcher
     {
         public DuckDuckGo(object settings) : base(settings)  

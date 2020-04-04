@@ -3,6 +3,7 @@ using System.Text;
 
 namespace PickAll
 {
+    /// <summary>Default implementation of a document fetched without HTML DOM.</summary>
     public sealed class FetchedDocument : IFetchedDocument
     {
         public static readonly IFetchedDocument Empty = new FetchedDocument();
@@ -30,9 +31,8 @@ namespace PickAll
         {
             unchecked {
                 var hash = 17;
-                hash = hash * 23 + Content.GetHashCode();
-                hash = hash * 23 + Length.GetHashCode();
-                hash = hash * 23 + LongLength.GetHashCode();
+                hash = hash * 31 + Content.GetHashCode();
+                hash = hash * 31 + Length.GetHashCode();
                 return hash;
             }
         }

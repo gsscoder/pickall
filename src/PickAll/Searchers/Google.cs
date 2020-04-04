@@ -9,9 +9,7 @@ using AngleSharp.Dom;
 
 namespace PickAll
 {
-    /// <summary>
-    /// <see cref="Searcher"/> that searches on Google search engine.
-    /// </summary>
+    /// <summary><c>Searcher</c> that searches on Google search engine.</summary>
     public class Google : Searcher
     {
         static readonly Regex _expression = new Regex(@"^/url\?q=([^&]*)&.*",

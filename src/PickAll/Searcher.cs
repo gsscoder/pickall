@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 
 namespace PickAll
 {
-    /// <summary>
-    /// Represents a searching service managed by <see cref="SearchContext"/>.
-    /// </summary>
+    /// <summary>Represents a searching service managed by <c>SearchContext</c>.</summary>
     public abstract class Searcher : Service
     {
         public Searcher(object settings)
@@ -17,16 +15,10 @@ namespace PickAll
 
         internal event EventHandler<ResultHandledEventArgs> ResultCreated;
 
-        /// <summary>
-        /// The searcher identifier set to class name.
-        /// </summary>
+        /// <summary>The searcher identifier set to class name.</summary>
         public string Name { get; private set; }
 
-        /// <summary>
-        /// Performs the actual search.
-        /// </summary>
-        /// <param name="query">A query string.</param>
-        /// <returns>A collection of <see cref="ResultInfo"/> with search results.</returns>
+        /// <summary>Performs the actual search and returns a sequence of <c>ResultInfo</c>.</summary>
         public abstract Task<IEnumerable<ResultInfo>> SearchAsync(string query);
 
         protected ResultInfo CreateResult(

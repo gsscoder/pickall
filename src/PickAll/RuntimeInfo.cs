@@ -1,5 +1,6 @@
 namespace PickAll
 {
+    /// <summary>Models runtime informations managed by a <c>Service</c>.</summary>
     public struct RuntimeInfo
     {
         internal RuntimeInfo(string query, int? maximumResults)

@@ -1,12 +1,12 @@
 namespace PickAll
 {
-    /// <summary>Models an <c>Searcher<c/> result record.</summary>
+    /// <summary>Models a <c>Searcher</c> result record.</summary>
     public class ResultInfo
     {
         #if DEBUG
         public ResultInfo() { }
         #endif
-        /// <summary>Initializes a new instance of <c>ResultInfo<c/>.</summary>
+        /// <summary>Initializes a new instance of <c>ResultInfo</c>.</summary>
         public ResultInfo(string originator, int index, string url, string description, object data)
         {
             Guard.AgainstNull(nameof(originator), originator);
@@ -23,7 +23,7 @@ namespace PickAll
             Data = data;
         }
 
-        /// <summary>The searcher which originated the result.</summary>
+        /// <summary>The <c>Searcher</c> which originated the result.</summary>
         public string Originator
         {
             get;

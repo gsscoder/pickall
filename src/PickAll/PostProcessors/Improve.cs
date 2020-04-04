@@ -5,17 +5,13 @@ using System.Linq;
 
 namespace PickAll
 {
-    /// <summary>
-    /// Settings for <see cref="Improve"/> post processor.
-    /// </summary>
+    /// <summary>Settings for <c>Improve</c> post processor.</summary>
     public struct ImproveSettings
     {
         int _wordCount;
         int _noiseLength;
 
-        /// <summary>
-        /// Number of word with highest frequency to use in subsequent search.
-        /// </summary>
+        /// <summary>Number of word with highest frequency to use in subsequent search.</summary>
         public int WordCount
         {
             get { return _wordCount; }
@@ -26,9 +22,7 @@ namespace PickAll
             }
         }
 
-        /// <summary>
-        /// Length of words to be considered noise.
-        /// </summary>
+        /// <summary>Length of words to be considered noise.</summary>
         public int NoiseLength
         {
             get { return _noiseLength; }
@@ -40,9 +34,7 @@ namespace PickAll
         }
     }
 
-    /// <summary>
-    /// Improves results computing word frequency to perform a subsequent search.
-    /// </summary>
+    /// <summary>Improves results computing word frequency to perform a subsequent search.</summary>
     public class Improve : PostProcessor
     {
         private readonly ImproveSettings _settings;

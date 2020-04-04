@@ -2,9 +2,7 @@ using System.Collections.Generic;
 
 namespace PickAll
 {
-    /// <summary>
-    /// Removes duplicate results by URL. 
-    /// </summary>
+    /// <summary>Removes duplicate results by URL. </summary>
     public class Uniqueness : PostProcessor
     {
         public Uniqueness(object settings) : base(settings)

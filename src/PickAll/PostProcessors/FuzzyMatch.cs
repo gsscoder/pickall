@@ -4,22 +4,16 @@ using System.Linq;
 
 namespace PickAll
 {
-    /// <summary>
-    /// Settings for <see cref="FuzzyMatch"/> post processor.
-    /// </summary>
+    /// <summary>Settings for <c>FuzzyMatch</c> post processor.</summary>
     public struct FuzzyMatchSettings
     {
         int _minimumDistance;
         int _maximumDistance;
 
-        /// <summary>
-        /// String to compare against descriptions.
-        /// </summary>
+        /// <summary>String to compare against descriptions.</summary>
         public string Text { get; set; }
 
-        /// <summary>
-        /// Minimum distance of permutations. 
-        /// </summary>
+        /// <summary>Minimum distance of permutations.</summary>
         public int MinimumDistance
         {
             get { return _minimumDistance; }
@@ -30,9 +24,7 @@ namespace PickAll
             }
         }
 
-        /// <summary>
-        /// Maximum distance of permutations.
-        /// </summary>
+        /// <summary>Maximum distance of permutations.</summary>
         public int MaximumDistance
         {
             get { return _maximumDistance; }
@@ -44,9 +36,7 @@ namespace PickAll
         }
     }
 
-    /// <summary>
-    /// Compares a string against results descriptions.
-    /// </summary>
+    /// <summary>Compares a string against results descriptions.</summary>
     public class FuzzyMatch : PostProcessor
     {
         readonly FuzzyMatchSettings _settings;

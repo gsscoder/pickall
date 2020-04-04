@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace PickAll
 {
+    /// <summary>The context in which the a document without HTML DOM is fetched.</summary>
     public sealed class FetchingContext : IFetchingContext
     {
         private readonly HttpClient _client;

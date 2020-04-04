@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PickAll
 {
-    /// <summary>Represents a post processor service managed by <c>SearchContext<c/>.</summary>
+    /// <summary>Represents a post processor service managed by <c>SearchContext</c>.</summary>
     public abstract class PostProcessor : Service
     {
         public PostProcessor(object settings)
