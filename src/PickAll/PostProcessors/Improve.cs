@@ -37,7 +37,7 @@ namespace PickAll
     /// <summary>Improves results computing word frequency to perform a subsequent search.</summary>
     public class Improve : PostProcessor
     {
-        private readonly ImproveSettings _settings;
+        readonly ImproveSettings _settings;
 
         public Improve(object settings) : base(settings)
         {

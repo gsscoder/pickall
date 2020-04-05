@@ -9,7 +9,7 @@ public class MarkerSettings
 
 public class Marker : PostProcessor
 {
-    private readonly MarkerSettings _settings;
+    readonly MarkerSettings _settings;
 
     public Marker(object settings) : base(settings)
     {

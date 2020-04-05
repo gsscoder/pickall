@@ -41,7 +41,7 @@ namespace PickAll
             }
         }
 
-        private static bool Validate(string url)
+        static bool Validate(string url)
         {
             return
                 url.StartsWith(
@@ -50,7 +50,7 @@ namespace PickAll
                     "/url?q=http://webcache.googleusercontent.com",StringComparison.OrdinalIgnoreCase);
         }
 
-        private static string Normalize(string url)
+        static string Normalize(string url)
         {
             var match = _expression.Match(url);
             return match.Groups.Count == 2 ? match.Groups[1].Value : url;
