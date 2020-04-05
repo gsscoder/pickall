@@ -17,5 +17,5 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>../../artifacts/PickAll.Sample/Release</OutputPath>
   </PropertyGroup>
-  <Import Project="../../.paket\Paket.Restore.targets" />
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

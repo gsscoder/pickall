@@ -14,7 +14,7 @@ PickAll is primarily designed to collect a limited amount of results (possibly t
 
 ## Documentation
 
-Documentation is available in the project [Wiki](https://github.com/gsscoder/pickall/wiki).
+Documentation is available in the project [wiki](https://github.com/gsscoder/pickall/wiki).
 
 ## Targets
 
