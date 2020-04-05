@@ -17,9 +17,7 @@ sealed class Program
     static async Task<int> ExecuteSearch(Options options)
     {
         var context = options.ToContext();
-
         context.SearchBegin += (sender, e) => Console.WriteLine($"Searching '{e.Query}' ...");
-
         var results = await context.SearchAsync(options.Query);
         foreach (var result in results) {
             Console.WriteLine(
