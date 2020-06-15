@@ -92,7 +92,7 @@ namespace PickAll
                         .With<Uniqueness>()
                         .With<Order>()
                         .SearchAsync(builder.ToString())
-                            .RunSynchronously<IEnumerable<ResultInfo>>();
+                        .Result;
         }
     }
 }

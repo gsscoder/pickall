@@ -74,7 +74,7 @@ namespace PickAll
             var builder = new StringBuilder(512);
             var limit = _settings.MaximumLength ?? 100000;            
             foreach (var result in results) {
-                var document = Context.Fetching.FetchAsync(result.Url).RunSynchronously<IFetchedDocument>();
+                var document = Context.Fetching.FetchAsync(result.Url).Result;
                 if (document.Equals(FetchedDocument.Empty)) continue;
                 if (document.Length > limit) continue;
 

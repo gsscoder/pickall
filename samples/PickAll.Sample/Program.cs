@@ -10,7 +10,7 @@ sealed class Program
     static int Main(string[] args)
     {
         return Parser.Default.ParseArguments<Options>(args)
-            .MapResult(options => ExecuteSearch(options).RunSynchronously<int>(),
+            .MapResult(options => ExecuteSearch(options).Result,
             _ => exitFail);
     }
 
