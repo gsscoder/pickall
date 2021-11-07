@@ -2,29 +2,34 @@ trigger:
 - master
 
 pool:
-  vmImage: 'vs2017-win2016'
+  vmImage: 'windows-2019'
 
 steps:
 - task: UseDotNet@2
+  displayName: '.NET Core: install 5.0.x'
   inputs:
     packageType: 'sdk'
-    version: '3.0.x'
+    version: '5.0.x'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Paket: global install'
   inputs:
     command: 'custom'
     custom: 'tool'
     arguments: 'install -g paket'
 
 - task: PaketRestore@0
+  displayName: 'Paket: restore'
   inputs:
     PaketPath: '.paket'
 
 - task: CmdLine@2
+  displayName: '.NET Core CLI: restore'
   inputs:
     script: 'dotnet restore'
 
 - task: DotNetCoreCLI@2
+  displayName: '.NET Core CLI: build'
   inputs:
     command: 'build'
     projects: 'src/**/*.csproj'
