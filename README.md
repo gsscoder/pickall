@@ -18,12 +18,12 @@ Documentation is available in the project [wiki](https://github.com/gsscoder/pic
 ## Targets
 
 - .NET Standard 2.0
-- .NET Framework 4.6.1
+- .NET 5.0
 
 ## Install via NuGet
 
 ```sh
-$ dotnet add package PickAll --version 1.1.0
+$ dotnet add package PickAll --version 1.2.0
 ```
 
 ## Build and sample
@@ -124,7 +124,3 @@ results |> Seq.iter (fun x -> printfn "%s %s" x.Url x.Description)
 ## Icon
 
 - [Search Engine](https://thenounproject.com/search/?q=search%20engine&i=2054907) icon designed by Vectors Market from [The Noun Project](https://thenounproject.com/).
-
-### Notes
-
-- PickAll is still under development and API could change until latest beta versions.
