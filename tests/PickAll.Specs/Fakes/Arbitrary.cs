@@ -80,7 +80,7 @@ static class WaffleBuilder
                 WaffleEngine.Html(
                     paragraphs: paragraphs,
                     includeHeading: true,
-                    includeHeadAndBody: true))).RunSynchronously<IDocument>();
+                    includeHeadAndBody: true))).Result;
     }
 
     public static string GenerateParagraph(int samples = 1, bool small = false)
