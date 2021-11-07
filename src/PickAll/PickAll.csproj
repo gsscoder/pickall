@@ -13,6 +13,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>web;scraping;api;library</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>../../artifacts/PickAll/Debug</OutputPath>
@@ -21,11 +22,8 @@
     <OutputPath>../../artifacts/PickAll/Release</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../../assets/icon.png">
-      <Pack>True</Pack>
-      <PackagePath>
-      </PackagePath>
-    </None>
+    <None Include="../../assets/icon.png" Pack="true" PackagePath="/" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
