@@ -81,12 +81,12 @@ public class ImproveSpecs
         sut.Context = context;
 
         var titles = WaffleBuilder.GenerateTitle(3, title => title
-                .Intersperse("massive".Replicate(50))
-                .Intersperse("catch".Replicate(25))
-                .Intersperse("a".Replicate(30))
-                .Intersperse("repetition".Replicate(50))
-                .Intersperse("word".Replicate(25))
-                .Intersperse("of").Replicate(30));
+                .Intersperse("massive".Replicate(50, separator: " "))
+                .Intersperse("catch".Replicate(25, separator: " "))
+                .Intersperse("a".Replicate(30, separator: " "))
+                .Intersperse("repetition".Replicate(50, separator: " "))
+                .Intersperse("word".Replicate(25, separator: " "))
+                .Intersperse("of").Replicate(30, separator: " "));
 
         var results = new ResultInfo[] {
             ResultInfoHelper.OnlyDescription(titles.First()),
