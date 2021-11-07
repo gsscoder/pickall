@@ -1,2 +1,3 @@
-AngleSharp
-AngleSharp.Io
+group main
+	AngleSharp
+	AngleSharp.Io
