@@ -50,10 +50,10 @@ public class ImproveSpecs
         sut.Context = context;
 
         var titles = WaffleBuilder.GenerateTitle(3, title => title
-                .Intersperse("massive".Replicate(50))
-                .Intersperse("something".Replicate(25))
-                .Intersperse("repetition".Replicate(50))
-                .Intersperse("hello".Replicate(25)));
+                .Intersperse("massive".Replicate(50, separator: " "))
+                .Intersperse("something".Replicate(25, separator: " "))
+                .Intersperse("repetition".Replicate(50, separator: " "))
+                .Intersperse("hello".Replicate(25, separator: " ")));
 
         var results = new ResultInfo[] {
             ResultInfoHelper.OnlyDescription(titles.First()),
