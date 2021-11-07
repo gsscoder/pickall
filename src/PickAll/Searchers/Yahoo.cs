@@ -16,16 +16,14 @@ namespace PickAll
 
         public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
         {
-            using (var document = await Context.Browsing.OpenAsync("https://yahoo.com/")) {
-                var form = document.QuerySelector<IHtmlFormElement>("#uh-search-form");
-                ((IHtmlInputElement)form["uh-search-box"]).Value = query;
-                using (var result = await form.SubmitAsync(form)) {
-                    var links = result.QuerySelectorAll<IHtmlAnchorElement>("#web h3.title a");
+            using var document = await Context.Browsing.OpenAsync("https://yahoo.com/");
+            var form = document.QuerySelector<IHtmlFormElement>("#uh-search-form");
+            ((IHtmlInputElement)form["uh-search-box"]).Value = query;
+            using var result = await form.SubmitAsync(form);
+            var links = result.QuerySelectorAll<IHtmlAnchorElement>("#web h3.title a");
 
-                    return links.Select((link, index) =>
-                        CreateResult((ushort)index, link.Attributes["href"].Value, link.Text));
-                }
-            }
+            return links.Select((link, index) =>
+                CreateResult((ushort)index, link.Attributes["href"].Value, link.Text));
         }
     }
 }
