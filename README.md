@@ -18,12 +18,15 @@ Documentation is available in the project [wiki](https://github.com/gsscoder/pic
 ## Targets
 
 - .NET Standard 2.0
+- .NET Core 3.1
 - .NET 5.0
 
 ## Install via NuGet
 
 ```sh
 $ dotnet add package PickAll --version 1.2.0
+  Determining projects to restore...
+  ...
 ```
 
 ## Build and sample

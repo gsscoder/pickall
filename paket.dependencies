@@ -1,6 +1,6 @@
 group main
     source https://www.nuget.org/api/v2
-    framework: netstandard20, net50
+    framework: netstandard20, netcoreapp31, net50
     nuget AngleSharp 0.14.0
     nuget AngleSharp.Io 0.14.0
 
