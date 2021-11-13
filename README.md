@@ -3,7 +3,9 @@
 [![NuGet](https://img.shields.io/nuget/vpre/pickall.svg)](https://www.nuget.org/packages/pickall)
 [![Join the Gitter chat!](https://badges.gitter.im/gsscoder/pickall.svg)](https://gitter.im/pickallwebsearcher/community#)
 
-# <img src="/assets/icon.png" height="30px" alt="PickAll Logo"> PickAll
+# PickAll
+
+![alt text](/assets/icon.png "SharpX Logo")
 
 .NET agile and extensible web searching API. Built with [AngleSharp](https://anglesharp.github.io/).
 
