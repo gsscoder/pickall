@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using FluentAssertions;
-using CSharpx;
+using SharpX;
 using PickAll;
 
 public class UniquenessSpecs

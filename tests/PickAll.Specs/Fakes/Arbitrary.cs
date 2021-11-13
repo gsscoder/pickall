@@ -6,7 +6,7 @@ using Bogus;
 using WaffleGenerator;
 using AngleSharp;
 using AngleSharp.Dom;
-using CSharpx;
+using SharpX;
 using PickAll;
 
 static class ResultInfoBuilder

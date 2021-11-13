@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CSharpx;
+using SharpX;
 using PickAll;
 
 class ArbitrarySearcherSettings

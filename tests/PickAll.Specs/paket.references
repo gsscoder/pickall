@@ -7,4 +7,4 @@ group specs
     xunit
     xunit.runner.visualstudio
     coverlet.collector
-    CSharpx
+    SharpX

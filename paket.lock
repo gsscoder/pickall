@@ -23,8 +23,6 @@ NUGET
   remote: https://www.nuget.org/api/v2
     Bogus (33.1.1)
     coverlet.collector (1.0.1)
-    CSharpx (2.8.0-rc.2)
-      FSharp.Core (>= 4.7)
     FluentAssertions (6.2)
       System.Configuration.ConfigurationManager (>= 4.4)
     FSharp.Core (6.0.1)
@@ -45,6 +43,8 @@ NUGET
       Microsoft.NETCore.Platforms (>= 1.1)
     Newtonsoft.Json (13.0.1)
     NuGet.Frameworks (5.11)
+    SharpX (1.0)
+      FSharp.Core (>= 4.7)
     System.Configuration.ConfigurationManager (5.0)
       System.Security.Cryptography.ProtectedData (>= 5.0)
       System.Security.Permissions (>= 5.0)

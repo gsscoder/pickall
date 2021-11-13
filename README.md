@@ -115,7 +115,7 @@ results |> Seq.iter (fun x -> printfn "%s %s" x.Url x.Description)
 
 - [AngleSharp](https://github.com/AngleSharp/AngleSharp)
 - [AngleSharp.Io](https://github.com/AngleSharp/AngleSharp.Io)
-- [CSharpx](https://github.com/gsscoder/csharpx)
+- [SharpX](https://github.com/gsscoder/sharpx)
 - [CommandLineParser](https://github.com/commandlineparser/commandline)
 - [xUnit.net](https://github.com/xunit/xunit)
 - [FluentAssertions](https://github.com/fluentassertions/fluentassertions)
