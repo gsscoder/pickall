@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using SharpX;
 
 namespace PickAll
 {
@@ -102,7 +103,7 @@ namespace PickAll
                     return string.Concat(
                         string.Join(" ",
                             from text in texts
-                            select RemoveNoise(Sanitize(text.StripMl().NormalizeWhiteSpace()))),
+                            select RemoveNoise(Sanitize(text.StripML().NormalizeWhiteSpace()))),
                             " ");
                     string Sanitize(string text) {
                         if (!_settings.SanitizeText) return text;

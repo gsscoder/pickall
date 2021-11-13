@@ -3,6 +3,7 @@ group main
     framework: netstandard20, netcoreapp31, net50
     nuget AngleSharp 0.14.0
     nuget AngleSharp.Io 0.14.0
+    nuget SharpX 1.0.0
 
 group specs
     source https://www.nuget.org/api/v2
