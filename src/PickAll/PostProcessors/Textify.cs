@@ -103,7 +103,7 @@ namespace PickAll
                     return string.Concat(
                         string.Join(" ",
                             from text in texts
-                            select RemoveNoise(Sanitize(text.StripML().NormalizeWhiteSpace()))),
+                            select RemoveNoise(Sanitize(text.StripTag().NormalizeWhiteSpace()))),
                             " ");
                     string Sanitize(string text) {
                         if (!_settings.SanitizeText) return text;

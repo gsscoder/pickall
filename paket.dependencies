@@ -3,7 +3,7 @@ group main
     framework: netstandard20, netcoreapp31, net50
     nuget AngleSharp 0.14.0
     nuget AngleSharp.Io 0.14.0
-    nuget SharpX 1.0.0
+    nuget SharpX 1.0.3
 
 group specs
     source https://www.nuget.org/api/v2
@@ -13,7 +13,7 @@ group specs
     nuget xunit 2.4.1
     nuget xunit.runner.visualstudio 2.4.3
     nuget FluentAssertions 6.2.0
-    nuget SharpX 1.0.0
+    nuget SharpX 1.0.3
     nuget Bogus 33.1.1
     nuget WaffleGenerator 4.2.1
     nuget WaffleGenerator.Bogus 4.2.1
