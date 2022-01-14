@@ -38,14 +38,11 @@ namespace PickAll
                    select @this;
         }
 
-        static bool Validate(string url)
-        {
-            return
+        static bool Validate(string url) =>
                 url.StartsWith(
                     "/url?", StringComparison.OrdinalIgnoreCase) &&
                 !url.StartsWith(
                     "/url?q=http://webcache.googleusercontent.com",StringComparison.OrdinalIgnoreCase);
-        }
 
         static string Normalize(string url)
         {
