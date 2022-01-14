@@ -12,8 +12,7 @@ namespace PickAll
     /// <summary><c>Searcher</c> that searches on Google search engine.</summary>
     public class Google : Searcher
     {
-        static readonly Regex _expression = new Regex(@"^/url\?q=([^&]*)&.*",
-            RegexOptions.Compiled);
+        static readonly Regex _normalize = new Regex(@"^/url\?q=([^&]*)&.*", RegexOptions.Compiled);
 
         public Google(object settings) : base(settings)  
         {
@@ -50,7 +49,7 @@ namespace PickAll
 
         static string Normalize(string url)
         {
-            var match = _expression.Match(url);
+            var match = _normalize.Match(url);
             return match.Groups.Count == 2 ? match.Groups[1].Value : url;
         }
     }
