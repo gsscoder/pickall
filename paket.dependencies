@@ -1,24 +1,24 @@
 group main
     source https://www.nuget.org/api/v2
-    framework: netstandard20, netcoreapp31, net50
-    nuget AngleSharp 0.14.0
-    nuget AngleSharp.Io 0.14.0
-    nuget SharpX 1.1.5
+    framework: netstandard21, net80
+    nuget AngleSharp 1.2.0
+    nuget AngleSharp.Io 1.0.0
+    nuget SharpX 6.4.6
 
 group specs
     source https://www.nuget.org/api/v2
-    framework: net50
-    nuget Microsoft.NET.Test.Sdk 16.9.4
-    nuget coverlet.collector 1.0.1
-    nuget xunit 2.4.1
-    nuget xunit.runner.visualstudio 2.4.3
-    nuget FluentAssertions 6.2.0
-    nuget SharpX 1.1.5
-    nuget Bogus 33.1.1
-    nuget WaffleGenerator 4.2.1
-    nuget WaffleGenerator.Bogus 4.2.1
+    framework: net80
+    nuget Microsoft.NET.Test.Sdk 17.12.0
+    nuget coverlet.collector 6.0.4
+    nuget xunit 2.9.3
+    nuget xunit.runner.visualstudio 3.0.1
+    nuget FluentAssertions 8.0.1
+    nuget SharpX 6.4.6
+    nuget Bogus 35.6.1
+    nuget WaffleGenerator 4.2.2
+    nuget WaffleGenerator.Bogus 4.2.2
 
 group sample
     source https://www.nuget.org/api/v2
-    framework: net50
-    nuget CommandLineParser 2.7.82
+    framework: net80
+    nuget CommandLineParser 2.9.1
