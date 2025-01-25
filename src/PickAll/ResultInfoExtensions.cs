@@ -2,7 +2,7 @@ namespace PickAll
 {
     public static class ResultInfoExtensions
     {
-        public static ResultInfo Clone(this ResultInfo resultInfo, object data = null)
+        public static ResultInfo Clone(this ResultInfo resultInfo, object? data = null)
         {
             Guard.AgainstNull(nameof(resultInfo), resultInfo);
 

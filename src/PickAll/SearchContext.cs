@@ -53,7 +53,7 @@ namespace PickAll
 
             Services = Enumerable.Empty<object>();
             foreach (var type in services) {
-                var instance = Activator.CreateInstance(type, new object[] { null });
+                var instance = Activator.CreateInstance(type, [null]);
                 Services = Services.Add(instance);
             }
         }
@@ -164,14 +164,14 @@ namespace PickAll
             return services;
         }
 
-        static HttpClient BuildHttpClient(TimeSpan? timeout, HttpClient defaultClient = null)
+        static HttpClient BuildHttpClient(TimeSpan? timeout, HttpClient? defaultClient = null)
         {
             if (timeout.HasValue) {
                 var client = new HttpClient();
                 client.Timeout = timeout.Value;
                 return client;
             }
-            return defaultClient;
+            return defaultClient!;
         }
 
         static IBrowsingContext BuildBrowsingContext(

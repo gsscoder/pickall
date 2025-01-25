@@ -9,7 +9,7 @@ namespace PickAll
     {
         /// <summary>Registers an instance of <c>Searcher</c> or <c>PostProcessor</c> without settings,
         /// using its type.</summary>
-        public static SearchContext With<T>(this SearchContext context, object settings = null)
+        public static SearchContext With<T>(this SearchContext context, object? settings = null)
             where T : Service
         {
             Guard.AgainstNull(nameof(context), context);
@@ -23,7 +23,7 @@ namespace PickAll
         /// <summary>Registers an instance of <c>Searcher</c> or <c>PostProcessor</c> without settings,
         /// using its type name.</summary>
         public static SearchContext With(this SearchContext context, string serviceName,
-                                         object settings = null)
+                                         object? settings = null)
         {
             Guard.AgainstNull(nameof(context), context);
             Guard.AgainstNull(nameof(serviceName), serviceName);

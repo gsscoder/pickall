@@ -12,13 +12,13 @@ static class ObjectExtensions
     }
 
     public static IEnumerable<object> Map<T>(this IEnumerable<object> collection, Func<T, T> func,
-        Func<T, bool> predicate = null)
+        Func<T, bool>? predicate = null)
     {
         foreach (var element in collection) {
             if (element.GetType().EqualsOrSubtype<T>() &&
                 (predicate == null ||
                 (predicate != null && predicate((T)element)))) {
-                yield return func((T)element);
+                yield return func((T)element)!;
             }
             else {
                 yield return element;
