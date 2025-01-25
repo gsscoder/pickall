@@ -5,16 +5,19 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using AngleSharp;
 using AngleSharp.Io.Network;
+using PuppeteerSharp;
 
 namespace PickAll
 {
     /// <summary>Manages <c>Searcher</c> and <c>PostProcessor</c> instances to gather
     /// and elaborate results.</summary>
-    public sealed class SearchContext
-    {   
+    public sealed class SearchContext : IDisposable
+    {
+        bool _disposed = false;
         readonly Lazy<IBrowsingContext> _browsing;
         readonly Lazy<IFetchingContext> _fetching;
-        static readonly Lazy<SearchContext> _default = new Lazy<SearchContext>(
+        readonly Lazy<PuppeteerSharp.IBrowser> _headlessBrowsing;
+        static readonly Lazy<SearchContext> _default = new(
             () => new SearchContext(
                 typeof(Google),
                 typeof(DuckDuckGo),
@@ -29,6 +32,8 @@ namespace PickAll
                 () => BuildBrowsingContext(settings.Timeout, () => BuildHttpClient(settings.Timeout)));
             _fetching = new Lazy<IFetchingContext>(
                 () => new FetchingContext(BuildHttpClient(settings.Timeout, new HttpClient())));
+            _headlessBrowsing = new Lazy<PuppeteerSharp.IBrowser>(
+                () => BuildHeadlessBrowsingContextAsync().Result);
         #if DEBUG
             EnforceMaximumResults = true;
         #endif
@@ -74,10 +79,12 @@ namespace PickAll
 #pragma warning restore CS3003
         /// <summary>Current <c>IFetchingContext</c> instance.</summary>
         public IFetchingContext Fetching => _fetching.Value;
+        /// <summary>Current <c>IPage</c> instance.</summary>
+        public IPage HeadlessPage => _headlessPage.Value;
     #if !DEBUG
         internal IEnumerable<object> Services { get; private set; }
         internal ContextSettings Settings { get; private set; }
-    #else
+#else
         public IEnumerable<object> Services { get; private set; }
         public ContextSettings Settings { get; private set; }
         public bool EnforceMaximumResults { get; set; } // Debug only
@@ -185,6 +192,40 @@ namespace PickAll
                         .WithDefaultLoader());
             }
             return BrowsingContext.New(Configuration.Default.WithDefaultLoader());
+        }
+
+        static async Task<PuppeteerSharp.IBrowser> BuildHeadlessBrowsingContextAsync()
+        {
+            var browserFetcher = new BrowserFetcher();
+            await browserFetcher.DownloadAsync();
+            var browser = await Puppeteer.LaunchAsync(
+                new LaunchOptions { Headless = true });
+            return browser;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing) {
+                if (_headlessBrowsing.IsValueCreated) {
+                    _headlessBrowsing.Value.Dispose();
+                }
+            }
+
+            _disposed = true;
+        }
+
+        ~SearchContext()
+        {
+            Dispose(false);
         }
     }
 }

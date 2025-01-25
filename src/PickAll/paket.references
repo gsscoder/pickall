@@ -2,3 +2,4 @@ group main
     AngleSharp
     AngleSharp.Io
     SharpX
+    PuppeteerSharp
