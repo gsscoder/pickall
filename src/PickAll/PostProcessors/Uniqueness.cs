@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SharpX.Extensions;
 
 namespace PickAll
@@ -12,7 +11,7 @@ namespace PickAll
 
         public override IEnumerable<ResultInfo> Process(IEnumerable<ResultInfo> results)
         {
-            return results.DistinctBy(result => result.Url);
+            return EnumerableExtensions.DistinctBy(results, result => result.Url);
         }
     }
 }
