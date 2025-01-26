@@ -16,5 +16,15 @@ public class SearchersTests
 
         results.Should().NotBeEmpty();
     }
-}
 
+    [Fact]
+    public async Task Test_Bing()
+    {
+        using var sut = new SearchContext()
+            .With("Bing");
+
+        var results = await sut.SearchAsync($"{TextPicker.GetSentence()} {TextPicker.GetName()}");
+
+        results.Should().NotBeEmpty();
+    }
+}
