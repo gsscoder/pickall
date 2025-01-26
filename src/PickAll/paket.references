@@ -3,3 +3,4 @@ group main
     AngleSharp.Io
     SharpX
     PuppeteerSharp
+    HtmlAgilityPack

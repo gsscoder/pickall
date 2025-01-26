@@ -8,6 +8,7 @@ NUGET
     FsCheck (3.0.0-rc1)
       FSharp.Core (>= 5.0.2)
     FSharp.Core (5.0.2)
+    HtmlAgilityPack (1.11.72)
     Microsoft.Bcl.AsyncInterfaces (9.0.1) - restriction: == netstandard2.1
     Microsoft.Extensions.DependencyInjection (9.0.1)
       Microsoft.Extensions.DependencyInjection.Abstractions (>= 9.0.1)
