@@ -74,13 +74,13 @@ namespace PickAll
         /// <summary>Occurs a <c>ResultInfo</c> is processed.</summary>
         public event EventHandler<ResultHandledEventArgs> ResultProcessed;
 #pragma warning disable CS3003
-        /// <summary>Current <c>IBrowsingContext</c> instance.</summary>
+        /// <summary>Current AngleSharp <c>IBrowsingContext</c> instance.</summary>
         public IBrowsingContext Browsing => _browsing.Value;
 #pragma warning restore CS3003
         /// <summary>Current <c>IFetchingContext</c> instance.</summary>
         public IFetchingContext Fetching => _fetching.Value;
-        /// <summary>Current <c>IPage</c> instance.</summary>
-        public IPage HeadlessPage => _headlessPage.Value;
+        /// <summary>Current PuppeteerSharp <c>IBrowser</c> instance.</summary>
+        public IBrowser HeadlessBrowsing => _headlessBrowsing.Value;
     #if !DEBUG
         internal IEnumerable<object> Services { get; private set; }
         internal ContextSettings Settings { get; private set; }
@@ -199,7 +199,9 @@ namespace PickAll
             var browserFetcher = new BrowserFetcher();
             await browserFetcher.DownloadAsync();
             var browser = await Puppeteer.LaunchAsync(
-                new LaunchOptions { Headless = true });
+                new LaunchOptions {
+                    Args = new[] { "--disable-blink-features=AutomationControlled" },
+                    Headless = true });
             return browser;
         }
 
