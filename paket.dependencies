@@ -5,6 +5,7 @@ group main
     nuget AngleSharp.Io 1.0.0
     nuget SharpX 6.4.6
     nuget PuppeteerSharp 20.0.5
+    nuget HtmlAgilityPack 1.11.72
 
 group specs
     source https://www.nuget.org/api/v2
