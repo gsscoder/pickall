@@ -1,35 +1,43 @@
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-using AngleSharp;
-using AngleSharp.Html.Dom;
-using AngleSharp.Dom;
+using HtmlAgilityPack;
+using System.Net.Http;
+using PickAll.Searchers;
+using PuppeteerSharp;
+using System.Data;
+using SharpX.Extensions;
 
-namespace PickAll
+namespace PickAll;
+
+/// <summary><c>Searcher</c> that searches on Bing search engine.</summary>
+public class Bing : Searcher
 {
-    /// <summary><c>Searcher</c> that searches on Bing search engine.</summary>
-    public class Bing : Searcher
+    public Bing(object settings) : base(settings)  
     {
-        public Bing(object settings) : base(settings)  
-        {
-        }
+    }
 
-        public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
+    public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
+    {
+        var page = await Context.HeadlessBrowsing.NewPageAsync();
+        await page.UseStealthMode();
+        var url = $"https://www.bing.com/search?q={Uri.EscapeDataString(query)}";
+        var response = await page.GoToAsync(url, new NavigationOptions
         {
-            using var document = await Context.Browsing.OpenAsync("https://www.bing.com/");
-            var form = document.QuerySelector<IHtmlFormElement>("#sb_form");
-            ((IHtmlInputElement)form["sb_form_q"]).Value = query;
-            using var result = await form.SubmitAsync(form);
-            // Select only actual results
-            var links = from link in result.QuerySelectorAll<IHtmlAnchorElement>("li.b_algo a")
-                        where link.Attributes["href"].Value.StartsWith(
-                            "http",
-                            StringComparison.OrdinalIgnoreCase)
-                        select link;
+            WaitUntil = [WaitUntilNavigation.Load]
+        });
+        response.EnsureSuccessOrThrow(
+            new SearcherException("Unable to navigate to 'https://www.google.com/search?q={query}'."));
 
-            return links.Select((link, index) =>
-                CreateResult((ushort)index, link.Attributes["href"].Value, link.Text));
+        var olHtmlContent = await page.EvaluateExpressionAsync<string>("document.querySelector('ol#b_results').outerHTML");
+        if (olHtmlContent == null) {
+            throw new SearcherException($"Unable to select item 'b_results'.");
         }
+        var resultsHtml = new HtmlDocument();
+        resultsHtml.LoadHtml(olHtmlContent);
+
+        var links = resultsHtml.DocumentNode.SelectNodes("//li[@class='b_algo']//a")
+            .Where(x => !x.InnerText.IsEmpty() || !x.InnerText.EqualsIgnoreCase("div") ||
+                   x.Attributes["href"].Value.ContainsIgnoreCase("javascript:"));
+
+        return links.Select((link, index) =>
+            CreateResult((ushort)index, link.Attributes["href"].Value, link.InnerText));
     }
 }
