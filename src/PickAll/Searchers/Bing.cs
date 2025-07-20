@@ -1,22 +1,17 @@
+using System.Data;
 using HtmlAgilityPack;
-using System.Net.Http;
 using PickAll.Searchers;
 using PuppeteerSharp;
-using System.Data;
 using SharpX.Extensions;
 
 namespace PickAll;
 
 /// <summary><c>Searcher</c> that searches on Bing search engine.</summary>
-public class Bing : Searcher
+public class Bing(object settings) : Searcher(settings)
 {
-    public Bing(object settings) : base(settings)  
-    {
-    }
-
     public override async Task<IEnumerable<ResultInfo>> SearchAsync(string query)
     {
-        var page = await Context.HeadlessBrowsing.NewPageAsync();
+        var page = await Context!.HeadlessBrowsing.NewPageAsync();
         await page.UseStealthMode();
         var url = $"https://www.bing.com/search?q={Uri.EscapeDataString(query)}";
         var response = await page.GoToAsync(url, new NavigationOptions
@@ -24,7 +19,7 @@ public class Bing : Searcher
             WaitUntil = [WaitUntilNavigation.Load]
         });
         response.EnsureSuccessOrThrow(
-            new SearcherException("Unable to navigate to 'https://www.google.com/search?q={query}'."));
+            new SearcherException("Unable to navigate to 'https://www.bing.com/search?q={query}'."));
 
         var olHtmlContent = await page.EvaluateExpressionAsync<string>("document.querySelector('ol#b_results').outerHTML");
         if (olHtmlContent == null) {
@@ -34,10 +29,11 @@ public class Bing : Searcher
         resultsHtml.LoadHtml(olHtmlContent);
 
         var links = resultsHtml.DocumentNode.SelectNodes("//li[@class='b_algo']//a")
-            .Where(x => !x.InnerText.IsEmpty() || !x.InnerText.EqualsIgnoreCase("div") ||
-                   x.Attributes["href"].Value.ContainsIgnoreCase("javascript:"));
+            .Where(x => !x.InnerText.IsEmpty() && !x.InnerText.EqualsIgnoreCase("div") &&
+                   !x.Attributes["href"].Value.ContainsIgnoreCase("javascript:"));
 
-        return links.Select((link, index) =>
+        var results = links.Select((link, index) =>
             CreateResult((ushort)index, link.Attributes["href"].Value, link.InnerText));
+        return results;
     }
 }
