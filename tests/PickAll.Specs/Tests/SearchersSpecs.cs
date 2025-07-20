@@ -1,4 +1,3 @@
-﻿using FluentAssertions;
 using PickAll;
 using Xunit;
 
@@ -12,8 +11,9 @@ public class SearchersTests
         using var sut = new SearchContext()
             .With("Bing");
 
-        var results = await sut.SearchAsync($"{TextPicker.GetSentence()} {TextPicker.GetName()}");
+        var query = $"{TextPicker.GetSentence()} {TextPicker.GetName()}";
+        var results = await sut.SearchAsync(query);
 
-        results.Should().NotBeEmpty();
+        Assert.NotEmpty(results);
     }
 }

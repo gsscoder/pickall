@@ -19,19 +19,21 @@ public class Bing(object settings) : Searcher(settings)
             WaitUntil = [WaitUntilNavigation.Load]
         });
         response.EnsureSuccessOrThrow(
-            new SearcherException("Unable to navigate to 'https://www.google.com/search?q={query}'."));
+            new SearcherException("Unable to navigate to 'https://www.bing.com/search?q={query}'."));
 
-        var olHtmlContent =
-            await page.EvaluateExpressionAsync<string>("document.querySelector('ol#b_results').outerHTML")
-            ?? throw new SearcherException($"Unable to select item 'b_results'.");
+        var olHtmlContent = await page.EvaluateExpressionAsync<string>("document.querySelector('ol#b_results').outerHTML");
+        if (olHtmlContent == null) {
+            throw new SearcherException($"Unable to select item 'b_results'.");
+        }
         var resultsHtml = new HtmlDocument();
         resultsHtml.LoadHtml(olHtmlContent);
 
         var links = resultsHtml.DocumentNode.SelectNodes("//li[@class='b_algo']//a")
-            .Where(x => !x.InnerText.IsEmpty() || !x.InnerText.EqualsIgnoreCase("div") ||
-                   x.Attributes["href"].Value.ContainsIgnoreCase("javascript:"));
+            .Where(x => !x.InnerText.IsEmpty() && !x.InnerText.EqualsIgnoreCase("div") &&
+                   !x.Attributes["href"].Value.ContainsIgnoreCase("javascript:"));
 
-        return links.Select((link, index) =>
+        var results = links.Select((link, index) =>
             CreateResult((ushort)index, link.Attributes["href"].Value, link.InnerText));
+        return results;
     }
 }

@@ -14,7 +14,7 @@ namespace PickAll
     {
         static readonly Regex _normalize = new Regex(@"^/url\?q=([^&]*)&.*", RegexOptions.Compiled);
 
-        public Google(object settings) : base(settings)  
+        public Google(object settings) : base(settings)
         {
         }
 
@@ -42,7 +42,7 @@ namespace PickAll
                 url.StartsWith(
                     "/url?", StringComparison.OrdinalIgnoreCase) &&
                 !url.StartsWith(
-                    "/url?q=http://webcache.googleusercontent.com",StringComparison.OrdinalIgnoreCase);
+                    "/url?q=http://webcache.googleusercontent.com", StringComparison.OrdinalIgnoreCase);
 
         static string Normalize(string url)
         {
